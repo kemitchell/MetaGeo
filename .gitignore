@@ -4,7 +4,8 @@
 .sails
 .waterline
 .rigging
-.tmp
+./assets/build
+./assets/source/bower_components
 
 
 ########################
