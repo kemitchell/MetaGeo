@@ -1,14 +1,4 @@
 ########################
-# sails
-########################
-.sails
-.waterline
-.rigging
-./assets/build
-./assets/source/bower_components
-
-
-########################
 # node.js / npm
 ########################
 lib-cov
@@ -41,10 +31,3 @@ nbproject
 *.swn
 *.swm
 *.swo
-
-########################
-# local config
-########################
-config/local.coffee
-config/local.js
-assets/bower_components

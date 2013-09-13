@@ -1,8 +1,8 @@
 this["JST"] = this["JST"] || {};
 
-this["JST"]["assets/templates/runtime/eventLi"] = function anonymous(locals
+this["JST"]["source/templates/runtime/eventLi"] = function anonymous(locals
 /**/) {
-jade.debug = [{ lineno: 1, filename: "assets/templates/runtime/eventLi.jade" }];
+jade.debug = [{ lineno: 1, filename: "source/templates/runtime/eventLi.jade" }];
 try {
 var buf = [];
 var locals_ = (locals || {}),content = locals_.content;jade.debug.unshift({ lineno: 1, filename: jade.debug[0].filename });
@@ -18,9 +18,9 @@ jade.debug.shift();;return buf.join("");
 }
 };
 
-this["JST"]["assets/templates/runtime/userNav"] = function anonymous(locals
+this["JST"]["source/templates/runtime/userNav"] = function anonymous(locals
 /**/) {
-jade.debug = [{ lineno: 1, filename: "assets/templates/runtime/userNav.jade" }];
+jade.debug = [{ lineno: 1, filename: "source/templates/runtime/userNav.jade" }];
 try {
 var buf = [];
 var locals_ = (locals || {}),authenticated = locals_.authenticated,username = locals_.username;jade.debug.unshift({ lineno: 1, filename: jade.debug[0].filename });

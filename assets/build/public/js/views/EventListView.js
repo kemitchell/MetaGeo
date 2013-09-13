@@ -41,7 +41,7 @@ controls the event list view
       };
 
       _Class.prototype.addEvent = function(event) {
-        return this.$("#eventList").append(JST['assets/templates/runtime/eventLi'](event.toJSON()));
+        return this.$("#eventList").append(JST['source/templates/runtime/eventLi'](event.toJSON()));
       };
 
       return _Class;

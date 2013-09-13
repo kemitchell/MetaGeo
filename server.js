@@ -1,31 +1,72 @@
 #!/bin/env node
 
 require('coffee-script');
-require('./connection');
 
 var Hapi = require('hapi');
-var SocketIO = require('socket.io');
+var sockjs = require('sockjs');
 var routes = require('./routes');
+var _ = require('lodash');
 
-var config = { };
-var server = new Hapi.Server('0.0.0.0', 1337, config);
+var config = {},
+eventmap = {},
+server,
+db;
 
-server.auth('session', {
+eventmap.start = function(cb){
+  
+  var echo = sockjs.createServer();
+  echo.on('connection', function(conn) {
+    conn.on('data', function(message) {
+      conn.write(message);
+    });
+    conn.on('close', function() {});
+  });
+
+  //fire up the database
+  db = require('./connection');
+  db.start();
+
+  server = new Hapi.Server('0.0.0.0', 1337, config);
+
+  server.auth('session', {
     scheme: 'cookie',
     password: 'secret sauce',
     cookie: 'sid-em',
     isSecure: false
-});
+  });
 
-server.pack.require({ lout: { endpoint: '/docs' } }, function (err) {
-
+  server.pack.require({ lout: { endpoint: '/docs' } }, function (err) {
     if (err) {
-        console.log('Failed loading plugins');
+      console.log('Failed loading plugins');
     }
-});
+  });
 
-server.addRoutes(routes);
+  server.addRoutes(routes);
+  server.start(function () {
+    echo.installHandlers(server.listener, {prefix:'/echo'});
+    if(_.isFunction(cb)){
+      cb();
+    }
+  });
+}
 
-server.start(function () {
-  var io = SocketIO.listen(server.listener);
-});
+eventmap.stop = function(options, cb){
+  var options; 
+  if( _.isFunction(options) && _.isUndefined(cb)){
+    cb = options;
+    options = { timeout: 60 * 1000 };
+  }
+  server.stop(options, function () {
+    db.stop();
+    console.log('Server stopped');
+    if(_.isFunction(cb)){
+      cb();
+    }
+  });
+}
+
+if(require.main === module){
+  eventmap.start();
+}else{
+  module.exports = eventmap;
+}

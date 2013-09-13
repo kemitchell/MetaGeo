@@ -12,7 +12,7 @@
         return this.render();
       },
       render: function() {
-        return this.$("#userNav").html(JST['assets/templates/runtime/userNav'](this.model.toJSON()));
+        return this.$("#userNav").html(JST['source/templates/runtime/userNav'](this.model.toJSON()));
       },
       events: {
         "webkitTransitionEnd #exclusivePanelWrapper": 'exclusiveTransEnd',

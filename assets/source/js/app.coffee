@@ -12,7 +12,7 @@ require.config
     "leaflet": "../../bower_components/leaflet/dist/leaflet-src"
     "require": "../../bower_components/require"
     "underscore": "../../bower_components/underscore/underscore"
-    "socket.io-client": "../../bower_components/socket.io-client/dist/socket.io"
+    "socketjs-client": "../../bower_components/sockjs-client/sockjs.min"
     "jade-runtime": "../../bower_components/jade/runtime"
     "cs": "../../bower_components/require-cs/cs"
     "coffee-script": "../../bower_components/coffee-script/index"
@@ -31,10 +31,6 @@ require.config
     'backbone.routefilter': ['backbone']
     'leaflet':
       exports: 'L'
-    'socket.io-client':
-      exports: 'io'
-    'js/sails.io.js':
-      deps: ['socket.io-client']
     'jquery.tooltip':
       deps: ['jquery']
 
@@ -51,7 +47,6 @@ define (require) ->
   window.jade = require('jade-runtime')
   #start sockets
   require('socketAdapter')
-
 
   Router = require('router')
   #include views

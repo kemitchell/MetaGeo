@@ -21,4 +21,4 @@ define (require)->
         @addEvent(event)
 
     addEvent: (event)->
-      @$("#eventList").append(JST['assets/templates/runtime/eventLi'](event.toJSON()))
+      @$("#eventList").append(JST['source/templates/runtime/eventLi'](event.toJSON()))

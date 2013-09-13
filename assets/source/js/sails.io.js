@@ -128,12 +128,9 @@
       data: data
     });
 
-
     // Send the message over the socket
     socket.emit(method, json, function afterEmitted (result) {
-
       var parsedResult = result;
-
       if (result && typeof result === 'string') {
         try {
           parsedResult = window.io.JSON.parse(result);

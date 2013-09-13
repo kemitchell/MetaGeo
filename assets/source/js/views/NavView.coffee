@@ -11,7 +11,7 @@ define (require)->
       @render()
 
     render: ()->
-      @$("#userNav").html(JST['assets/templates/runtime/userNav'](@model.toJSON()))
+      @$("#userNav").html(JST['source/templates/runtime/userNav'](@model.toJSON()))
 
     events:
       #transition events

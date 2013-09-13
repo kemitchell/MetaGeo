@@ -11,21 +11,19 @@ module.exports = (grunt) ->
   
   # Modify css file injection paths to use 
   cssFilesToInject = cssFilesToInject.map((path) ->
-    "compiled/public/" + path
+    "build/public/" + path
   )
   
   # Get path to core grunt dependencies from Sails
-  depsPath = grunt.option("gdsrc") or "node_modules/sails/node_modules"
-  grunt.loadTasks depsPath + "/grunt-contrib-clean/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-copy/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-jst/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-watch/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-uglify/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-cssmin/tasks"
-  grunt.loadTasks depsPath + "/grunt-contrib-less/tasks"
-  grunt.loadNpmTasks "grunt-sails-linker"
-  grunt.loadNpmTasks "grunt-contrib-jade"
-  grunt.loadNpmTasks "grunt-contrib-coffee"
+  grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-contrib-jade')
+  grunt.loadNpmTasks('grunt-contrib-less')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-cssmin')
+  grunt.loadNpmTasks('grunt-contrib-watch')
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks("grunt-sails-linker")
   
   # Project configuration.
   grunt.initConfig
@@ -35,7 +33,7 @@ module.exports = (grunt) ->
         expand: true
         cwd: "./source/js"
         src: ["**/*.coffee"]
-        dest: "compiled/public/js"
+        dest: "build/public/js"
         ext: ".js"
 
     jade:
@@ -44,21 +42,21 @@ module.exports = (grunt) ->
           data:
             debug: true
         files:
-          "compiled/public/index.html": "source/templates/static/*.jade"
+          "build/public/index.html": "source/templates/static/*.jade"
 
       release:
         options:
           data:
             debug: false
         files:
-          "compiled/public/index.html": "source/templates/static/*.jade"
+          "build/public/index.html": "source/templates/static/*.jade"
 
       client:
         options:
           client: true
           namespace: "JST"
         files:
-          "compiled/public/templates/tmp.js": "source/templates/runtime/*.jade"
+          "build/public/templates/tmp.js": "source/templates/runtime/*.jade"
 
     less:
       dev:
@@ -66,19 +64,19 @@ module.exports = (grunt) ->
           expand: true
           cwd: "source/styles/"
           src: ["*.less"]
-          dest: "compiled/public/styles/"
+          dest: "build/public/styles/"
           ext: ".css"
         ]
 
     uglify:
       dist:
-        src: ["compiled/public/concat/production.js"]
-        dest: "compiled/public/min/production.js"
+        src: ["build/public/concat/production.js"]
+        dest: "build/public/min/production.js"
 
     cssmin:
       dist:
-        src: ["compiled/public/concat/production.css"]
-        dest: "compiled/public/min/production.css"
+        src: ["build/public/concat/production.css"]
+        dest: "build/public/min/production.css"
 
     "sails-linker":
       devStyles:
@@ -86,12 +84,12 @@ module.exports = (grunt) ->
           startTag: "<!--STYLES-->"
           endTag: "<!--STYLES END-->"
           fileTmpl: "<link rel=\"stylesheet\" href=\"%s\">"
-          appRoot: "compiled/public"
+          appRoot: "build/public"
 
         
         # cssFilesToInject defined up top
         files:
-          "compiled/public/**/*.html": cssFilesToInject
+          "build/public/**/*.html": cssFilesToInject
           "views/**/*.html": cssFilesToInject
 
       prodStyles:
@@ -99,11 +97,11 @@ module.exports = (grunt) ->
           startTag: "<!--STYLES-->"
           endTag: "<!--STYLES END-->"
           fileTmpl: "<link rel=\"stylesheet\" href=\"%s\">"
-          appRoot: "compiled/public"
+          appRoot: "build/public"
 
         files:
-          "compiled/public/index.html": ["compiled/public/min/production.css"]
-          "views/**/*.html": ["compiled/public/min/production.css"]
+          "build/public/index.html": ["build/public/min/production.css"]
+          "views/**/*.html": ["build/public/min/production.css"]
 
     
     ###
@@ -115,19 +113,19 @@ module.exports = (grunt) ->
           expand: true
           cwd: "./source"
           src: ["**/*"]
-          dest: "compiled/public"
+          dest: "build/public"
         ]
 
       build:
         files: [
           expand: true
-          cwd: "compiled/public"
+          cwd: "build/public"
           src: ["**/*"]
           dest: "www"
         ]
 
     clean:
-      dev: ["compiled/public/**"]
+      dev: ["build/public/**"]
       build: ["www"]
 
     watch:
