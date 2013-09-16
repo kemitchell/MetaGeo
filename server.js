@@ -3,27 +3,17 @@
 require('coffee-script');
 
 var Hapi = require('hapi');
-var sockjs = require('sockjs');
-var routes = require('./routes');
-var _ = require('lodash');
-
-var config = {},
+routes = require('./routes'),
+_ = require('lodash'),
+db = require('./db'),
+sockets = require('./socket'),
+config = {},
 eventmap = {},
-server,
-db;
+server =  null;
 
 eventmap.start = function(cb){
   
-  var echo = sockjs.createServer();
-  echo.on('connection', function(conn) {
-    conn.on('data', function(message) {
-      conn.write(message);
-    });
-    conn.on('close', function() {});
-  });
-
   //fire up the database
-  db = require('./connection');
   db.start();
 
   server = new Hapi.Server('0.0.0.0', 1337, config);
@@ -43,7 +33,8 @@ eventmap.start = function(cb){
 
   server.addRoutes(routes);
   server.start(function () {
-    echo.installHandlers(server.listener, {prefix:'/echo'});
+    //start sockets
+    sockets.start(server.listener);
     if(_.isFunction(cb)){
       cb();
     }
