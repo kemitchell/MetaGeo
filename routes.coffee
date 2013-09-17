@@ -12,7 +12,8 @@ module.exports = [
   path: "/login"
   config:
     handler: require("./controllers/authController").status
-    auth:true
+    auth:
+      mode: 'try'
 ,
   method: "POST"
   path: "/login"

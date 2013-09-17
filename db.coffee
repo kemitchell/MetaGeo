@@ -4,7 +4,6 @@ mongoose = require('mongoose')
 host = process.env.MONGO_HOST || process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost"
 port =  process.env.MONGO_PORT || process.env.OPENSHIFT_MONGODB_DB_PORT || 27017
 database = process.env.MONGO_DB || process.env.OPENSHIFT_APP_NAME || "em"
-
 password = process.env.MONGO_PASSWORD || process.env.OPENSHIFT_MONGODB_DB_PASSWORD
 user = process.env.MONGO_USERNAME || process.env.OPENSHIFT_MONGODB_DB_USERNAME
 

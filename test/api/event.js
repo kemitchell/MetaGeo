@@ -12,7 +12,6 @@ before(function(done){
     .send({username: testUser, password: password })
     .end(function(err, res){
         self.user_id = res.body.id;
-
         api.post('/login')
         .set('Content-Type', 'application/json')
         .send({username: testUser, password:password })
