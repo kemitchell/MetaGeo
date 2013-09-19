@@ -1,37 +1,31 @@
 #!/bin/env node
 
-require('coffee-script');
-
-var Hapi = require('hapi');
-routes = require('./routes'),
-_ = require('lodash'),
-db = require('./db'),
-sockets = require('./socket'),
-config = {},
-eventmap = {},
-server =  null;
+             require('coffee-script');
+var Hapi =   require('hapi'),
+_ =          require('lodash'),
+routes =     require('./routes'),
+config =     require('./config'),
+db =         require('./db'),
+sockets =    require('./socket'),
+eventmap =   {},
+server =     null;
 
 eventmap.start = function(cb){
-  
   //fire up the database
   db.start();
-
-  server = new Hapi.Server('0.0.0.0', 1337, config);
-
-  server.auth('session', {
-    scheme: 'cookie',
-    password: 'secret sauce',
-    cookie: 'sid-em',
-    isSecure: false
-  });
-
+  //setup the API server
+  server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
+  //set authentication
+  server.auth(config.authentication.name, config.authentication.options);
+  //add some plugins
   server.pack.require({ lout: { endpoint: '/docs' } }, function (err) {
     if (err) {
       console.log('Failed loading plugins');
     }
   });
-
+  //add routes
   server.addRoutes(routes);
+  //start the server
   server.start(function () {
     //start sockets
     sockets.start(server.listener);
@@ -45,7 +39,7 @@ eventmap.stop = function(options, cb){
   var options; 
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
-    options = { timeout: 60 * 1000 };
+    options = config.server.stop;
   }
   server.stop(options, function () {
     db.stop();
