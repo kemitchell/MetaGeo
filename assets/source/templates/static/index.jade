@@ -1,0 +1,69 @@
+doctype 5
+html
+  head
+    title= title
+    //STYLES
+    //STYLES END
+    script(type="text/javascript", data-main="/js/app", src="bower_components/requirejs/require.js")
+  body
+    #map
+
+    #exclusivePanelWrapper.overlay
+      #login.exclusivePanel.hidden
+        form#loginForm
+            fieldset
+              legend LOGIN
+              input(type="text", name='username', placeholder="Username")
+              input(type="password" , name='password', placeholder="Password")
+              input#loginButton(name='login', type='submit', value='Login')
+
+      #register.exclusivePanel.hidden
+        form#registerForm
+          fieldset
+            legend CREATE AN ACCOUNT
+            input(type="text", name='username', placeholder="Username")
+            input(type="email", name='email', placeholder="email")
+            input(type="password", name='password', placeholder="Password")
+            input(type="password", name='passwordRepeat', placeholder="Comfirm Password")
+            input#registerButton(name='register', type='submit', value='Register')
+
+      a(href="#")#closeExclusivePanel
+        | CLOSE
+
+      nav#nav.overlay
+        a#showAddEvent.navPanelLink(href="#addEvent", data-el='addEvent') Add a new event 
+        |,&nbsp;
+        span#userNav
+
+    #addEvent.panel
+      .overlay.panelInner
+        form#addEventForm
+          fieldset
+            legend ADD AN EVENT
+            input(type="text", id="createEventTitle", name='title', placeholder="Title")
+            label Start Date
+              input(type="date", name='startDate')
+            label and Time
+              input(type="time", name='startTime')
+
+            label End Date
+              input(type="date", name='endDate')
+            label and Time
+              input(type="time", name='endTime')
+            label Content
+              textarea(id="createEventContent", name='content')
+            input(type="hidden", name='lat')
+            input(type="hidden", name='lng')
+            input(type="hidden", name='type')
+            input(name='create', type='submit', value='Create')#addEventButton
+
+        a(href="#").closePanel
+          | CLOSE
+
+    #list.panel
+      .overlay.panelInner
+        ul#eventList
+        ul#dayList
+
+        a(href="#").closePanel
+          | CLOSE
