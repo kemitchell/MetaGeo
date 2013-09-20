@@ -2,7 +2,7 @@ var should = require('chai').should(),
   supertest = require('supertest'),
   api = supertest('http://localhost:1337');
 
-describe('/collection', function() {
+describe.skip('/collection', function() {
     var object_id = null;  
 
     it('GET: collection', function(done) {

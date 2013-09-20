@@ -1,42 +1,37 @@
-var request = require("superagent"),
-url = 'http://localhost:1337';
+var config = require("../config"),
+supertest = require('supertest'),
+request = supertest.agent(config.url);
 
 module.exports = {
-
-    cookie: null,
-    object_id: null,
-
-    login: function(testUser, password, cb){
+    userId: null,
+    request: request,
+    login: function(cb){
         var self = this;
-        request.post(url + '/login')
+        this.request.post('/login')
         .set('Content-Type', 'application/json')
-        .send({username: testUser, password: password })
+        .send({username: config.username, password: config.password })
         .end(function(err, res){
-            self.object_id = res.body.id;
+            if(res){
+              self.userId = res.body.id;
+            }
             cb();
         });
     },
-
-    createUser: function(testUser, password, cb){
+    createUser: function(cb){
         var self = this;
-        request.post(url + '/user')
+        this.request.post('/user')
         .set('Content-Type', 'application/json')
-        .send({username: testUser, password: password })
+        .send({username: config.username, password: config.password })
         .end(function(err, res){
-            if( res.error){
-              self.login(testUser, password, cb);
-            }else{
-
-              self.object_id = res.body.id;
-              cb();
+            if(res){
+              self.userId = res.body.id;
             }
+            cb();
         });
-     },
-
+    },
     destroyUser: function(cb){
-        var self = this;
-        request.del(url + '/user/' + self.object_id)
-       .end(function(err, res){
+        this.request.del('/user/' + this.object_id)
+        .end(function(err, res){
             cb();
         });
     }

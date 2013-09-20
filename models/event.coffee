@@ -5,7 +5,6 @@
 gjVal = require("geojson-validation")
 _ = require("lodash")
 mongoose = require('mongoose')
-socket = require('../socket')
 Schema = mongoose.Schema
 
 eventSchema = new Schema
@@ -45,9 +44,6 @@ eventSchema = new Schema
     defaultsTo: 'event'
 
 eventSchema.index({geometry: '2dsphere'})
-eventSchema.post 'validate', (next)->
-  socket.broadcast(this.toJSON())
-  
 
 eventSchema.options.toJSON = {}
 eventSchema.options.toJSON.transform = (doc, ret, options)->

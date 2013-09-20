@@ -7,14 +7,6 @@ options ={
 };
 
 describe('Sockets', function() {
-    before(function(done){
-      server.start(done);
-    });
-
-    after(function(done){
-      server.stop({timeout: 200},done);
-    });
-
     it("should connect", function(done){
       sock =  new SockJS(socketURL);
       sock.onopen = function() {

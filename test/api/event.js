@@ -1,58 +1,43 @@
 var should = require('chai').should(),
-  supertest = require('supertest'),
-  api = supertest.agent('http://localhost:1337'),
-  testUser = "testUser20",
-  password = "password",
-  user_id;
-
-before(function(done){
-    self = this;
-    api.post('/user')
-    .set('Content-Type', 'application/json')
-    .send({username: testUser, password: password })
-    .end(function(err, res){
-        self.user_id = res.body.id;
-        api.post('/login')
-        .set('Content-Type', 'application/json')
-        .send({username: testUser, password:password })
-        .end(function(err, res){
-            done();
-        });
-    });
-
-
-});
-
-
-after(function(done){
-    api.del('/user/' + this.user_id)
-   .end(function(err, res){
-        done();
-    });
-});
+    config = require("../config");
+    utils = require('../utils');
 
 describe('/event', function() {
-    var event_id = null;  
+    var event_id = null;
 
-    describe("POST - create a new event", function(){
+    before(function(done) {
+        utils.createUser(done);
+    });
 
+    after(function(done) {
+        utils.destroyUser(done);
+    });
+
+    describe("POST - create a new event", function() {
         it('create a new event with invalid fields', function(done) {
-            api.post('/event')
-            .expect(400, done)
+            utils.request.post('/event')
+                .end(function(err, res) {
+                res.status.should.equal(401);
+                done();
+            });
+        });
+
+        it('login', function(done) {
+            utils.login(done);
         });
 
         it('create a new event valid fields', function(done) {
-            api.post('/event')
-            .set('Content-Type', 'application/json')
-            .send({ 
-                title: "testEvent3", 
-                content: "testContent", 
+            utils.request.post( '/event')
+                .set('Content-Type', 'application/json')
+                .send({
+                title: "testntr89",
+                content: "testContent",
                 time: new Date(),
                 lat: 34,
                 lng: -90
             })
-            .expect(200)
-            .end(function(err, res){
+                .end(function(err, res) {
+                res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
@@ -62,22 +47,22 @@ describe('/event', function() {
         });
     });
 
-    describe("GET - retrieve an event", function(){
-        it('get with out an ID', function(done) {
-            api.get('/event')
-            .set('Content-Type', 'application/json')
-            .expect(200)
-            .end(function(err, res){
+    describe("GET - retrieve an event", function() {
+        it('get without an ID', function(done) {
+            utils.request.get( '/event')
+                .set('Content-Type', 'application/json')
+                .end(function(err, res) {
+                res.status.should.equal(200);
                 res.body.should.have.property('items').and.be.an('array');
-                done();            
+                done();
             });
         });
 
         it('retreive an event', function(done) {
-            api.get('/event/' + event_id)
-            .set('Content-Type', 'application/json')
-            .expect(200)
-            .end(function(err, res){
+            utils.request.get('/event/' + event_id)
+                .set('Content-Type', 'application/json')
+                .end(function(err, res) {
+                res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
@@ -86,13 +71,17 @@ describe('/event', function() {
         });
     });
 
-    describe("PUT - modiy an event", function(){
+    describe("PUT - modiy an event", function() {
         it('modify an event', function(done) {
-            api.put('/event/' + event_id)
-            .set('Content-Type', 'application/json')
-            .send({title: "testEventModified", "time": new Date(), content: "testContentModified" })
-            .expect(200)
-            .end(function(err, res){
+            utils.request.put('/event/' + event_id)
+                .set('Content-Type', 'application/json')
+                .send({
+                title: "testEventModified",
+                "time": new Date(),
+                content: "testContentModified"
+            })
+                .end(function(err, res) {
+                res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
@@ -101,11 +90,13 @@ describe('/event', function() {
         });
     });
 
-    describe("DELETE - delete an event", function(){
+    describe("DELETE - delete an event", function() {
         it('delete an event', function(done) {
-            api.del('/event/' + event_id)
-            .expect(200, done)
+            utils.request.del('/event/' + event_id)
+                .end(function(err, res) {
+                res.status.should.equal(200);
+                done();
+            });
         });
     });
-
 });

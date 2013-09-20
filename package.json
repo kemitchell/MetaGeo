@@ -21,6 +21,10 @@
     "chai": "~1.7.2",
     "supertest": "~0.7.1",
     "superagent": "~0.15.4",
-    "sockjs-client-node": "0.0.0"
+    "sockjs-client-node": "0.0.0",
+    "mocha": "~1.13.0"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive  --reporter spec ./test/"
   }
 }
