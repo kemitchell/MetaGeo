@@ -11,7 +11,6 @@ Schema = mongoose.Schema
 eventSchema = new Schema
   title:
     type: String
-    unique: true
   actor:
     type: String
   startDateTime:
