@@ -14,7 +14,8 @@
     "pwd": "0.0.2",
     "lodash": "~1.3.1",
     "geojson-validation": "~0.1.3",
-    "sockjs": "~0.3.7"
+    "sockjs": "~0.3.7",
+    "mongoose-createdmodified": "0.0.2"
   },
   "private": "true",
   "devDependencies": {

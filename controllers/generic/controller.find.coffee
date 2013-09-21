@@ -32,8 +32,14 @@ module.exports = (context) ->
         return request.reply(model)
     else
       where = params.where
-      limit = params.limit
-      sort = params.sort or params.order
+      limit = Number(params.limit)
+      sort = Number(params.sort or params.order) or undefined
+      skip = Number(params.skip or params.offset) or undefined
+
+      delete params.sort
+      delete params.order
+      delete params.skip
+      delete params.offset
 
       if _.isString(where)
         where = tryToParseJSON(where)
@@ -41,16 +47,20 @@ module.exports = (context) ->
       unless where
         # Remove undefined params
         # (as well as limit, skip, and sort)
-        # to build a proper where query
         where = _.transform params, (result, param, key)->
           if key not in ['limit', 'offset', 'skip', 'sort'] and Model.schema[key] and param
             if _.isString(param)
               param = tryToParseJSON(param)
             result[key] = param
 
+      #add queries 
+      if context?.options?.queries?
+        for param, query of context.options.queries
+          if params[param]
+            Model = query(params[param], Model, params)
+
       #add limit
       if context?.options?.maxLimit?
-        limit = Number(limit)
         if _.isNaN(limit) or limit > context.options.maxLimit
           limit = context.options.maxLimit
  
@@ -58,24 +68,10 @@ module.exports = (context) ->
       if context?.options?.defaultOrder? and not sort
         sort = context.options.defaultOrder
 
-      options =
-        limit: Number(limit) or undefined
-        skip: Number(params.skip or params.offset) or undefined
-        sort: sort or undefined
-        where: where or undefined
-
-      #add the queury modifier
-      if context?.options?.query?
-        options = context.options.query options, request.query
-
-      Model.find(options.where).sort(options.sort).skip(options.skip).limit(options.limit).exec (err, models) ->
+      Model.find(where).sort(sort).skip(skip).limit(limit).exec (err, models) ->
         # An error occurred 
         if(err)
           return request.reply(err)
-
-        #if sails.config.hooks.pubsub and not Model.silent
-        #  Model.subscribe(req.socket)
-        #  Model.subscribe(req.socket, models)
 
         #Build set of model values
         modelValues = []
@@ -84,6 +80,9 @@ module.exports = (context) ->
 
         #add wrapper
         if context?.options?.result?
-          modelValues = context.options.result(modelValues, options)
+          params.sort = sort
+          params.limit = limit
+          params.skip = skip
+          modelValues = context.options.result(modelValues, params)
 
         return request.reply(modelValues)

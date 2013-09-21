@@ -4,36 +4,58 @@
 ###
 
 _ = require("lodash")
+querystring = require("querystring")
 Event = require("../models/event")
 generic = require('./generic')
 generic(Event)
+
+bboxToPoly = (box)->
+  if not _.isArray(box)
+    box = box.split(',')
+
+  box = box.map (e)->
+    Number(e)
+
+  box = [[[box[0], box[1]],[box[0], box[3]],[box[2], box[3]],[box[2], box[1]],[box[0], box[1]]]]
 
 EventController =
   find: generic.find(
     maxLimit: 30
     defaultOrder: "startDateTime ASC"
-    query: (query, params) ->
-      if params['bbox']
-        query.where.geometry = { $geoWithin :{ $geometry : { type : "Polygon" ,coordinates: [ [ [ -87.885132, 42.051332] , [ -87.533569, 42.051332] , [ -87.533569, 41.71393 ] , [ -87.885132, 42.051332 ] ] ] } } }
-      return query
-    result: (vals, query)->
+    queries:
+      box: (box, Event)->
+        Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}})
+
+      poly: (poly, Event)->
+        Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}})
+
+      near: (near, Event, params)->
+        if params["distance"]
+          distance = params["distance"]
+        else
+          distance = 9000
+        if not _.isArray(near)
+          near = near.split(',')
+        near = near.map (e)->
+          Number(e)
+        Event.find({geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}})
+
+    result: (vals, options)->
       wrapped =
         items: vals
-        query: query
         pages:
           more: true
 
-      if vals.length < query.limit
+      if vals.length < options.limit
         wrapped.more = false
 
-      wrapped.pages.next = wrapped.pages.prev = "?limit=" + query.limit
-      wrapped.pages.next += "&offset=" + ((query.skip or 0) + query.limit)
-      wrapped.pages.prev += "&offset=" + (- query.limit + (query.skip or 0))
+      wrapped.pages.next = "?offset=" + ((options.skip or 0) + options.limit)
+      wrapped.pages.prev = "?offset=" + (- options.limit + (options.skip or 0))
 
-      if not _.isEmpty(wrapped.query.where)
-        where = "&where=" + JSON.stringify(wrapped.query.where)
-        wrapped.pages.next += where
-        wrapped.pages.prev += where
+      delete options.skip
+      where = querystring.stringify(options)
+      wrapped.pages.next += "&" + where
+      wrapped.pages.prev += "&" + where
 
       return wrapped
   )

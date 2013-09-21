@@ -2,9 +2,10 @@
   :: Event
   -> model
 ###
-gjVal = require("geojson-validation")
-_ = require("lodash")
-mongoose = require('mongoose')
+gjVal = require "geojson-validation"
+_ = require "lodash"
+mongoose = require 'mongoose'
+createdModifiedPlugin = require('mongoose-createdmodified').createdModifiedPlugin
 Schema = mongoose.Schema
 
 eventSchema = new Schema
@@ -31,7 +32,7 @@ eventSchema = new Schema
   #if the event has both goe and time info
   complete:
     type: Boolean
-  #doe the event repeat?
+  #does the event repeat?
   repeat:
     type: Boolean
   #if so what is its patteren?
@@ -44,7 +45,7 @@ eventSchema = new Schema
     defaultsTo: 'event'
 
 eventSchema.index({geometry: '2dsphere'})
-
+#add custom defs for JSON
 eventSchema.options.toJSON = {}
 eventSchema.options.toJSON.transform = (doc, ret, options)->
   ret.id = ret._id
@@ -52,7 +53,8 @@ eventSchema.options.toJSON.transform = (doc, ret, options)->
   delete ret.__v
   undefined
 
+eventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
+
 #this could a been automated
 Event = mongoose.model('Event', eventSchema)
 module.exports = Event
-
