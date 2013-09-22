@@ -16,7 +16,7 @@ describe('/event', function() {
     describe("POST - create a new event", function() {
         it('create a new event with invalid fields', function(done) {
             utils.request.post('/event')
-                .end(function(err, res) {
+            .end(function(err, res) {
                 res.status.should.equal(401);
                 done();
             });
@@ -26,17 +26,18 @@ describe('/event', function() {
             utils.login(done);
         });
 
-        it('create a new event valid fields', function(done) {
+        it('create a new event with valid fields', function(done) {
             utils.request.post( '/event')
                 .set('Content-Type', 'application/json')
                 .send({
-                title: "testntr89",
+                title: "testtr89",
                 content: "testContent",
-                time: new Date(),
+                startDateTime: new Date(),
                 lat: 34,
                 lng: -90
             })
-                .end(function(err, res) {
+            .end(function(err, res) {
+                console.log(res.body);
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('title').and.be.an('string');

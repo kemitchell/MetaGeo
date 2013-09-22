@@ -11,10 +11,13 @@ Schema = mongoose.Schema
 eventSchema = new Schema
   title:
     type: String
+    required: true
   actor:
     type: String
+    required: true
   startDateTime:
     type: String
+    required: true
   endDateTime:
     type: String
   geometry:
@@ -24,6 +27,9 @@ eventSchema = new Schema
     #index: '2dsphere'
     #validation: gjVal.isPoint
   content:
+    required: true
+    type: String
+  address:
     type: String
   #what collections was this event posted to
   collections:

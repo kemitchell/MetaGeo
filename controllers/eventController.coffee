@@ -47,10 +47,10 @@ EventController =
           more: true
 
       if vals.length < options.limit
-        wrapped.more = false
+        wrapped.pages.more = false
 
-      wrapped.pages.next = "?offset=" + ((options.skip or 0) + options.limit)
-      wrapped.pages.prev = "?offset=" + (- options.limit + (options.skip or 0))
+      wrapped.pages.next = "offset=" + ((options.skip or 0) + options.limit)
+      wrapped.pages.prev = "offset=" + (- options.limit + (options.skip or 0))
 
       delete options.skip
       where = querystring.stringify(options)
