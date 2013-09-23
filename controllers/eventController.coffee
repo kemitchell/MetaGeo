@@ -27,6 +27,8 @@ EventController =
         Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}})
 
       poly: (poly, Event)->
+        if _.isString(poly)
+          poly = JSON.parse(poly)
         Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}})
 
       near: (near, Event, params)->

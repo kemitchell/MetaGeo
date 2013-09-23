@@ -13,10 +13,9 @@ define (require)->
   class extends EventMap.Panel
     el: "#list"
     initialize: (options)->
-      #if the map has been cleared then don't push new events to it
-      @cleared = false
       @model.on("add", @addEvent, @)
-      @$("#eventList").on("scroll" + console.log("test"))
+      @model.nextPage()
+      @$("#eventList").on("scroll", @onScroll)
 
     renderEvents: ()->
       for event in @model.models
@@ -24,3 +23,12 @@ define (require)->
 
     addEvent: (event)->
       @$("#eventList").append(JST['source/templates/runtime/eventLi'](event.toJSON()))
+
+    onScroll: (e) =>
+      # get more events 100 pixels from the top or bottom
+      triggerPoint = 100
+      el = @$("#eventList")[0]
+      if el.scrollTop + el.clientHeight + triggerPoint > el.scrollHeight
+        @model.nextPage()
+      else if el.scrollTop < triggerPoint
+        @model.prevPage()

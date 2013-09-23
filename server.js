@@ -3,6 +3,7 @@
              require('coffee-script');
 var Hapi =   require('hapi'),
 _ =          require('lodash'),
+qs =         require('qs'),
 routes =     require('./routes'),
 config =     require('./config'),
 db =         require('./db'),
@@ -25,6 +26,15 @@ eventmap.start = function(cb){
   });
   //add routes
   server.addRoutes(routes);
+
+  server.ext('onRequest', function (request, next) {
+    //add nested query strings
+    if(request.method == "get"){ 
+      request.query = qs.parse(request.url.search.slice(1))
+    }
+    next();
+  });
+
   //start the server
   server.start(function () {
     //start sockets

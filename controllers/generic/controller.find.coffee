@@ -6,12 +6,10 @@ module.exports = (context) ->
   _ = require('lodash')
 
   tryToParseJSON = (json)->
-    if(not _.isString(json))
-      return null
     try
       return JSON.parse(json)
     catch e
-      return e
+      return json
 
   (request) ->
     # Grab model class based on the controller this blueprint comes from
@@ -31,7 +29,6 @@ module.exports = (context) ->
 
         return request.reply(model)
     else
-      where = params.where
       limit = Number(params.limit)
       sort = Number(params.sort or params.order) or undefined
       skip = Number(params.skip or params.offset) or undefined
@@ -41,17 +38,19 @@ module.exports = (context) ->
       delete params.skip
       delete params.offset
 
-      if _.isString(where)
-        where = tryToParseJSON(where)
+      #Build the query
+      # Remove undefined params
+      # (as well as limit, skip, and sort)
+      where = _.transform params, (result, param, key)->
+        if key not in ['limit', 'offset', 'skip', 'sort'] and Model.schema.paths[key] and param
+          if _.isString(param)
+            param = tryToParseJSON(param)
 
-      unless where
-        # Remove undefined params
-        # (as well as limit, skip, and sort)
-        where = _.transform params, (result, param, key)->
-          if key not in ['limit', 'offset', 'skip', 'sort'] and Model.schema[key] and param
-            if _.isString(param)
-              param = tryToParseJSON(param)
-            result[key] = param
+          if not _.isString(param)
+            param = _.transform param, (result, prop, key)->
+              result["$"+key] = prop
+
+          result[key] = param
 
       #add queries 
       if context?.options?.queries?
