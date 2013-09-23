@@ -35,35 +35,33 @@ html
         |,&nbsp;
         span#userNav
 
-    #addEvent.panel
-      .overlay.panelInner
-        form#addEventForm
-          fieldset
-            legend ADD AN EVENT
-            input(type="text", id="createEventTitle", name='title', placeholder="Title")
-            label Start Date
-              input(type="date", name='startDate')
-            label and Time
-              input(type="time", name='startTime')
+    #addEvent.panel.overlay
+      form#addEventForm
+        fieldset
+          legend ADD AN EVENT
+          input(type="text", id="createEventTitle", name='title', placeholder="Title")
+          label Start Date
+            input(type="date", name='startDate')
+          label and Time
+            input(type="time", name='startTime')
 
-            label End Date
-              input(type="date", name='endDate')
-            label and Time
-              input(type="time", name='endTime')
-            label Content
-              textarea(id="createEventContent", name='content')
-            input(type="hidden", name='lat')
-            input(type="hidden", name='lng')
-            input(type="hidden", name='type')
-            input(name='create', type='submit', value='Create')#addEventButton
-
-        a(href="#").closePanel
-          | CLOSE
-
-    #list.panel
-      .overlay.panelInner
-        ul#eventList
-        ul#dayList
+          label End Date
+            input(type="date", name='endDate')
+          label and Time
+            input(type="time", name='endTime')
+          label Content
+            textarea(id="createEventContent", name='content')
+          input(type="hidden", name='lat')
+          input(type="hidden", name='lng')
+          input(type="hidden", name='type')
+          input(name='create', type='submit', value='Create')#addEventButton
 
         a(href="#").closePanel
           | CLOSE
+
+    #list.panel.overlay
+      ul#eventList
+      ul#dayList
+
+      a(href="#").closePanel
+        | CLOSE

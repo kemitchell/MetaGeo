@@ -13,10 +13,8 @@ define (require)->
       url: '/events/?'
 
     paginator_ui:
-      firstPage: 0
       currentPge: 0
-      perPage: 3
-      totalPages: 10
+      perPage: 30
       start_date: (new Date()).toISOString()
 
 

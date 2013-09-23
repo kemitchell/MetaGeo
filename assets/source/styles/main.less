@@ -47,17 +47,15 @@ legend{
   width: 50%;
   height: 100%;
   position: fixed;
-  bottom: -100%;
-  pointer-events: none;
+  bottom: -120%;
+  padding: 30px;
+  margin: 10px;
+  //pointer-events: none;
 
   -webkit-transition: all 0.3s ease-in;
   -moz-transition: all 0.3s ease-in;
   -o-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;
-}
-.panelInner{
-  padding: 30px;
-  margin: 10px;
 }
 
 #exclusivePanelWrapper{
@@ -82,9 +80,10 @@ legend{
   right: 10px;
 }
 
-#login{
+#eventList{
+  overflow-y: scroll;
+  max-height: inherit;
 }
-
 //leaflet
 .leaflet-control-zoom{
   top: 10px;

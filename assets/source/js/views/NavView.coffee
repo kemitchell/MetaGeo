@@ -9,9 +9,12 @@ define (require)->
       window.commands.setHandler("hidePanel", @hidePanel, this)
       @model.on('change', @render, @)
       @render()
+      func = _.debounce(_.bind(@onResize, @), 300)
+      $(window).on('resize.'+@cid, func)
 
     render: ()->
       @$("#userNav").html(JST['source/templates/runtime/userNav'](@model.toJSON()))
+      @onResize()
 
     events:
       #transition events
@@ -50,6 +53,10 @@ define (require)->
         @currentView.close()
         delete @currentView
 
-
     panelTransEnd:()->
       console.log("panel trans done")
+
+    onResize:()->
+      height = $(window).height()
+      $(".panel").css("max-height", height-80)
+

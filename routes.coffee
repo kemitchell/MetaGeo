@@ -29,12 +29,6 @@ module.exports = [
     handler: require("./controllers/authController").logout
     auth:true
 ,
-  #user
-  method: "GET"
-  path: "/user"
-  config:
-    handler: require("./controllers/userController").find
-,
   method: "GET"
   path: "/user/{id}"
   config:
@@ -59,12 +53,12 @@ module.exports = [
 ,
   #event
   method: "GET"
-  path: "/events/"
+  path: '/events/'
   config:
     handler: require("./controllers/eventController").find
 ,
   method: "GET"
-  path: "/event"
+  path: "/event/"
   config:
     handler: require("./controllers/eventController").find
 ,

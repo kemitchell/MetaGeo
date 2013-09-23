@@ -8,6 +8,7 @@ controls the event list view
 define (require)->
   EventMap = require('../eventmap')
   require("templates/tmp.js")
+  _ = require("underscore")
 
   class extends EventMap.Panel
     el: "#list"
@@ -15,6 +16,7 @@ define (require)->
       #if the map has been cleared then don't push new events to it
       @cleared = false
       @model.on("add", @addEvent, @)
+      @$("#eventList").on("scroll" + console.log("test"))
 
     renderEvents: ()->
       for event in @model.models
