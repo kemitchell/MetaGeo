@@ -78,7 +78,7 @@ EventController =
         if params['lat'] and params['lng']
           geometry =
             type: "Point"
-            coordinates: [params['lng'], params['lat']]
+            coordinates: [Number(params['lng']),Number(params['lat'])]
         return geometry
     #add custom validation
     validators:
