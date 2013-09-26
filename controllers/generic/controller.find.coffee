@@ -46,7 +46,7 @@ module.exports = (context) ->
           if _.isString(param)
             param = tryToParseJSON(param)
 
-          if not _.isString(param)
+          if _.isObject(param)
             param = _.transform param, (result, prop, key)->
               result["$"+key] = prop
 
