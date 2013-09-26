@@ -1,8 +1,0 @@
-if authenticated
-  a#me.navPanelLink(href="#me", data-el='me')= username 
-  |&nbsp;or&nbsp;
-  a#logout.navPanelLink(href="#logout", data-el='logout') logout
-else
-  a#showLogin.navPanelLink(href="#login", data-el='login') login
-  |&nbsp;or&nbsp;
-  a#showRegister.navPanelLink(href="#register", data-el='register') register
