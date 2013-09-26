@@ -1,2 +1,8 @@
-./build
-./source/bower_components
+dist
+bower_components
+node_modules
+
+*.swp
+*.swn
+*.swm
+*.swo

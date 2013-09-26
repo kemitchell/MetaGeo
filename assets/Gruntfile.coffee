@@ -4,26 +4,15 @@ http://gruntjs.com/configuring-tasks
 ###
 module.exports = (grunt) ->
   
-  ###
-  CSS files to inject in order
-  ###
-  cssFilesToInject = ["styles/*.css", "/bower_components/leaflet/dist/leaflet.css", "/bootstrap/css/bootstrap.css"]
-  
-  # Modify css file injection paths to use 
-  cssFilesToInject = cssFilesToInject.map((path) ->
-    "build/public/" + path
-  )
-  
-  # Get path to core grunt dependencies from Sails
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-jade')
   grunt.loadNpmTasks('grunt-contrib-less')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-clean')
-  grunt.loadNpmTasks("grunt-sails-linker")
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-browserify')
   
   # Project configuration.
   grunt.initConfig
@@ -31,10 +20,15 @@ module.exports = (grunt) ->
     coffee:
       glob_to_multiple:
         expand: true
-        cwd: "./source/js"
+        cwd: "./src"
         src: ["**/*.coffee"]
-        dest: "build/public/js"
+        dest: "dist"
         ext: ".js"
+
+    browserify:
+      dist:
+        files:
+          'dist/bundle.js': ["dist/app.js"]
 
     jade:
       dev:
@@ -42,29 +36,29 @@ module.exports = (grunt) ->
           data:
             debug: true
         files:
-          "build/public/index.html": "source/templates/static/*.jade"
+          "dist/index.html": "templates/static/*.jade"
 
       release:
         options:
           data:
             debug: false
         files:
-          "build/public/index.html": "source/templates/static/*.jade"
+          "dist/index.html": "templates/static/*.jade"
 
       client:
         options:
           client: true
           namespace: "JST"
         files:
-          "build/public/templates/tmp.js": "source/templates/runtime/*.jade"
+          "dist/templates/tmp.js": "templates/runtime/*.jade"
 
     less:
       dev:
         files: [
           expand: true
-          cwd: "source/styles/"
+          cwd: "styles/"
           src: ["*.less"]
-          dest: "build/public/styles/"
+          dest: "dist"
           ext: ".css"
         ]
 
@@ -75,79 +69,30 @@ module.exports = (grunt) ->
 
     cssmin:
       dist:
-        src: ["build/public/concat/production.css"]
-        dest: "build/public/min/production.css"
-
-    "sails-linker":
-      devStyles:
-        options:
-          startTag: "<!--STYLES-->"
-          endTag: "<!--STYLES END-->"
-          fileTmpl: "<link rel=\"stylesheet\" href=\"%s\">"
-          appRoot: "build/public"
-
-        
-        # cssFilesToInject defined up top
-        files:
-          "build/public/**/*.html": cssFilesToInject
-          "views/**/*.html": cssFilesToInject
-
-      prodStyles:
-        options:
-          startTag: "<!--STYLES-->"
-          endTag: "<!--STYLES END-->"
-          fileTmpl: "<link rel=\"stylesheet\" href=\"%s\">"
-          appRoot: "build/public"
-
-        files:
-          "build/public/index.html": ["build/public/min/production.css"]
-          "views/**/*.html": ["build/public/min/production.css"]
-
+        src: ["dist/main.css", "node_modules/leaflet/dist/leaflet.css", "bootstrap/css/bootstrap.css"]
+        dest: "dist/main.min.css"
     
     ###
     File manipulation
     ###
+    clean: ["dist/**"]
+
     copy:
-      dev:
+      main:
         files: [
-          expand: true
-          cwd: "./source"
-          src: ["**/*"]
-          dest: "build/public"
+          {expand: true, src: ['images/**'], dest: 'dist/', filter: 'isFile'},
+          { src: ['robots.txt'], dest: 'dist/'}
         ]
-
-      build:
-        files: [
-          expand: true
-          cwd: "build/public"
-          src: ["**/*"]
-          dest: "www"
-        ]
-
-    clean:
-      dev: ["build/public/**"]
-      build: ["www"]
 
     watch:
       source:
         
         # source to watch:
-        files: ["source/**/*"]
+        files: ["./*"]
         
         # When source are changed:
-        tasks: ["compileAssets", "linkAssets"]
+        tasks: ["compileAssets"]
 
-  
-  # When Sails is lifted:
-  grunt.registerTask "default", ["compileAssets", "linkAssets", "watch"]
-  grunt.registerTask "compileAssets", ["clean:dev", "coffee", "jade:dev", "jade:client", "less:dev", "copy:dev"]
-  
-  # Update link/script/template references in `assets` index.html
-  grunt.registerTask "linkAssets", ["sails-linker:devStyles"]
-  
-  # Build the assets into a web accessible folder.
-  # (handy for phone gap apps, chrome extensions, etc.)
-  grunt.registerTask "build", ["compileAssets", "linkAssets", "clean:build", "copy:build"]
-  
-  # When sails is lifted in production
-  grunt.registerTask "prod", ["clean:dev", "less:dev", "copy:dev", "uglify", "cssmin", "sails-linker:prodStyles"]
+  grunt.registerTask "default", ["compileAssets", "watch"]
+  grunt.registerTask "compileAssets", ["clean", "copy:main", "coffee",  "jade:dev", "jade:client", "browserify", "less:dev", "cssmin"]
+  grunt.registerTask "prod", ["clean:dev", "less:dev", "uglify", "cssmin"]

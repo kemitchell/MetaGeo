@@ -6,7 +6,7 @@ module.exports = [
   config:
     handler:
       directory:
-        path: './assets/build/public'
+        path: './assets/dist'
 ,
   method: "GET"
   path: "/login"
