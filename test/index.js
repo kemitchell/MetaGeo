@@ -1,4 +1,11 @@
-var server = require('../server');
+var server = require('../server'),
+config = {
+  server: {
+    port: 1338 
+  } 
+  
+}
+
 
 before(function(done) {
     server.start(done);

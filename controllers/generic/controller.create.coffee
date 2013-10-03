@@ -16,6 +16,9 @@ module.exports = (context) ->
     else if context.parent.model
       Model = context.parent.model
 
+    if context?.options?.before?
+      context.options.before params
+
     #check for field option
     if context?.options?.fields?
       fields = _.transform context.options.fields, (result, func, index) ->
@@ -37,6 +40,10 @@ module.exports = (context) ->
     model = new Model(params)
 
     model.save (err)->
+
+      if context?.options?.after?
+        model = context.options.after(model, params)
+
       if(err)
         herror = Hapi.error.badRequest(err.message)
         return request.reply herror

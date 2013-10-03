@@ -17,6 +17,9 @@ module.exports = (context) ->
       Model = context.parent.getModel(request)
     else if context.parent.model
       Model = context.parent.model
+
+    if context?.options?.before?
+      context.options.before params
     
     # Otherwise, find and destroy the model in question
 
@@ -25,6 +28,10 @@ module.exports = (context) ->
     #    return res.send 401, 'Not Allowed'
 
     Model.findByIdAndRemove params.id, (err, result) ->
+
+      if context?.options?.after?
+        model = context.options.after(result, params)
+
       if err
         return request.reply err
 

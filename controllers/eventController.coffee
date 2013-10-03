@@ -52,7 +52,7 @@ EventController =
           Number(e)
         Event.find({geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}})
 
-    result: (vals, options)->
+    after: (vals, options)->
       wrapped =
         items: vals
         pages:

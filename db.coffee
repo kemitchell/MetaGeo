@@ -1,6 +1,5 @@
 mongoose = require('mongoose')
 
-
 db = {}
 db.start = (options)->
 

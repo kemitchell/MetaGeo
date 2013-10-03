@@ -21,8 +21,15 @@ module.exports = (context) ->
     else if context.parent.model
       Model = context.parent.model
     
+    if context?.options?.before?
+      context.options.before params
+
     if params.id
       Model.findById(params.id).exec (err, model)->
+
+        if context?.options?.after?
+          model = context.options.after(model, params)
+
         if err
           return request.reply(err)
         if not model
@@ -34,10 +41,6 @@ module.exports = (context) ->
       sort = Number(params.sort or params.order) or undefined
       skip = Number(params.skip or params.offset) or undefined
 
-      delete params.sort
-      delete params.order
-      delete params.skip
-      delete params.offset
 
       #Build the query
       # Remove undefined params
@@ -52,6 +55,7 @@ module.exports = (context) ->
               result["$"+key] = prop
 
           result[key] = param
+
 
       #add queries 
       if context?.options?.queries?
@@ -79,10 +83,11 @@ module.exports = (context) ->
           modelValues.push(model)
 
         #add wrapper
-        if context?.options?.result?
+        if context?.options?.after?
+          #some of the params may have mutated
           params.sort = sort
           params.limit = limit
           params.skip = skip
-          modelValues = context.options.result(modelValues, params)
+          modelValues = context.options.after(modelValues, params)
 
         return request.reply(modelValues)

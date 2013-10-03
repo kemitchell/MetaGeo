@@ -8,7 +8,12 @@ module.exports = (context) ->
   (request) ->
 
     params = _.merge request.params, request.query
+
+    if context?.options?.before?
+      context.options.before params
+
     id = params.id
+
     if not id
       return request.reply '400 Bad Request: No id provided.'
 
@@ -25,6 +30,10 @@ module.exports = (context) ->
 
     # Otherwise find and update the models in question
     Model.findByIdAndUpdate id, request.payload, (err, model) ->
+
+      if context?.options?.after?
+        model = context.options.after(model, params)
+
       if err
         request.reply err
       if not model
