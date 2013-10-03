@@ -13,10 +13,10 @@ module.exports = (context) ->
 
     # Grab model class based on the controller this blueprint comes from 
     # If no model exists, move on to the next middleware
-    if context.globals
-      Model = context.globals
-    else
-      return request.reply '400 Bad Request: No Model provided.'
+    if context.parent.getModel?
+      Model = context.parent.getModel(request)
+    else if context.parent.model
+      Model = context.parent.model
     
     # Otherwise, find and destroy the model in question
 

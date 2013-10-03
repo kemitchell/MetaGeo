@@ -6,8 +6,8 @@
 _ = require('lodash')
 User = require("../models/user")
 Hapi = require('hapi')
-generic = require('./generic')
-generic(User)
+generic = new require('./generic')
+generic.model = User
 pass = require('pwd')
 
 

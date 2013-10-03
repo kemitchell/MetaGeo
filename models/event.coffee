@@ -8,28 +8,19 @@ mongoose = require 'mongoose'
 createdModifiedPlugin = require('mongoose-createdmodified').createdModifiedPlugin
 Schema = mongoose.Schema
 
-eventSchema = new Schema
-  title:
-    type: String
-    required: true
+eventSchema = new Schema({
   actor:
     type: String
     required: true
-  startDateTime:
-    type: String
+  start:
+    type: Date
     required: true
-  endDateTime:
-    type: String
   geometry:
     type:
       type: String
     coordinates: []
-    #index: '2dsphere'
-    #validation: gjVal.isPoint
   content:
     required: true
-    type: String
-  address:
     type: String
   #what collections was this event posted to
   collections:
@@ -37,17 +28,12 @@ eventSchema = new Schema
   #if the event has both goe and time info
   complete:
     type: Boolean
-  #does the event repeat?
-  repeat:
-    type: Boolean
-  #if so what is its patteren?
-  # many to one
-  repeat_id:
-    type: String
-  #what type of event is this
+
   objectType:
     type: String
-    defaultsTo: 'event'
+    default: "mblog"}
+
+  discriminatorKey: 'objectType')
 
 eventSchema.index({geometry: '2dsphere'})
 #add custom defs for JSON

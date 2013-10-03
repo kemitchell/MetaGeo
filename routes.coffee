@@ -7,6 +7,14 @@ module.exports = [
     handler:
       directory:
         path: './assets/dist'
+    description: "servering static files"
+    notes: ["this probably should change to /static/{*}"]
+    tags: ['static']
+,
+  method: "GET"
+  path: "/config"
+  config:
+    handler: require("./controllers/configController")
 ,
   method: "GET"
   path: "/login"
@@ -67,8 +75,28 @@ module.exports = [
   config:
     handler: require("./controllers/eventController").find
 ,
+  method: "GET"
+  path: "/event/{type}/"
+  config:
+    handler: require("./controllers/eventController").find
+    auth:true
+,
+
+  method: "GET"
+  path: "/events/{type}/"
+  config:
+    handler: require("./controllers/eventController").find
+    auth:true
+,
   method: "POST"
   path: "/event"
+  config:
+    handler: require("./controllers/eventController").create
+    auth:true
+,
+
+  method: "POST"
+  path: "/event/{type}"
   config:
     handler: require("./controllers/eventController").create
     auth:true

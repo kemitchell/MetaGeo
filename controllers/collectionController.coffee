@@ -4,8 +4,8 @@
 ###
 
 Collection = require("../models/collection")
-generic = require('./generic')
-generic(Collection)
+generic = new require('./generic')
+generic.model = Collection
 
 CollectionController =
   find: generic.find()

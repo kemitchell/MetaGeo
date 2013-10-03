@@ -32,7 +32,7 @@ describe('/event', function() {
                 .send({
                 title: "testtr89",
                 content: "testContent",
-                startDateTime: new Date(),
+                start: new Date(),
                 lat: 34,
                 lng: -90
             })
@@ -40,7 +40,6 @@ describe('/event', function() {
                 console.log(res.body);
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
-                res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 event_id = res.body.id;
                 done();
@@ -65,7 +64,6 @@ describe('/event', function() {
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
-                res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 done();
             });
@@ -84,7 +82,6 @@ describe('/event', function() {
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
-                res.body.should.have.property('title').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 done();
             });

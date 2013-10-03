@@ -7,15 +7,15 @@ socket = require('../../socket')
 module.exports = (context) ->
 
   _ = require('lodash')
-
   (request) ->
 
-    if context.globals
-      Model = context.globals
-    else
-      return request.reply '400 Bad Request: No Model provided.'
-
     params = _.merge request.params, request.query, request.payload
+
+    if context.parent.getModel?
+      Model = context.parent.getModel(params)
+    else if context.parent.model
+      Model = context.parent.model
+
     #check for field option
     if context?.options?.fields?
       fields = _.transform context.options.fields, (result, func, index) ->

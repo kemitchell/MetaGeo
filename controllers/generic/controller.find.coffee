@@ -14,12 +14,13 @@ module.exports = (context) ->
   (request) ->
     # Grab model class based on the controller this blueprint comes from
     # If no model exists, move on to the next middleware
-    if context.globals?
-      Model = context.globals
-    else
-      return request.reply("no model defined")
+    params = _.merge request.params, request.query, request.payload
+
+    if context.parent.getModel?
+      Model = context.parent.getModel(params)
+    else if context.parent.model
+      Model = context.parent.model
     
-    params = _.merge request.params, request.query
     if params.id
       Model.findById(params.id).exec (err, model)->
         if err

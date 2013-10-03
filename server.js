@@ -11,9 +11,17 @@ sockets =    require('./socket'),
 eventmap =   {},
 server =     null;
 
-eventmap.start = function(cb){
+eventmap.start = function(options, cb){
+
+  var options; 
+  if( _.isFunction(options) && _.isUndefined(cb)){
+    cb = options;
+  }else{
+    _.extend(config, options)
+  }
+
   //fire up the database
-  db.start();
+  db.start(config.mongo);
   //setup the API server
   server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
   //set authentication
@@ -29,9 +37,10 @@ eventmap.start = function(cb){
 
   server.ext('onRequest', function (request, next) {
     //add nested query strings
-    if(request.method == "get"){ 
+    if(request.method == "get" && request.url.pathname != '/docs'){ 
       request.query = qs.parse(request.url.search.slice(1))
     }
+
     next();
   });
 
@@ -51,6 +60,7 @@ eventmap.stop = function(options, cb){
     cb = options;
     options = config.server.stop;
   }
+
   server.stop(options, function () {
     db.stop();
     console.log('Server stopped');
