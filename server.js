@@ -17,7 +17,7 @@ eventmap.start = function(options, cb){
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
   }else{
-    _.extend(config, options)
+    _.merge(config, options)
   }
 
   //fire up the database

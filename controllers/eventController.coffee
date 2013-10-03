@@ -9,7 +9,7 @@ config = require("../config")
 Event = require("../models/event")
 Social = require("../models/social")
 Mblog = require("../models/mblog")
-generic = new require('./generic')
+generic = new require('./generic')()
 
 generic.getModel = (params)->
   if params.type is "social" or params.objectType is "social"

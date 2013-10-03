@@ -6,10 +6,9 @@
 _ = require('lodash')
 User = require("../models/user")
 Hapi = require('hapi')
-generic = new require('./generic')
+generic = new require('./generic')()
 generic.model = User
 pass = require('pwd')
-
 
 UserController =
   find: generic.find()

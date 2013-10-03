@@ -1,16 +1,10 @@
 var server = require('../server'),
-config = {
-  server: {
-    port: 1338 
-  } 
-  
-}
-
+config  = require('./config')
 
 before(function(done) {
-    server.start(done);
+    server.start(config, done);
 });
 
 after(function(done) {
-    server.stop({timeout:200},done);
+    server.stop({timeout:200}, done);
 });

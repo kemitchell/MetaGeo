@@ -3,7 +3,8 @@ CRUD find
 ###
 
 module.exports = (context) ->
-  _ = require('lodash')
+  _ = require 'lodash'
+  Hapi = require 'hapi'
 
   tryToParseJSON = (json)->
     try
@@ -26,10 +27,6 @@ module.exports = (context) ->
 
     if params.id
       Model.findById(params.id).exec (err, model)->
-
-        if context?.options?.after?
-          model = context.options.after(model, params)
-
         if err
           return request.reply(err)
         if not model

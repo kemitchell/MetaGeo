@@ -1,11 +1,12 @@
 var should = require('chai').should(),
   supertest = require('supertest'),
-  api = supertest.agent('http://localhost:1337');
+
+  utils = require('../utils');
+  api = utils.request 
 
 describe('/user', function() {
   var object_id = null; 
-  var testUser = "testUser8";
-  var cookie;
+  var testUser = "testUser9";
 
   describe('POST - a new user', function() {
     it('should return an error invalid fields', function(done) {

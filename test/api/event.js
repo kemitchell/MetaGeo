@@ -49,7 +49,7 @@ describe('/event', function() {
 
     describe("GET - retrieve an event", function() {
         it('get without an ID', function(done) {
-            utils.request.get( '/event')
+            utils.request.get( '/event/')
                 .set('Content-Type', 'application/json')
                 .end(function(err, res) {
                 res.status.should.equal(200);
@@ -59,6 +59,7 @@ describe('/event', function() {
         });
 
         it('retreive an event', function(done) {
+            console.log('/event/' + event_id)
             utils.request.get('/event/' + event_id)
                 .set('Content-Type', 'application/json')
                 .end(function(err, res) {

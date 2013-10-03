@@ -4,7 +4,7 @@
 ###
 
 Collection = require("../models/collection")
-generic = new require('./generic')
+generic = require('./generic')
 generic.model = Collection
 
 CollectionController =
