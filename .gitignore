@@ -31,3 +31,10 @@ nbproject
 *.swn
 *.swm
 *.swo
+
+########################
+# Cloud9 Stuff
+########################
+
+data/
+mongod
