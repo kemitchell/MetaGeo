@@ -5,19 +5,9 @@
 
 _ = require("lodash")
 querystring = require("querystring")
-config = require("../config")
 Event = require("../models/event")
-Social = require("../models/social")
-Mblog = require("../models/mblog")
-generic = new require('./generic')
-
-generic.getModel = (params)->
-  if params.type is "social" or params.objectType is "social"
-    return Social
-  else if params.type is "mblog" or params.objectType is "mblog"
-    return Mblog
-  else
-    return Event
+generic = require('./generic')
+generic(Event)
 
 bboxToPoly = (box)->
   if not _.isArray(box)
@@ -30,8 +20,8 @@ bboxToPoly = (box)->
 
 EventController =
   find: generic.find(
-    maxLimit: config.api.events.maxlimit
-    defaultOrder: config.api.events.defaults.order
+    maxLimit: 30
+    defaultOrder: "startDateTime ASC"
     queries:
       box: (box, Event)->
         Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}})

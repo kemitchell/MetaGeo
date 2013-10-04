@@ -2,20 +2,18 @@
 this a generic create controller
 @class generic create
 ###
-Hapi = require('hapi')
-socket = require('../../socket')
 module.exports = (context) ->
 
   _ = require('lodash')
-  (request) ->
 
-    params = _.merge request.params, request.query, request.payload
+  (req,res,next) ->
 
-    if context.parent.getModel?
-      Model = context.parent.getModel(params)
-    else if context.parent.model
-      Model = context.parent.model
+    if context.globals
+      Model = context.globals
+    else
+      return res.send 400, 'Bad Request: No Model provided.'
 
+    params = _.merge req.params, req.query, req.body
     #check for field option
     if context?.options?.fields?
       fields = _.transform context.options.fields, (result, func, index) ->
@@ -32,13 +30,11 @@ module.exports = (context) ->
         #check if the attrubite actully exsits first
         #if Model._validator.validations[field]?ndRemove
         #  _.extend( Model._validator.validations[field], validator )
-        console.log("to implent")
+        console.log("to implement")
 
     model = new Model(params)
 
-    model.save (err)->
-      if(err)
-        herror = Hapi.error.badRequest(err.message)
-        return request.reply herror
-      socket.broadcast(model.toJSON())
-      return request.reply(model.toJSON())
+    model.save (err,model)->
+      if err
+        return res.send 500, err
+      res.send model

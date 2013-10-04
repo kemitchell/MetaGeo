@@ -11,24 +11,23 @@ module.exports = (context) ->
     catch e
       return json
 
-  (request) ->
+  (req,res,next) ->
     # Grab model class based on the controller this blueprint comes from
     # If no model exists, move on to the next middleware
-    params = _.merge request.params, request.query, request.payload
-
-    if context.parent.getModel?
-      Model = context.parent.getModel(params)
-    else if context.parent.model
-      Model = context.parent.model
+    if context.globals?
+      Model = context.globals
+    else
+      return req.send 500, "no model defined"
     
+    params = _.merge req.params, req.query
     if params.id
       Model.findById(params.id).exec (err, model)->
         if err
-          return request.reply(err)
+          return res.send err
         if not model
-          return request.reply(Hapi.error.notFound("model with id of" + params.id + " not found"))
+          return res.send 404, 'Model not found'
 
-        return request.reply(model)
+        return res.send(model)
     else
       limit = Number(params.limit)
       sort = Number(params.sort or params.order) or undefined
@@ -85,4 +84,4 @@ module.exports = (context) ->
           params.skip = skip
           modelValues = context.options.result(modelValues, params)
 
-        return request.reply(modelValues)
+        return res.send modelValues

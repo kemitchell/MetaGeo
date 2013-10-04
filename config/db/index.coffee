@@ -1,24 +1,23 @@
 mongoose = require('mongoose')
+config =   require('./config')
 
+#build connection string
+if config.mongo.password and config.mongo.user
+  dbURI = "mongodb://" +
+    config.mongo.user + ":" +
+    config.mongo.password + "@" +
+    config.mongo.host +  ":" +
+    config.mongo.port + "/" +
+    config.mongo.database
+else
+  dbURI = "mongodb://" +
+    config.mongo.host + ":" +
+    config.mongo.port + "/" +
+    config.mongo.database
 
 db = {}
-db.start = (options)->
-
-  #build connection string
-  if options.password and options.user
-    dbURI = "mongodb://" +
-      options.user + ":" +
-      options.password + "@" +
-      options.host +  ":" +
-      options.port + "/" +
-      options.database
-  else
-    dbURI = "mongodb://" +
-      options.host + ":" +
-      options.port + "/" +
-      options.database
-
-  mongoose.connect(dbURI)
+db.start = (cb)->
+  mongoose.connect(dbURI,cb)
 
   # CONNECTION EVENTS
   # When successfully connected
@@ -39,7 +38,7 @@ db.start = (options)->
       console.log "Mongoose default connection disconnected through app termination"
       process.exit 0
 
-db.stop = ()->
-  mongoose.disconnect()
+db.stop = (cb)->
+  mongoose.disconnect(cb)
 
 module.exports = db
