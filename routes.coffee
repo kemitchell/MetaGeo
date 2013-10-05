@@ -79,13 +79,11 @@ module.exports = [
   path: "/event/{objectType}/"
   config:
     handler: require("./controllers/eventController").find
-    auth:true
 ,
   method: "GET"
   path: "/events/{objectType}/"
   config:
     handler: require("./controllers/eventController").find
-    auth:true
 ,
   method: "POST"
   path: "/event"
