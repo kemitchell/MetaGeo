@@ -3,12 +3,12 @@
   -> controller
 ###
 
-_ = require('lodash')
-User = require("../models/user")
-Hapi = require('hapi')
+_ = require 'lodash'
+User = require '../models/user'
+Hapi = require 'hapi'
 generic = new require('./generic')()
 generic.model = User
-pass = require('pwd')
+pass = require 'pwd'
 
 UserController =
   find: generic.find()
@@ -20,7 +20,7 @@ UserController =
         herror = Hapi.error.badRequest(err.message)
         return request.reply herror
 
-      params = _.merge(request.payload, {hash: hash, salt: salt })
+      params = _.merge request.payload, {hash: hash, salt: salt }
       # don't save the password
       delete params.password
 

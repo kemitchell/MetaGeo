@@ -36,7 +36,7 @@ eventSchema = new Schema({
   collection : 'events'
   discriminatorKey: 'objectType')
 
-eventSchema.index({geometry: '2dsphere'})
+eventSchema.index {geometry: '2dsphere'}
 #add custom defs for JSON
 eventSchema.options.toJSON = {}
 eventSchema.options.toJSON.transform = (doc, ret, options)->
@@ -48,5 +48,5 @@ eventSchema.options.toJSON.transform = (doc, ret, options)->
 eventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
 
 #this could a been automated
-Event = mongoose.model('Event', eventSchema)
+Event = mongoose.model 'Event', eventSchema
 module.exports = Event

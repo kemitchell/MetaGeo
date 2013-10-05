@@ -13,15 +13,11 @@ module.exports = (context) ->
       context.options.before params
 
     if not params.id
-      return request.reply '400 Bad Request: No id provided.'
+      return request.reply Hapi.error.badRequest 'No id provided.'
 
-    # Grab model class based on the controller this blueprint comes from 
-    # If no model exists, move on to the next middleware
     Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
     if not Model.modelName?
-      Model = Model(params)
-
-    # Otherwise, find and destroy the model in question
+      Model = Model params
 
     #if context.options?.check? and _.isFunction(context.options.check)
     #  if not context.options.check req, result
@@ -30,7 +26,7 @@ module.exports = (context) ->
     Model.findByIdAndRemove params.id, (err, result) ->
 
       if context?.options?.after?
-        model = context.options.after(result, params)
+        model = context.options.after result, params
 
       if err
         return request.reply err
@@ -39,4 +35,4 @@ module.exports = (context) ->
       if result
         return request.reply(result)
 
-      return request.reply(Hapi.error.notFound("model with id of" + params.id + " not found"))
+      return request.reply Hapi.error.notFound("model with id of" + params.id + " not found")

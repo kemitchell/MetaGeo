@@ -3,12 +3,12 @@
   -> controller
 ###
 
-_ = require("lodash")
-querystring = require("querystring")
-config = require("../config")
-Event = require("../models/event")
-Social = require("../models/social")
-Mblog = require("../models/mblog")
+_ = require "lodash"
+querystring = require "querystring"
+config = require "../config"
+Event = require "../models/event"
+Social = require "../models/social"
+Mblog = require "../models/mblog"
 generic = new require('./generic')()
 
 generic.getModel = (params)->
@@ -20,11 +20,11 @@ generic.getModel = (params)->
     return Event
 
 bboxToPoly = (box)->
-  if not _.isArray(box)
-    box = box.split(',')
+  if not _.isArray box
+    box = box.split ','
 
   box = box.map (e)->
-    Number(e)
+    Number e
 
   box = [[[box[0], box[1]],[box[0], box[3]],[box[2], box[3]],[box[2], box[1]],[box[0], box[1]]]]
 
@@ -34,23 +34,23 @@ EventController =
     defaultOrder: config.api.events.defaults.order
     queries:
       box: (box, Event)->
-        Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}})
+        Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
 
       poly: (poly, Event)->
-        if _.isString(poly)
-          poly = JSON.parse(poly)
-        Event.find({geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}})
+        if _.isString poly
+          poly = JSON.parse poly
+        Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
 
       near: (near, Event, params)->
         if params["distance"]
           distance = params["distance"]
         else
           distance = 9000
-        if not _.isArray(near)
-          near = near.split(',')
+        if not _.isArray near
+          near = near.split ','
         near = near.map (e)->
-          Number(e)
-        Event.find({geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}})
+          Number e
+        Event.find {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
 
     after: (vals, options)->
       wrapped =
@@ -65,7 +65,7 @@ EventController =
       wrapped.pages.prev = "offset=" + (- options.limit + (options.skip or 0))
 
       delete options.skip
-      where = querystring.stringify(options)
+      where = querystring.stringify options
       wrapped.pages.next += "&" + where
       wrapped.pages.prev += "&" + where
 
@@ -87,7 +87,7 @@ EventController =
       #check and progagete event s
       collections: (collections) ->
         if collections
-          if not _.isArray(collections)
+          if not _.isArray collections
             #set collections to an array
             collections = [collections]
         return collections
@@ -98,10 +98,6 @@ EventController =
             type: "Point"
             coordinates: [Number(params['lng']),Number(params['lat'])]
         return geometry
-    #add custom validation
-    validators:
-      geometry:
-        required: true
   )
   update: generic.update(
     getModel: (params)->

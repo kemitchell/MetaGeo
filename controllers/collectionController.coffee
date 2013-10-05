@@ -2,9 +2,8 @@
   :: Collection
   -> controller
 ###
-
-Collection = require("../models/collection")
-generic = require('./generic')
+Collection = require "../models/collection"
+generic = require './generic'
 generic.model = Collection
 
 CollectionController =

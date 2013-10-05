@@ -7,9 +7,6 @@ module.exports = [
     handler:
       directory:
         path: './assets/dist'
-    description: "servering static files"
-    notes: ["this probably should change to /static/{*}"]
-    tags: ['static']
 ,
   method: "GET"
   path: "/config"
@@ -60,7 +57,6 @@ module.exports = [
     handler: require("./controllers/userController").delete
     auth:true
 ,
-  #event
   method: "GET"
   path: '/events/'
   config:
@@ -92,7 +88,6 @@ module.exports = [
     handler: require("./controllers/eventController").create
     auth:true
 ,
-
   method: "POST"
   path: "/event/{objectType}"
   config:

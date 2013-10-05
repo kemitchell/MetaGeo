@@ -1,3 +1,3 @@
-config = require("../config")
+config = require "../config"
 module.exports = (request)->
-  @reply(config.api)
+  @reply config.api

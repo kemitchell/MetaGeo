@@ -10,12 +10,16 @@ User = require "../models/user"
 AuthController =
   process: (request) ->
     password = request.payload.password
-    if not request.payload.username or not password
-      return @reply 'Missing username or password'
+    username = request.payload.username
+    if not username
+      return request.reply Hapi.error.badRequest 'Missing UserName'
 
-    User.findOne {username:request.payload.username}, (err, user)->
+    if not password
+      return request.reply Hapi.error.badRequest 'Missing Password'
+
+    User.findOne {username:username}, (err, user)->
       if err
-        return @reply(err)
+        return @reply Hapi.error.internal err
 
       if user
         pass.hash password, user.salt, (err, hash)->
@@ -31,12 +35,12 @@ AuthController =
   status: () ->
     if @auth.isAuthenticated
       @auth.credentials.authenticated = true
-      return @reply(@auth.credentials)
+      return @reply @auth.credentials
     else
-      return @reply({authenticated: false})
+      return @reply {authenticated: false}
 
   logout: () ->
     @auth.session.clear()
-    return @reply({authenticated: false})
+    return @reply {authenticated: false}
 
 module.exports = AuthController
