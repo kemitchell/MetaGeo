@@ -3,8 +3,9 @@
   -> controller
 ###
 
-pass = require('pwd')
-User = require("../models/user")
+pass = require 'pwd'
+Hapi = require 'hapi'
+User = require "../models/user"
 
 AuthController =
   process: (request) ->
@@ -16,11 +17,16 @@ AuthController =
       if err
         return @reply(err)
 
-      pass.hash password, user.salt, (err, hash)->
-        if user.hash is hash.toString()
-          request.auth.session.set(user)
-          return request.reply(user)
-        return request.reply({ message: 'Invalid Password'})
+      if user
+        pass.hash password, user.salt, (err, hash)->
+          if user.hash is hash.toString()
+            request.auth.session.set user
+            return request.reply user
+          #invalid password
+          return request.reply Hapi.error.badRequest 'Invalid User or Password'
+      else
+        #invalid user
+        request.reply Hapi.error.badRequest 'Invalid User or Password'
 
   status: () ->
     if @auth.isAuthenticated

@@ -8,7 +8,7 @@ describe('/user', function() {
   var object_id = null; 
   var testUser = "testUser9";
 
-  describe('POST - a new user', function() {
+  describe('POST', function() {
     it('should return an error invalid fields', function(done) {
         api.post('/user')
         .set('Content-Type', 'application/json')
@@ -18,6 +18,20 @@ describe('/user', function() {
 
     it('should create a new user with valid fields', function(done) {
         api.post('/user')
+        .set('Content-Type', 'application/json')
+        .expect('Content-Type', /json/)
+        .send({username: testUser, password:"testPassword" })
+        .expect(200)
+        .end(function(err, res){
+            res.body.should.have.property('username').and.be.an('string');
+            res.body.should.have.property('id').and.be.an('string');
+            object_id = res.body.id;
+            done();
+        });
+    });
+
+    it('should be able to login', function(done) {
+        api.post('/login')
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
         .send({username: testUser, password:"testPassword" })

@@ -53,7 +53,6 @@ module.exports = [
   config:
     handler: require("./controllers/userController").create
     payload: "parse"
-    auth:true
 ,
   method: "DELETE"
   path: "/user/{id}"
