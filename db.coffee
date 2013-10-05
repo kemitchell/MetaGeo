@@ -1,6 +1,5 @@
-mongoose = require('mongoose')
+mongoose = require 'mongoose'
 
-<<<<<<< HEAD
 db =
   start:(options, cb)->
 
@@ -18,7 +17,7 @@ db =
         options.port + "/" +
         options.database
 
-    mongoose.connect(dbURI, cb)
+    mongoose.connect dbURI, cb
 
     # CONNECTION EVENTS
     # When successfully connected
@@ -40,7 +39,6 @@ db =
         process.exit 0
 
   stop:(cb)->
-    mongoose.disconnect(cb)
-
+    mongoose.disconnect cb
 
 module.exports = db
