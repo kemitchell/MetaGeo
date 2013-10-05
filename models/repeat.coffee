@@ -3,7 +3,7 @@
   -> model
 ###
 
-mongoose = require('mongoose')
+mongoose = require 'mongoose'
 Schema = mongoose.Schema
 
 repeatSchema = new Schema
@@ -18,6 +18,5 @@ repeatSchema = new Schema
   numOfRepeats:
     type: Number
 
-#this could a been automated
-Repeat = mongoose.model('Repeat', userSchema)
+Repeat = mongoose.model 'Repeat', userSchema
 module.exports = Repeat

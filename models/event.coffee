@@ -25,7 +25,7 @@ eventSchema = new Schema({
   #what collections was this event posted to
   collections:
     type: [Number]
-  #if the event has both goe and time info
+  #if the event has both geo and time info
   complete:
     type: Boolean
 
@@ -47,6 +47,5 @@ eventSchema.options.toJSON.transform = (doc, ret, options)->
 
 eventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
 
-#this could a been automated
 Event = mongoose.model 'Event', eventSchema
 module.exports = Event
