@@ -1,7 +1,7 @@
 mongoose = require('mongoose')
 
 db = {}
-db.start = (options)->
+db.start = (options,cb)->
 
   #build connection string
   if options.password and options.user
@@ -17,7 +17,7 @@ db.start = (options)->
       options.port + "/" +
       options.database
 
-  mongoose.connect(dbURI)
+  mongoose.connect(dbURI,cb)
 
   # CONNECTION EVENTS
   # When successfully connected
@@ -38,7 +38,7 @@ db.start = (options)->
       console.log "Mongoose default connection disconnected through app termination"
       process.exit 0
 
-db.stop = ()->
-  mongoose.disconnect()
+db.stop = (cb)->
+  mongoose.disconnect(cb)
 
 module.exports = db

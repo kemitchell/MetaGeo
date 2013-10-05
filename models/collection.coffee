@@ -1,21 +1,14 @@
-###
-  :: Collection
-  -> model
-###
+mongoose = require 'mongoose'
+extend = require 'mongoose-schema-extend'
+aggregateSchema = require './aggregateSchema'
 
-mongoose = require('mongoose')
-Schema = mongoose.Schema
+collectionSchema = aggregateSchema.extend({})
 
-collectionSchema = new Schema
-  title:
-    type: String
-  description:
-    type: String
-  actor:
-    type: String
-  subscription:
-    type: [Number]
-
-#this could a been automated
-Collection = mongoose.model('Collection', userSchema)
-module.exports = Collection
+collectionSchema.pre 'validate', (next)->
+  collection = this
+  if !collection.isModified 'slug'
+    return next();
+  collection.email = collection.slug+'@mapkido.com'
+  return next()
+  
+module.exports = mongoose.model 'Collection', collectionSchema
