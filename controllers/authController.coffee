@@ -10,7 +10,7 @@ AuthController =
   process: (request) ->
     password = request.payload.password
     if not request.payload.username or not password
-      return @replay 'Missing username or password'
+      return @reply 'Missing username or password'
 
     User.findOne {username:request.payload.username}, (err, user)->
       if err
