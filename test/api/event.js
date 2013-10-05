@@ -26,8 +26,27 @@ describe('/event', function() {
             utils.login(done);
         });
 
-        it('create a new event with valid fields', function(done) {
+        it('create a new event with valid fields without an objectType', function(done) {
             utils.request.post( '/event')
+                .set('Content-Type', 'application/json')
+                .send({
+                content: "testContent",
+                lat: 34,
+                lng: -90
+            })
+            .end(function(err, res) {
+                console.log(res.body);
+                res.status.should.equal(200);
+                res.body.should.have.property('actor').and.be.an('string');
+                res.body.should.have.property('content').and.be.an('string');
+                res.body.should.have.property('objectType').and.be.equal('mblog');
+                event_id = res.body.id;
+                done();
+            });
+        });
+
+        it('create a new socail event', function(done) {
+            utils.request.post( '/event/social')
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testtr89",
@@ -41,7 +60,7 @@ describe('/event', function() {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
-                event_id = res.body.id;
+                res.body.should.have.property('objectType').and.be.equal('social');
                 done();
             });
         });

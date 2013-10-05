@@ -1,35 +1,31 @@
 ###
 CRUD update
 ###
+Hapi = require('hapi')
+_ = require('lodash')
 
 module.exports = (context) ->
-
-  _ = require('lodash')
   (request) ->
 
-    params = _.merge request.params, request.query
+    params = _.merge  request.query, request.params
 
     if context?.options?.before?
       context.options.before params
 
-    id = params.id
-
-    if not id
+    if not params.id
       return request.reply '400 Bad Request: No id provided.'
 
     # Grab model class based on the controller this blueprint comes from 
     # If no model exists, move on to the next middleware
-    if context.parent.getModel?
-      Model = context.parent.getModel(request)
-    else if context.parent.model
-      Model = context.parent.model
+    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    if not Model.modelName?
+      Model = Model(params)
     
-
-    #never update the id
-    delete params['id']
+    #for that wierd edge case
+    delete params['objectType']
 
     # Otherwise find and update the models in question
-    Model.findByIdAndUpdate id, request.payload, (err, model) ->
+    Model.findByIdAndUpdate params['id'], request.payload, (err, model) ->
 
       if context?.options?.after?
         model = context.options.after(model, params)
@@ -37,5 +33,5 @@ module.exports = (context) ->
       if err
         request.reply err
       if not model
-        return request.reply(Hapi.error.notFound("model with id of" + params.id + " not found"))
+        return request.reply(Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found"))
       return request.reply(model)

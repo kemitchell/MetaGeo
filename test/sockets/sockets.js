@@ -1,6 +1,6 @@
 var server = require('../../server'),
+config = require("../config"),
 SockJS = require('sockjs-client-node'),
-socketURL = 'http://0.0.0.0:1337/echo';
 options ={
     transports: ['websocket'],
     'force new connection': true
@@ -8,7 +8,7 @@ options ={
 
 describe('Sockets', function() {
     it("should connect", function(done){
-      sock =  new SockJS(socketURL);
+      sock =  new SockJS(config.url + "/echo");
       sock.onopen = function() {
         done();
       };

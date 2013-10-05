@@ -1,26 +1,26 @@
 ###
 CRUD delete
 ###
+Hapi = require('hapi')
+_ = require('lodash')
 
 module.exports = (context) ->
-  Hapi = require('hapi')
-  _ = require('lodash')
  
   (request) ->
-    params = _.merge request.params, request.query
+    params = _.merge  request.query, request.params
+
+    if context?.options?.before?
+      context.options.before params
+
     if not params.id
       return request.reply '400 Bad Request: No id provided.'
 
     # Grab model class based on the controller this blueprint comes from 
     # If no model exists, move on to the next middleware
-    if context.parent.getModel?
-      Model = context.parent.getModel(request)
-    else if context.parent.model
-      Model = context.parent.model
+    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    if not Model.modelName?
+      Model = Model(params)
 
-    if context?.options?.before?
-      context.options.before params
-    
     # Otherwise, find and destroy the model in question
 
     #if context.options?.check? and _.isFunction(context.options.check)

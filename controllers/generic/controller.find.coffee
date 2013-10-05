@@ -1,10 +1,10 @@
 ###
 CRUD find
 ###
+_ = require 'lodash'
+Hapi = require 'hapi'
 
 module.exports = (context) ->
-  _ = require 'lodash'
-  Hapi = require 'hapi'
 
   tryToParseJSON = (json)->
     try
@@ -15,12 +15,11 @@ module.exports = (context) ->
   (request) ->
     # Grab model class based on the controller this blueprint comes from
     # If no model exists, move on to the next middleware
-    params = _.merge request.params, request.query, request.payload
+    params = _.merge request.query, request.payload, request.params
 
-    if context.parent.getModel?
-      Model = context.parent.getModel(params)
-    else if context.parent.model
-      Model = context.parent.model
+    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    if not Model.modelName?
+      Model = Model(params)
     
     if context?.options?.before?
       context.options.before params
@@ -30,7 +29,7 @@ module.exports = (context) ->
         if err
           return request.reply(err)
         if not model
-          return request.reply(Hapi.error.notFound("model with id of" + params.id + " not found"))
+          return request.reply(Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found"))
 
         return request.reply(model)
     else

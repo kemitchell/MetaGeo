@@ -5,7 +5,7 @@ module.exports = {
   mongo:{
     database: "test" 
   },
-  url: 'http://localhost:1338',
+  url: 'http://0.0.0.0:1338',
   username: "testUser21",
   password: "password"
 }

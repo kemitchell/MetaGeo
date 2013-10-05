@@ -12,9 +12,9 @@ Mblog = require("../models/mblog")
 generic = new require('./generic')()
 
 generic.getModel = (params)->
-  if params.type is "social" or params.objectType is "social"
+  if params.objectType is "social"
     return Social
-  else if params.type is "mblog" or params.objectType is "mblog"
+  else if params.objectType is "mblog"
     return Mblog
   else
     return Event
@@ -72,6 +72,14 @@ EventController =
       return wrapped
   )
   create: generic.create(
+
+    getModel: (params)->
+      if params.objectType is "social"
+        return Social
+      else if params.objectType is "mblog"
+        return Mblog
+      return Mblog
+
     fields:
       # give the event an author
       actor: (actor, params, req) ->
@@ -95,7 +103,14 @@ EventController =
       geometry:
         required: true
   )
-  update: generic.update()
+  update: generic.update(
+    getModel: (params)->
+      if params.objectType is "social"
+        return Social
+      else if params.objectType is "mblog"
+        return Mblog
+      return Mblog
+  )
   delete: generic.delete(
     check: (req, model) ->
       #check if the user who created the object is the one deleting it

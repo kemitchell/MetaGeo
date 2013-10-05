@@ -33,6 +33,7 @@ eventSchema = new Schema({
     type: String
     default: "mblog"}
 
+  collection : 'events'
   discriminatorKey: 'objectType')
 
 eventSchema.index({geometry: '2dsphere'})
