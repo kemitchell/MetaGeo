@@ -53,11 +53,13 @@ module.exports = [
   config:
     handler: require("./controllers/userController").create
     payload: "parse"
+    auth:true
 ,
   method: "DELETE"
   path: "/user/{id}"
   config:
     handler: require("./controllers/userController").delete
+    auth:true
 ,
   #event
   method: "GET"
@@ -102,9 +104,11 @@ module.exports = [
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").update
+    auth:true
 ,
   method: "DELETE"
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").delete
+    auth:true
 ]
