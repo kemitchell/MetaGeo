@@ -26,21 +26,15 @@ eventmap.start = function(options, cb){
   server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
   //set authentication
   server.auth(config.authentication.name, config.authentication.options);
-  //add some plugins
-  server.pack.require({ lout: { endpoint: '/docs' } }, function (err) {
-    if (err) {
-      console.log('Failed loading plugins');
-    }
-  });
+
   //add routes
   server.addRoutes(routes);
 
   server.ext('onRequest', function (request, next) {
     //add nested query strings
-    if(request.method == "get" && request.url.pathname != '/docs'){ 
+    if(request.method == "get"){ 
       request.query = qs.parse(request.url.search.slice(1))
     }
-
     next();
   });
 
