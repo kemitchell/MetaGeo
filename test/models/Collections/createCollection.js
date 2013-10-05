@@ -6,7 +6,7 @@ var should = require('chai').should();
 var Collection = require('../../../models/collection');
 var mongoose = require('mongoose');
 
-describe('Create Collection',function(){
+describe.skip('Create Collection',function(){
     before(function(done){
         require('../../../db').start(mongoConf,done);
     });

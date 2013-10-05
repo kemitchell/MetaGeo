@@ -76,7 +76,7 @@ var createFixtures = function(cb){
     });
 }
 
-describe('Create Collection',function(){
+describe.skip('Create Collection',function(){
     before(function(done){
         this.timeout(5000);
         require('../../../db').start(mongoConf,function(){

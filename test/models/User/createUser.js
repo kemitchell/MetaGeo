@@ -4,7 +4,7 @@ var should = require('chai').should();
 var User = require('../../../models/user');
 var mongoose = require('mongoose');
 
-describe('Create User',function(){
+describe.skip('Create User',function(){
     before(function(done){
         require('../../../db').start(mongoConf,done);
     });
