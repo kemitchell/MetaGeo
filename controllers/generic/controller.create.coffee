@@ -13,7 +13,7 @@ module.exports = (context) ->
     params = _.merge request.query, request.payload, request.params
     Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
     if not Model.modelName?
-      Model = Model(params)
+      Model = Model params
 
     if context?.options?.before?
       context.options.before params

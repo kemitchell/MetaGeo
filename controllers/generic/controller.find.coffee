@@ -35,12 +35,11 @@ module.exports = (context) ->
       sort = Number(params.sort or params.order) or undefined
       skip = Number(params.skip or params.offset) or undefined
 
-
       #Build the query
       #Remove undefined params
       #(as well as limit, skip, and sort)
       where = _.transform params, (result, param, key)->
-        if key not in ['limit', 'offset', 'skip', 'sort'] and Model.schema.paths[key] and param
+        if key not in ['limit', 'offset', 'skip', 'sort'] and param
           if _.isString param
             param = tryToParseJSON param
 
@@ -50,7 +49,6 @@ module.exports = (context) ->
 
           result[key] = param
 
-
       #add queries 
       if context?.options?.queries?
         for param, query of context.options.queries
@@ -59,7 +57,7 @@ module.exports = (context) ->
 
       #add limit
       if context?.options?.maxLimit?
-        if _.isNaN limit or limit > context.options.maxLimit
+        if _.isNaN(limit) or limit > context.options.maxLimit
           limit = context.options.maxLimit
  
       #add oder

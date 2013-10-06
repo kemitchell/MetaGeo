@@ -30,7 +30,7 @@ bboxToPoly = (box)->
 
 EventController =
   find: generic.find(
-    maxLimit: config.api.events.maxlimit
+    maxLimit: config.api.events.maxLimit
     defaultOrder: config.api.events.defaults.order
     queries:
       box: (box, Event)->
