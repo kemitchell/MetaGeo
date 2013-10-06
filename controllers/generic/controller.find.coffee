@@ -39,7 +39,7 @@ module.exports = (context) ->
       #Remove undefined params
       #(as well as limit, skip, and sort)
       where = _.transform params, (result, param, key)->
-        if key not in ['limit', 'offset', 'skip', 'sort'] and param
+        if key not in ['limit', 'offset', 'skip', 'sort'] and not context.options.queries[key] and param
           if _.isString param
             param = tryToParseJSON param
 
