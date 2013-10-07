@@ -1,14 +1,14 @@
 #!/bin/env node
-
-             require('coffee-script');
-var Hapi =   require('hapi'),
+//in the begining a varible was declared and there was a varible. The Programmer saw that the varible was good.
+var eventmap =   {},
+cs =         require('coffee-script'),
+Hapi =       require('hapi'),
 _ =          require('lodash'),
 qs =         require('qs'),
 routes =     require('./routes'),
 config =     require('./config'),
 db =         require('./db'),
 sockets =    require('./socket'),
-eventmap =   {},
 server =     null;
 
 eventmap.start = function(options, cb){

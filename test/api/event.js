@@ -5,12 +5,8 @@ var should = require('chai').should(),
 describe('/event', function() {
     var event_id = null;
 
-    before(function(done) {
-        utils.createUser(done);
-    });
-
-    after(function(done) {
-        utils.destroyUser(done);
+    after(function(done){
+        utils.logout(done);
     });
 
     describe("POST - create a new event", function() {
@@ -35,7 +31,6 @@ describe('/event', function() {
                 lng: -90
             })
             .end(function(err, res) {
-                console.log(res.body);
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
@@ -56,7 +51,6 @@ describe('/event', function() {
                 lng: -90
             })
             .end(function(err, res) {
-                console.log(res.body);
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');

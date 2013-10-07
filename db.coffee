@@ -18,7 +18,6 @@ db =
         options.database
 
     mongoose.connect dbURI, cb
-
     # CONNECTION EVENTS
     # When successfully connected
     mongoose.connection.on "connected", ->

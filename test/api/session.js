@@ -1,19 +1,8 @@
 var should = require('chai').should(),
-    utils = require('../utils');
-    config = require('../config')
-
+    utils = require('../utils'),
+    config = require('../config');
 
 describe('/login', function() {
-
-    before(function(done) {
-        //start the server and create a test user
-        utils.createUser(done);
-    });
-
-    after(function(done) {
-        //kill the server; delete the test user
-        utils.destroyUser(done);
-    });
 
     describe('POST - create a new sesssion', function() {
         it('should create a new session', function(done) {

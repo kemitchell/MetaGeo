@@ -6,7 +6,7 @@ var should = require('chai').should(),
 
 describe('/user', function() {
   var object_id = null; 
-  var testUser = "testUser9";
+  var testUser = "testUser19";
 
   describe('POST', function() {
     it('should return an error invalid fields', function(done) {
