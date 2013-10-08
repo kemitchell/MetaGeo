@@ -3,7 +3,8 @@ var should = require('chai').should(),
     utils = require('../utils');
 
 describe('/event', function() {
-    var event_id = null;
+    var mblog_event_id = null;
+    var social_event_id = null;
 
     after(function(done){
         utils.logout(done);
@@ -35,7 +36,7 @@ describe('/event', function() {
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 res.body.should.have.property('objectType').and.be.equal('mblog');
-                event_id = res.body.id;
+                mblog_event_id = res.body.id;
                 done();
             });
         });
@@ -44,7 +45,7 @@ describe('/event', function() {
             utils.request.post( '/event/social')
                 .set('Content-Type', 'application/json')
                 .send({
-                title: "testtr89",
+                title: "testtr89t",
                 content: "testContent",
                 start: new Date(),
                 lat: 34,
@@ -55,6 +56,7 @@ describe('/event', function() {
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 res.body.should.have.property('objectType').and.be.equal('social');
+                social_event_id = res.body.id;
                 done();
             });
         });
@@ -72,8 +74,7 @@ describe('/event', function() {
         });
 
         it('retreive an event', function(done) {
-            console.log('/event/' + event_id)
-            utils.request.get('/event/' + event_id)
+            utils.request.get('/event/' + mblog_event_id)
                 .set('Content-Type', 'application/json')
                 .end(function(err, res) {
                 res.status.should.equal(200);
@@ -86,7 +87,7 @@ describe('/event', function() {
 
     describe("PUT - modiy an event", function() {
         it('modify an event', function(done) {
-            utils.request.put('/event/' + event_id)
+            utils.request.put('/event/' + mblog_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",
@@ -102,9 +103,17 @@ describe('/event', function() {
         });
     });
 
-    describe("DELETE - delete an event", function() {
-        it('delete an event', function(done) {
-            utils.request.del('/event/' + event_id)
+    describe("DELETE", function() {
+        it('delete a mblog event', function(done) {
+            utils.request.del('/event/' + mblog_event_id)
+                .end(function(err, res) {
+                res.status.should.equal(200);
+                done();
+            });
+        });
+
+        it('delete a social event', function(done) {
+            utils.request.del('/event/' + social_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 done();

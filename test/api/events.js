@@ -19,4 +19,17 @@ describe('/events/', function() {
             done();
         });
     });
+
+    it('get a list of events', function(done) {
+        var bounds = config.test.bounds2
+        bounds = bounds[0][0] + "," + bounds[0][1] + "," + bounds[1][0] + "," + bounds[1][1]
+        utils.request.get('/events/?box='+bounds)
+            .set('Content-Type', 'application/json')
+            .end(function(err, res) {
+            res.status.should.equal(200);
+            res.body.items.should.be.an("array");
+            res.body.items.length.should.equal(30)
+            done();
+        });
+    });
 });
