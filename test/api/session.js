@@ -9,8 +9,8 @@ describe('/login', function() {
             utils.request.post('/login')
             .set('Content-Type', 'application/json')
             .send({
-                username: config.username,
-                password: config.password
+                username: config.test.username,
+                password: config.test.password
             })
             .end(function(err, res) {
                 res.body.should.have.property('username').and.be.an('string');

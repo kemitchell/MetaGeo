@@ -8,7 +8,7 @@ options ={
 
 describe('Sockets', function() {
     it("should connect", function(done){
-      sock =  new SockJS(config.url + "/echo");
+      sock =  new SockJS(config.test.url + "/echo");
       sock.onopen = function() {
         done();
       };

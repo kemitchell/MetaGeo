@@ -1,7 +1,7 @@
 var config = require("../config"),
     supertest = require('supertest'),
     async = require("async"),
-    request = supertest.agent(config.url);
+    request = supertest.agent(config.test.url);
 
 module.exports = {
     userId: null,
@@ -19,8 +19,8 @@ module.exports = {
         this.request.post('/login')
             .set('Content-Type', 'application/json')
             .send({
-            username: config.username,
-            password: config.password
+            username: config.test.username,
+            password: config.test.password
         })
         .end(function(err, res) {
             if (res) {
@@ -34,8 +34,8 @@ module.exports = {
         this.request.post('/user')
             .set('Content-Type', 'application/json')
             .send({
-            username: config.username,
-            password: config.password
+            username: config.test.username,
+            password: config.test.password
         })
             .end(function(err, res) {
             if (res) {
@@ -55,7 +55,7 @@ module.exports = {
             function(callback){
               async.whilst(
                 function(){ 
-                    return count < num;
+                    return count < num+1;
                 },
                 function(callback){
                   count++;

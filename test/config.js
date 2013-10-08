@@ -6,11 +6,11 @@ module.exports = {
   mongo:{
     database: "test" 
   },
-  url: 'http://localhost:1338',
-  username: "testUser21",
-  password: "password",
   test:{
-    bounds: [[42.051332, -87.885132],[41.71393, -87.533569]],
-    bounds2: [[42.051332, -87.885132],[41.71393, -87.533569]]
+    url: 'http://localhost:1338',
+    username: "testUser21",
+    password: "password",
+    boundsA: [[42.051332, -87.885132],[41.71393, -87.533569]],
+    boundsB: [[43.051332, -88.885132],[42.71393, -88.533569]]
   }
 }
