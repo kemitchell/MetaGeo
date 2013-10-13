@@ -10,5 +10,4 @@
 
 ### Test API
 * Make sure redis and mongdb are running
-* start server: `node app.js`
 * run test: `npm test`   
