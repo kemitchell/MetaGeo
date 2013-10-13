@@ -3,6 +3,7 @@ this is a generic create controller
 @class generic create
 ###
 Hapi = require 'hapi'
+mongoose = require 'mongoose'
 socket = require '../../socket'
 _ = require 'lodash'
 
@@ -34,12 +35,18 @@ module.exports = (context) ->
     model = new Model params
 
     model.save (err)->
-
       if context?.options?.after?
         model = context.options.after(model, params)
 
       if err
-        herror = Hapi.error.badRequest err.message
-        return request.reply herror
+        if err instanceof mongoose.Error
+          #moongoose error, probably validation
+          herror = Hapi.error.badRequest err.toString()
+          return request.reply herror
+        else
+          #mongo db itself is erroring
+          herror = Hapi.error.internal err
+          return request.reply herror
+
       socket.broadcast model.toJSON()
       return request.reply model.toJSON()

@@ -28,8 +28,6 @@ userSchema.options.toJSON.transform = (doc, ret, options)->
   delete ret.salt
   undefined
 
-#this could a been automated
 User = mongoose.model('User', userSchema)
 
 module.exports = User
-

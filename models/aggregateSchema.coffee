@@ -10,7 +10,7 @@ aggregateSchema = mongoose.Schema {
     type: String
     required: true
   description:
-    type: String 
+    type: String
   slug:
     type: String
     required: true

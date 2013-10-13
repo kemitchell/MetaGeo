@@ -25,6 +25,8 @@ AuthController =
         pass.hash password, user.salt, (err, hash)->
           if user.hash is hash.toString()
             request.auth.session.set user
+            user = user.toJSON()
+            user.authenticated = true
             return request.reply user
           #invalid password
           return request.reply Hapi.error.badRequest 'Invalid User or Password'

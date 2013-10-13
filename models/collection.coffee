@@ -7,7 +7,7 @@ collectionSchema = aggregateSchema.extend({})
 collectionSchema.pre 'validate', (next)->
   collection = this
   if !collection.isModified 'slug'
-    return next();
+    return next()
   collection.email = collection.slug+'@mapkido.com'
   return next()
   
