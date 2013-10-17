@@ -32,7 +32,7 @@ module.exports = (context) ->
         return request.reply model
     else
       limit = Number params.limit
-      sort = Number(params.sort or params.order) or undefined
+      sort = params.sort or params.order or undefined
       skip = Number(params.skip or params.offset) or undefined
 
       #Build the query
