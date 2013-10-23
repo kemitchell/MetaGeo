@@ -27,10 +27,7 @@ npm-debug.log
 .netbeans
 nbproject
 .idea
-*.swp
-*.swn
-*.swm
-*.swo
+*.sw?
 
 ########################
 # Cloud9 Stuff
