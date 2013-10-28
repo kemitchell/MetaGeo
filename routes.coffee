@@ -1,6 +1,8 @@
 Types = require("hapi").types
 
 module.exports = [
+  #static assests
+  #TODO: change to /static maybe
   method: "GET"
   path: "/{path*}"
   config:
@@ -8,11 +10,13 @@ module.exports = [
       directory:
         path: './assets/dist'
 ,
+  #config
   method: "GET"
   path: "/config"
   config:
     handler: require("./controllers/configController")
 ,
+  #auth
   method: "GET"
   path: "/login"
   config:
@@ -34,16 +38,25 @@ module.exports = [
     handler: require("./controllers/authController").logout
     auth: true
 ,
+  #user
   method: "GET"
   path: "/user/{id}"
   config:
     handler: require("./controllers/userController").find
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "PUT"
   path: "/user/{id}"
   config:
     handler: require("./controllers/userController").update
     payload: "parse"
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "POST"
   path: "/user"
@@ -56,12 +69,18 @@ module.exports = [
   config:
     handler: require("./controllers/userController").delete
     auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
+  #event collections
   method: "GET"
   path: '/events/'
   config:
     handler: require("./controllers/eventController").find
 ,
+  #event CRUD
   method: "GET"
   path: "/event/"
   config:
@@ -71,6 +90,10 @@ module.exports = [
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").find
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "GET"
   path: "/event/{objectType}/"
@@ -99,12 +122,20 @@ module.exports = [
   config:
     handler: require("./controllers/eventController").update
     auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "DELETE"
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").delete
     auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
 
   #lists
@@ -113,6 +144,16 @@ module.exports = [
   config:
     handler: require("./controllers/listController").create
     auth: true
+,
+  method: "GET"
+  path: "/l/{id}"
+  config:
+    handler: require("./controllers/listController").find
+    auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "PUT"
   path: "/l/{id}"
@@ -125,4 +166,8 @@ module.exports = [
   config:
     handler: require("./controllers/listController").delete
     auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ]

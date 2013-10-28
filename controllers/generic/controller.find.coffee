@@ -22,6 +22,7 @@ module.exports = (context) ->
     if context?.options?.before?
       context.options.before params
 
+    #find one
     if params.id
       Model.findById(params.id).exec (err, model)->
         if err
@@ -31,6 +32,7 @@ module.exports = (context) ->
 
         return request.reply model
     else
+      #find many
       limit = Number params.limit
       sort = params.sort or params.order or undefined
       skip = Number(params.skip or params.offset) or undefined

@@ -7,7 +7,7 @@ module.exports =
     events:
       maxLimit: 30
       defaults:
-        order: "start ASC"
+        order: "start"
         limit: 30
 
   server:

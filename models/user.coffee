@@ -12,15 +12,16 @@ UserSchema = AggregateSchema.extend
     type: String
     unique: true
     sparse: true
+    required: true
   salt:
     type: String
   hash:
     type: String
   email:
     type: String
-    required: true
     unique: true
     sparse: true
+    required: true
 
 UserSchema.options.toJSON =
   transform: (doc, ret, options)->

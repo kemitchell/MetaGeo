@@ -6,7 +6,9 @@ var config = require("../config"),
 module.exports = {
     userId: null,
     request: request,
-
+    randomDate: function(start, end) {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+    },
     logout: function(cb) {
         console.log("logout")
         this.request.del('/login')
@@ -48,10 +50,10 @@ module.exports = {
     createRandomEvents: function(num, bounds, cb) {
         var count = 0;
         request = this.request;
-        that = this
+        _this = this
         async.series([
             function(callback){
-                that.login.bind(that)(callback);
+                _this.login.bind(_this)(callback);
             },
             function(callback){
               async.whilst(
@@ -67,7 +69,7 @@ module.exports = {
                       .send({
                           title: "test_" + count,
                           content: "testContent",
-                          start: new Date(),
+                          start: _this.randomDate(new Date(), new Date(2099,0,1)),
                           lat: x,
                           lng: y
                       })
@@ -85,7 +87,6 @@ module.exports = {
             }
         ],
         function(err, results){
-            console.log("end")
             cb();
         }
       );

@@ -10,5 +10,13 @@ ListSchema.pre 'validate', (next)->
     return next()
   collection.email = collection.slug+'@mapkido.com'
   return next()
-###  
-module.exports = mongoose.model 'Collection', ListSchema
+###
+
+ListSchema.options.toJSON =
+  transform: (doc, ret, options)->
+    ret.id = ret._id
+    delete ret._id
+    delete ret.__v
+    undefined
+
+module.exports = mongoose.model 'List', ListSchema
