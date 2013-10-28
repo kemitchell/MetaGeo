@@ -2,16 +2,16 @@
   :: Collection
   -> controller
 ###
-Collection = require "../models/collection"
-generic = require './generic'
-generic.model = Collection
+List = require "../models/list"
+generic = new require('./generic')()
+generic.model = List
 
-CollectionController =
+ListController =
   find: generic.find()
   create: generic.create(
     fields:
-      actor: (user, parmas, req) ->
-        return req.user.id
+      actor: (actor, params, req) ->
+        return req.auth.credentials.id
   )
   update: generic.update()
   delete: generic.delete(
@@ -22,4 +22,4 @@ CollectionController =
       return false
   )
 
-module.exports = CollectionController
+module.exports = ListController

@@ -65,6 +65,7 @@ EventController =
       wrapped.pages.prev = "offset=" + (- options.limit + (options.skip or 0))
 
       delete options.skip
+      delete options.offset
       where = querystring.stringify options
       wrapped.pages.next += "&" + where
       wrapped.pages.prev += "&" + where

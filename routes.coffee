@@ -105,4 +105,24 @@ module.exports = [
   config:
     handler: require("./controllers/eventController").delete
     auth: true
+,
+
+  #lists
+  method: "POST"
+  path: "/l"
+  config:
+    handler: require("./controllers/listController").create
+    auth: true
+,
+  method: "PUT"
+  path: "/l/{id}"
+  config:
+    handler: require("./controllers/listController").update
+    auth: true
+,
+  method: "DELETE"
+  path: "/l/{id}"
+  config:
+    handler: require("./controllers/listController").delete
+    auth: true
 ]

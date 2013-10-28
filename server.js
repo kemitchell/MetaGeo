@@ -50,7 +50,7 @@ eventmap.start = function(options, cb){
   //write errors to console
   server.on('log', function (event, tags) {
     if (tags.error) {
-      //console.log(event);
+      console.log(event);
     }
   });
 

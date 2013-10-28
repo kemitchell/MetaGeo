@@ -10,8 +10,8 @@ extend = require 'mongoose-schema-extend'
 UserSchema = AggregateSchema.extend
   username:
     type: String
-    required: true
     unique: true
+    sparse: true
   salt:
     type: String
   hash:
@@ -20,6 +20,7 @@ UserSchema = AggregateSchema.extend
     type: String
     required: true
     unique: true
+    sparse: true
 
 UserSchema.options.toJSON =
   transform: (doc, ret, options)->
