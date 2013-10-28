@@ -3,31 +3,23 @@
   -> model
 ###
 
-mongoose = require('mongoose')
+mongoose = require 'mongoose'
+Schema = mongoose.Schema
 
-aggregateSchema = mongoose.Schema {
+AggregateSchema = Schema {
   title:
     type: String
     required: true
-  description:
-    type: String
   slug:
     type: String
-    required: true
-    unique: true
-  email:
+  description:
     type: String
-    required: true
+  aggregateEmail:
+    type: String
     unique: true
-},collection:'aggregate',discriminatorKey: '_type'
+    sparse: true
+  subscriptions: [{aggregateId:Schema.Types.ObjectId, name:String, filter:String}]
 
-aggregateSchema.pre 'save', (next)->
-    aggregate = this
-    if !aggregate.isModified 'slug'
-        return next()
-    valid = /^[\w]+$/.test aggregate.slug
-    if !valid
-        return next(new Error 'The slug is in an invalid format')
-    return next()
+},collection: 'Aggregates', discriminatorKey: 'objectType'
 
-module.exports = aggregateSchema
+module.exports = AggregateSchema

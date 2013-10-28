@@ -35,7 +35,7 @@ describe('/event', function() {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
-                res.body.should.have.property('objectType').and.be.equal('mblog');
+                res.body.should.have.property('objectType').and.be.equal('Mblog');
                 mblog_event_id = res.body.id;
                 done();
             });
@@ -55,7 +55,7 @@ describe('/event', function() {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
-                res.body.should.have.property('objectType').and.be.equal('social');
+                res.body.should.have.property('objectType').and.be.equal('Social');
                 social_event_id = res.body.id;
                 done();
             });

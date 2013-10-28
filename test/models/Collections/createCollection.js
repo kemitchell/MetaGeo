@@ -3,7 +3,7 @@
 require('coffee-script')
 var mongoConf = require('../../config').mongo;
 var should = require('chai').should();
-var Collection = require('../../../models/collection');
+var Collection = require('../../../models/list');
 var mongoose = require('mongoose');
 
 describe.skip('Create Collection',function(){

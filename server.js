@@ -38,6 +38,22 @@ eventmap.start = function(options, cb){
     next();
   });
 
+  //log error
+  server.ext('onPreResponse', function (request, next) {
+    var response = request.response();
+    if (response.isBoom) {
+      server.log(['error'], response.message);
+    }
+    return next();
+  });
+
+  //write errors to console
+  server.on('log', function (event, tags) {
+    if (tags.error) {
+      //console.log(event);
+    }
+  });
+
   //start the server
   server.start(function () {
     //start sockets

@@ -35,7 +35,8 @@ module.exports = {
             .set('Content-Type', 'application/json')
             .send({
             username: config.test.username,
-            password: config.test.password
+            password: config.test.password,
+            email: config.test.email
         })
             .end(function(err, res) {
             if (res) {

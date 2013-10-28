@@ -3,12 +3,14 @@
   -> model
 ###
 
-mongoose = require('mongoose')
-Schema = mongoose.Schema
+AggregateSchema = require './aggregateSchema'
+mongoose = require 'mongoose'
+extend = require 'mongoose-schema-extend'
 
-userSchema = new Schema
+UserSchema = AggregateSchema.extend
   username:
-    type: String,
+    type: String
+    required: true
     unique: true
   salt:
     type: String
@@ -16,18 +18,23 @@ userSchema = new Schema
     type: String
   email:
     type: String
-  objectType:
-    type: String
-    default: "person"
+    required: true
+    unique: true
 
-userSchema.options.toJSON = {}
-userSchema.options.toJSON.transform = (doc, ret, options)->
-  ret.id = ret._id
-  delete ret._id
-  delete ret.hash
-  delete ret.salt
-  undefined
+UserSchema.options.toJSON =
+  transform: (doc, ret, options)->
+    #remove things we dont want the API to return
+    ret.id = ret._id
+    delete ret._id
+    delete ret.hash
+    delete ret.salt
+    undefined
 
-User = mongoose.model('User', userSchema)
+validateEmail = (email)->
+  emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
+  emailRegex.test(email)
+
+UserSchema.path('email').validate validateEmail, 'The e-mail field cannot be empty.'
+User = mongoose.model('User', UserSchema)
 
 module.exports = User

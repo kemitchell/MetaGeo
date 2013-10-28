@@ -3,7 +3,7 @@
 require('coffee-script')
 var should = require('chai').should();
 var mongoConf = require('../../config').mongo;
-var Collection = require('../../../models/collection');
+var Collection = require('../../../models/list');
 var User = require('../../../models/user');
 var Subscription = require('../../../models/subscription');
 var async = require('async');

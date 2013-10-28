@@ -1,12 +1,11 @@
 var should = require('chai').should(),
   supertest = require('supertest'),
-
   utils = require('../utils');
   api = utils.request 
 
 describe('/user', function() {
   var object_id = null; 
-  var testUser = "testUser19";
+  var testUser = "te3stUser19";
 
   describe('POST', function() {
     it('should return an error invalid fields', function(done) {
@@ -19,9 +18,7 @@ describe('/user', function() {
     it('should create a new user with valid fields', function(done) {
         api.post('/user')
         .set('Content-Type', 'application/json')
-        .expect('Content-Type', /json/)
-        .send({username: testUser, password:"testPassword" })
-        .expect(200)
+        .send({username: testUser, password:"testPassword", email: "testad@email.com" })
         .end(function(err, res){
             res.body.should.have.property('username').and.be.an('string');
             res.body.should.have.property('id').and.be.an('string');

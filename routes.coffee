@@ -32,7 +32,7 @@ module.exports = [
   path: "/login"
   config:
     handler: require("./controllers/authController").logout
-    auth:true
+    auth: true
 ,
   method: "GET"
   path: "/user/{id}"
@@ -55,7 +55,7 @@ module.exports = [
   path: "/user/{id}"
   config:
     handler: require("./controllers/userController").delete
-    auth:true
+    auth: true
 ,
   method: "GET"
   path: '/events/'
@@ -86,23 +86,23 @@ module.exports = [
   path: "/event"
   config:
     handler: require("./controllers/eventController").create
-    auth:true
+    auth: true
 ,
   method: "POST"
   path: "/event/{objectType}"
   config:
     handler: require("./controllers/eventController").create
-    auth:true
+    auth: true
 ,
   method: "PUT"
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").update
-    auth:true
+    auth: true
 ,
   method: "DELETE"
   path: "/event/{id}"
   config:
     handler: require("./controllers/eventController").delete
-    auth:true
+    auth: true
 ]

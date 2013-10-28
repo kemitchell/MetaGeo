@@ -3,12 +3,11 @@
   -> model
 ###
 gjVal = require "geojson-validation"
-_ = require "lodash"
 mongoose = require 'mongoose'
 createdModifiedPlugin = require('mongoose-createdmodified').createdModifiedPlugin
 Schema = mongoose.Schema
 
-eventSchema = new Schema({
+EventSchema = new Schema({
   actor:
     type: String
     required: true
@@ -22,9 +21,9 @@ eventSchema = new Schema({
   content:
     required: true
     type: String
-  #what collections was this event posted to
-  collections:
-    type: [Number]
+  #what aggergates this event posted to
+  aggergates:
+    type: [Schema.Types.ObjectId]
   #if the event has both geo and time info
   complete:
     type: Boolean
@@ -36,16 +35,16 @@ eventSchema = new Schema({
   collection : 'events'
   discriminatorKey: 'objectType')
 
-eventSchema.index {geometry: '2dsphere'}
+EventSchema.index {geometry: '2dsphere'}
 #add custom defs for JSON
-eventSchema.options.toJSON = {}
-eventSchema.options.toJSON.transform = (doc, ret, options)->
-  ret.id = ret._id
-  delete ret._id
-  delete ret.__v
-  undefined
+EventSchema.options.toJSON =
+  transform: (doc, ret, options)->
+    ret.id = ret._id
+    delete ret._id
+    delete ret.__v
+    undefined
 
-eventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
+EventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
 
-Event = mongoose.model 'Event', eventSchema
+Event = mongoose.model 'Event', EventSchema
 module.exports = Event

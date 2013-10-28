@@ -2,13 +2,13 @@ mongoose = require 'mongoose'
 extend = require 'mongoose-schema-extend'
 aggregateSchema = require './aggregateSchema'
 
-collectionSchema = aggregateSchema.extend({})
+ListSchema = aggregateSchema.extend({})
 
-collectionSchema.pre 'validate', (next)->
+ListSchema.pre 'validate', (next)->
   collection = this
   if !collection.isModified 'slug'
     return next()
   collection.email = collection.slug+'@mapkido.com'
   return next()
   
-module.exports = mongoose.model 'Collection', collectionSchema
+module.exports = mongoose.model 'List', ListSchema
