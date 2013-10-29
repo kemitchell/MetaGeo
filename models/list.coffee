@@ -1,16 +1,11 @@
 mongoose = require 'mongoose'
 extend = require 'mongoose-schema-extend'
-aggregateSchema = require './aggregateSchema'
+aggregateSchema = require('./aggregate').schema
 
-ListSchema = aggregateSchema.extend({})
-###
-ListSchema.pre 'validate', (next)->
-  collection = this
-  if !collection.isModified 'slug'
-    return next()
-  collection.email = collection.slug+'@mapkido.com'
-  return next()
-###
+ListSchema = aggregateSchema.extend
+  title:
+    type: String
+    required: true
 
 ListSchema.options.toJSON =
   transform: (doc, ret, options)->

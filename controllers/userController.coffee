@@ -21,7 +21,7 @@ UserController =
         return request.reply herror
 
       params = _.merge request.payload, {hash: hash, salt: salt }
-      params.title = params.username
+      #params.title = params.username
       # don't save the password
       delete params.password
 

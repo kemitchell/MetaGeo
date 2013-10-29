@@ -4,9 +4,9 @@ var should = require('chai').should(),
     utils = require('../utils');
 
 describe('/events/', function() {
-
+    var numOfEvents = 30
     before(function(done) {
-        utils.createRandomEvents(30, config.test.boundsA, done)
+        utils.createRandomEvents(numOfEvents, config.test.boundsA, done)
         //utils.createRandomEvents(200, config.test.bounds2)
     });
 
@@ -16,7 +16,7 @@ describe('/events/', function() {
             .end(function(err, res) {
             res.status.should.equal(200);
             res.body.items.should.be.an("array");
-            res.body.items.length.should.equal(30)
+            res.body.items.length.should.equal(numOfEvents)
             done();
         });
     });
@@ -29,7 +29,7 @@ describe('/events/', function() {
             .end(function(err, res) {
             res.status.should.equal(200);
             res.body.items.should.be.an("array");
-            res.body.items.length.should.equal(30)
+            res.body.items.length.should.equal(numOfEvents)
             done();
         });
     });
@@ -128,6 +128,18 @@ describe('/events/', function() {
             res.body.items.forEach(function(item){
                 assert(item.start < date.toJSON() , 'items not in oder')
             });
+            done();
+        });
+    });
+
+    it('should return events by user', function(done) {
+        date = utils.randomDate(new Date(), new Date(2099,0,1))
+        utils.request.get('/events/user/' + config.test.username + "/")
+            .set('Content-Type', 'application/json')
+            .end(function(err, res) {
+            res.status.should.equal(200);
+            res.body.items.should.be.an("array");
+            res.body.items.length.should.equal(numOfEvents)
             done();
         });
     });

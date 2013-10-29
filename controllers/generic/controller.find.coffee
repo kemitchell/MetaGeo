@@ -6,12 +6,6 @@ Hapi = require 'hapi'
 
 module.exports = (context) ->
 
-  tryToParseJSON = (json)->
-    try
-      return JSON.parse json
-    catch e
-      return json
-
   (request) ->
     params = _.merge request.query, request.params
 
@@ -31,9 +25,6 @@ module.exports = (context) ->
     #(as well as limit, skip, and sort)
     where = _.transform params, (result, param, key)->
       if key not in ['limit', 'offset', 'skip', 'sort'] and not context?.options?.queries?[key] and param
-        if _.isString param
-          param = tryToParseJSON param
-
         if _.isObject param
           param = _.transform param, (result, prop, key)->
             result["$"+key] = prop

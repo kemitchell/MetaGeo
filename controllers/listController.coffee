@@ -3,11 +3,14 @@
   -> controller
 ###
 List = require "../models/list"
+Aggergate = require "../models/aggregate"
 generic = new require('./generic')()
 generic.model = List
 
 ListController =
-  findOne: generic.findOne()
+  findOne: generic.findOne(
+    model: Aggergate
+  )
   create: generic.create(
     fields:
       actor: (actor, params, req) ->

@@ -3,7 +3,7 @@
   -> model
 ###
 
-AggregateSchema = require './aggregateSchema'
+AggregateSchema = require('./aggregate').schema
 mongoose = require 'mongoose'
 extend = require 'mongoose-schema-extend'
 
@@ -28,6 +28,7 @@ UserSchema.options.toJSON =
     #remove things we dont want the API to return
     ret.id = ret._id
     delete ret._id
+    delete ret.__v
     delete ret.hash
     delete ret.salt
     undefined
@@ -36,7 +37,7 @@ validateEmail = (email)->
   emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
   emailRegex.test(email)
 
-UserSchema.path('email').validate validateEmail, 'The e-mail field cannot be empty.'
+UserSchema.path('email').validate validateEmail, 'The e-mail field must be a valid email'
 User = mongoose.model('User', UserSchema)
 
 module.exports = User

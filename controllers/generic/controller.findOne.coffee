@@ -6,12 +6,6 @@ Hapi = require 'hapi'
 
 module.exports = (context) ->
 
-  tryToParseJSON = (json)->
-    try
-      return JSON.parse json
-    catch e
-      return json
-
   (request) ->
     params = _.merge request.query, request.params
 

@@ -99,7 +99,7 @@ module.exports = [
     handler: require("./controllers/eventController").find
 ,
   method: "GET"
-  path: "/event/user/{username}/"
+  path: "/event/user/{actor}/"
   config:
     handler: require("./controllers/eventController").find
 ,
