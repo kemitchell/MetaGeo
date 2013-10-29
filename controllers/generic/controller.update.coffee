@@ -7,13 +7,10 @@ _ = require('lodash')
 module.exports = (context) ->
   (request) ->
 
-    params = _.merge  request.query, request.params
+    params = _.merge request.query, request.params
 
     if context?.options?.before?
       context.options.before params
-
-    if not params.id
-      return request.reply Hapi.error.badRequest 'No id provided.'
 
     # Grab model class based on the controller this blueprint comes from 
     # If no model exists, move on to the next middleware
@@ -24,9 +21,11 @@ module.exports = (context) ->
     #for that wierd edge case
     delete params['objectType']
 
-    # Otherwise find and update the models in question
-    Model.findByIdAndUpdate params['id'], request.payload, (err, model) ->
+    if params.id
+      params._id = params.id
+      delete params.id
 
+    Model.findOneAndUpdate params, request.payload, (err, model) ->
       if context?.options?.after?
         model = context.options.after model, params
 

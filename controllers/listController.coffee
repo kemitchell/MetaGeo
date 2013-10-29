@@ -7,11 +7,11 @@ generic = new require('./generic')()
 generic.model = List
 
 ListController =
-  find: generic.find()
+  findOne: generic.findOne()
   create: generic.create(
     fields:
       actor: (actor, params, req) ->
-        return req.auth.credentials.id
+        return req.auth.credentials.username
   )
   update: generic.update()
   delete: generic.delete(

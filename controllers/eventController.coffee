@@ -29,6 +29,7 @@ bboxToPoly = (box)->
   box = [[[box[0], box[1]],[box[0], box[3]],[box[2], box[3]],[box[2], box[1]],[box[0], box[1]]]]
 
 EventController =
+  findOne: generic.findOne()
   find: generic.find(
     maxLimit: config.api.events.maxLimit
     defaultOrder: config.api.events.defaults.order
@@ -84,7 +85,7 @@ EventController =
     fields:
       # give the event an author
       actor: (actor, params, req) ->
-        return req.auth.credentials.id
+        return req.auth.credentials.username
       #check and progagete event s
       collections: (collections) ->
         if collections

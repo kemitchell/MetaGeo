@@ -1,7 +1,7 @@
 var should = require('chai').should(),
     utils = require('../utils');
 
-describe('/l', function() {
+describe('/list', function() {
     var object_id = null;  
 
     after(function(done){
@@ -14,7 +14,7 @@ describe('/l', function() {
 
     describe("POST - create a new list", function() {
       it('with invalid fields', function(done) {
-          utils.request.post('/l')
+          utils.request.post('/list')
           .set('Content-Type', 'application/json')
           .expect(400)
           .end(function(err, res){
@@ -24,7 +24,7 @@ describe('/l', function() {
       });
 
       it('valid fields', function(done) {
-          utils.request.post('/l')
+          utils.request.post('/list')
           .set('Content-Type', 'application/json')
           .send({actor: "testActor", title: "testEvent", description: 'test description' })
           .expect(200)
@@ -42,7 +42,7 @@ describe('/l', function() {
 
     describe("GET - retrieve lists", function() {
       it('retreive a list', function(done) {
-          utils.request.get('/l/' + object_id)
+          utils.request.get('/list/' + object_id)
           .set('Content-Type', 'application/json')
           .expect(200)
           .end(function(err, res){
@@ -56,7 +56,7 @@ describe('/l', function() {
 
     describe("PUT - modify a list", function() {
       it('modify an collection', function(done) {
-          utils.request.put('/l/' + object_id)
+          utils.request.put('/list/' + object_id)
           .set('Content-Type', 'application/json')
           .send({actor: "testActorModified", title: "testCollectionModified" })
           .expect(200)
@@ -70,7 +70,7 @@ describe('/l', function() {
 
     describe("DELETE - delete a list", function() {
       it('delete an collection', function(done) {
-          utils.request.del('/l/' + object_id)
+          utils.request.del('/list/' + object_id)
           .expect(200)
           .end(function(err, res){
               if(err) throw err;

@@ -11,7 +11,7 @@ generic.model = User
 pass = require 'pwd'
 
 UserController =
-  find: generic.find()
+  findOne: generic.findOne()
   create: (request) ->
     #salt passwords
     pass.hash request.payload.password, (err, salt, hash) ->

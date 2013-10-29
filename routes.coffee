@@ -40,23 +40,15 @@ module.exports = [
 ,
   #user
   method: "GET"
-  path: "/user/{id}"
+  path: "/user/{username}"
   config:
-    handler: require("./controllers/userController").find
-    validate:
-      path:
-        #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+    handler: require("./controllers/userController").findOne
 ,
   method: "PUT"
-  path: "/user/{id}"
+  path: "/user/{username}"
   config:
     handler: require("./controllers/userController").update
     payload: "parse"
-    validate:
-      path:
-        #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "POST"
   path: "/user"
@@ -65,14 +57,10 @@ module.exports = [
     payload: "parse"
 ,
   method: "DELETE"
-  path: "/user/{id}"
+  path: "/user/{username}"
   config:
     handler: require("./controllers/userController").delete
     auth: true
-    validate:
-      path:
-        #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   #event collections
   method: "GET"
@@ -89,7 +77,7 @@ module.exports = [
   method: "GET"
   path: "/event/{id}"
   config:
-    handler: require("./controllers/eventController").find
+    handler: require("./controllers/eventController").findOne
     validate:
       path:
         #id must be an mongo id
@@ -102,6 +90,16 @@ module.exports = [
 ,
   method: "GET"
   path: "/events/{objectType}/"
+  config:
+    handler: require("./controllers/eventController").find
+,
+  method: "GET"
+  path: "/events/user/{actor}/"
+  config:
+    handler: require("./controllers/eventController").find
+,
+  method: "GET"
+  path: "/event/user/{username}/"
   config:
     handler: require("./controllers/eventController").find
 ,
@@ -140,15 +138,15 @@ module.exports = [
 
   #lists
   method: "POST"
-  path: "/l"
+  path: "/list"
   config:
     handler: require("./controllers/listController").create
     auth: true
 ,
   method: "GET"
-  path: "/l/{id}"
+  path: "/list/{id}"
   config:
-    handler: require("./controllers/listController").find
+    handler: require("./controllers/listController").findOne
     auth: true
     validate:
       path:
@@ -156,13 +154,13 @@ module.exports = [
         id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "PUT"
-  path: "/l/{id}"
+  path: "/list/{id}"
   config:
     handler: require("./controllers/listController").update
     auth: true
 ,
   method: "DELETE"
-  path: "/l/{id}"
+  path: "/list/{id}"
   config:
     handler: require("./controllers/listController").delete
     auth: true

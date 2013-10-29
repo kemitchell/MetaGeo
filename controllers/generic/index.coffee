@@ -4,7 +4,10 @@ module.exports = ->
 
   find: (options) ->
     return require("./controller.find.coffee")({parent: @, options: options or {}})
-    
+
+  findOne: (options) ->
+    return require("./controller.findOne.coffee")({parent: @, options: options or {}})
+
   update: (options) ->
     return require("./controller.update.coffee")({parent: @, options: options or {}})
 

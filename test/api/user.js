@@ -22,7 +22,7 @@ describe('/user', function() {
         .end(function(err, res){
             res.body.should.have.property('username').and.be.an('string');
             res.body.should.have.property('id').and.be.an('string');
-            object_id = res.body.id;
+            object_id = res.body.username;
             done();
         });
     });
@@ -36,7 +36,7 @@ describe('/user', function() {
         .end(function(err, res){
             res.body.should.have.property('username').and.be.an('string');
             res.body.should.have.property('id').and.be.an('string');
-            object_id = res.body.id;
+            object_id = res.body.username;
             done();
         });
     });
