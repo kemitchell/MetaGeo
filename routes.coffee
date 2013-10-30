@@ -62,18 +62,6 @@ module.exports = [
     handler: require("./controllers/userController").delete
     auth: true
 ,
-  #event collections
-  method: "GET"
-  path: '/events/'
-  config:
-    handler: require("./controllers/eventController").find
-,
-  #event CRUD
-  method: "GET"
-  path: "/event/"
-  config:
-    handler: require("./controllers/eventController").find
-,
   method: "GET"
   path: "/event/{id}"
   config:
@@ -82,26 +70,6 @@ module.exports = [
       path:
         #id must be an mongo id
         id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
-,
-  method: "GET"
-  path: "/event/{objectType}/"
-  config:
-    handler: require("./controllers/eventController").find
-,
-  method: "GET"
-  path: "/events/{objectType}/"
-  config:
-    handler: require("./controllers/eventController").find
-,
-  method: "GET"
-  path: "/events/user/{actor}/"
-  config:
-    handler: require("./controllers/eventController").find
-,
-  method: "GET"
-  path: "/event/user/{actor}/"
-  config:
-    handler: require("./controllers/eventController").find
 ,
   method: "POST"
   path: "/event"
@@ -135,7 +103,28 @@ module.exports = [
         #id must be an mongo id
         id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
-
+  #event collections
+  method: "GET"
+  path: '/events/'
+  config:
+    handler: require("./controllers/eventController").find
+,
+  method: "GET"
+  path: "/events/{objectType}/"
+  config:
+    handler: require("./controllers/eventController").find
+,
+  method: "GET"
+  path: "/events/user/{actor}/"
+  config:
+    handler: require("./controllers/eventController").find
+,
+  #TODO
+  method: "GET"
+  path: "/events/list/{id}/"
+  config:
+    handler: require("./controllers/eventController").find
+,
   #lists
   method: "POST"
   path: "/list"

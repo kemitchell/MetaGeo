@@ -2,10 +2,15 @@ module.exports =
 
   api:
     geo:
+      #the bouds that users can post within, in a geoJSON ploygon 
       bounds:[[[-88.41796875, 41.1455697310095], [-88.41796875, 42.48019996901214], [-86.737060546875, 42.48019996901214], [-86.737060546875, 41.1455697310095], [-88.41796875, 41.1455697310095]]]
+      #the focus point of this server
       center: [ -87.57202148437499, 41.83682786072714]
     events:
+      #the max number of events to return
       maxLimit: 30
+      #the max number of lists you can save an event to
+      maxLists: 5
       defaults:
         order: "start"
         limit: 30

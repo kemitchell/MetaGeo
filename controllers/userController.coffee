@@ -7,8 +7,18 @@ _ = require 'lodash'
 User = require '../models/user'
 Hapi = require 'hapi'
 generic = new require('./generic')()
-generic.model = User
 pass = require 'pwd'
+generic.model = User
+generic.fields =
+  #changes id to _id
+  id:
+    to: '_id'
+  username:
+    to: (current)->
+        mongoIdRegex = /^[0-9a-fA-F]{24}$/
+        if mongoIdRegex.test current
+          return '_id'
+        return 'username'
 
 UserController =
   findOne: generic.findOne()

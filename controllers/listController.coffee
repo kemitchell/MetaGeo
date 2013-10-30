@@ -7,6 +7,11 @@ Aggergate = require "../models/aggregate"
 generic = new require('./generic')()
 generic.model = List
 
+generic.fields =
+  #changes id to _id
+  id:
+    to: '_id'
+
 ListController =
   findOne: generic.findOne(
     model: Aggergate

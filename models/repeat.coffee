@@ -18,5 +18,5 @@ repeatSchema = new Schema
   numOfRepeats:
     type: Number
 
-Repeat = mongoose.model 'Repeat', userSchema
+Repeat = mongoose.model 'repeat', userSchema
 module.exports = Repeat

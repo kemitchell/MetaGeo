@@ -21,8 +21,8 @@ EventSchema = new Schema({
   content:
     required: true
     type: String
-  #what aggergates this event posted to
-  aggergates:
+  #what lists this event is in
+  lists:
     type: [Schema.Types.ObjectId]
   #if the event has both geo and time info
   complete:
@@ -46,5 +46,5 @@ EventSchema.options.toJSON =
 
 EventSchema.plugin createdModifiedPlugin, {createdName: "published", modifiedName: "updated" }
 
-Event = mongoose.model 'Event', EventSchema
+Event = mongoose.model 'event', EventSchema
 module.exports = Event

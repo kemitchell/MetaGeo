@@ -10,7 +10,6 @@ module.exports = {
       return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
     },
     logout: function(cb) {
-        console.log("logout")
         this.request.del('/login')
             .end(function(err, res) {
             cb();
@@ -76,7 +75,6 @@ module.exports = {
                       .end(function(err, res){
                           if(err){
                             console.error("creating events broke", err);
-                            console.log(res.body);
                           }
                           callback();
                       });

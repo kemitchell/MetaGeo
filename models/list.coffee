@@ -14,4 +14,4 @@ ListSchema.options.toJSON =
     delete ret.__v
     undefined
 
-module.exports = mongoose.model 'List', ListSchema
+module.exports = mongoose.model 'list', ListSchema

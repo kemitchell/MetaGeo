@@ -11,32 +11,40 @@ module.exports = (context) ->
 
   (request) ->
 
-    params = _.merge request.query, request.payload, request.params
+    payload = _.merge request.payload, request.params
     Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+
+    #get the model based of the params
     if not Model.modelName?
-      Model = Model params
+      Model = Model payload
 
     if context?.options?.before?
       context.options.before params
 
-    #for that wierd edge case
-    delete params['objectType']
+    #field manipulation and validation
+    fields =  context.options.fields or context.parent.fields
+    if fields
+      for  index, field of fields
+        if _.isFunction field
+          payload[index] = field payload[index], payload, request
 
-    #check for field option
-    if context?.options?.fields?
-      fields = _.transform context.options.fields, (result, func, index) ->
-        if _.isFunction func
+        else if _.isFunction field.transform
           #get the value of the paramter being manuplated
-          func = func(params[index], params, request)
-        result[index] = func
+          payload[index] = field.transform payload[index], payload, request
+          
+          #run validation
+          if _.isFunction field.validate
+            err = field.validate payload[index], payload, request
+            if err
+              herror = Hapi.error.badRequest err
+              return request.reply herror
 
-      _.extend params, fields
-
-    model = new Model params
-
+    #create a new model
+    model = new Model payload
+    #and save it
     model.save (err)->
       if context?.options?.after?
-        model = context.options.after(model, params)
+        model = context.options.after(model, payload)
 
       if err
         if err instanceof mongoose.Error

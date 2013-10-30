@@ -33,7 +33,7 @@ describe('/list', function() {
               res.body.should.have.property('title').and.be.an('string');
               res.body.should.have.property('description').and.be.an('string');
               res.body.should.have.property('subscriptions').and.be.an('array');
-              res.body.should.have.property('objectType').and.be.equal('List');
+              res.body.should.have.property('objectType').and.be.equal('list');
               object_id = res.body.id;
               done();
           });

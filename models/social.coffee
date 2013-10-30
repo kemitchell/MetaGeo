@@ -16,4 +16,4 @@ SocialSchema = EventSchema.extend
   repeat:
     type: Boolean
 
-module.exports  =  mongoose.model 'Social' ,  SocialSchema
+module.exports  =  mongoose.model 'social' ,  SocialSchema

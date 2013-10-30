@@ -9,6 +9,7 @@ config = require "../config"
 Event = require "../models/event"
 Social = require "../models/social"
 Mblog = require "../models/mblog"
+List = require "../models/list"
 generic = new require('./generic')()
 
 generic.getModel = (params)->
@@ -18,6 +19,34 @@ generic.getModel = (params)->
     return Mblog
   else
     return Event
+
+generic.fields =
+  #changes id to _id
+  id:
+    to: '_id'
+
+  # give the event an author
+  actor: (actor, params, req) ->
+    return req.auth.credentials.username
+
+  lists:
+    transform: (lists) ->
+      if lists
+        if not _.isArray lists
+          #set collections to an array
+          lists = [lists]
+      return lists
+    validate: (lists)->
+      if lists and lists.length > config.api.events.maxLists
+        return "the max number of lists you can add an event to is:" +  config.api.events.maxLists
+
+  geometry:
+    transform: (geometry, params)->
+      if params['lat'] and params['lng']
+        geometry =
+          type: "Point"
+          coordinates: [Number(params['lng']),Number(params['lat'])]
+      return geometry
 
 bboxToPoly = (box)->
   if not _.isArray box
@@ -35,6 +64,7 @@ EventController =
     defaultOrder: config.api.events.defaults.order
     queries:
       box: (box, Event)->
+        #find events within a bounding box
         Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
 
       poly: (poly, Event)->
@@ -74,40 +104,19 @@ EventController =
       return wrapped
   )
   create: generic.create(
-
     getModel: (params)->
       if params.objectType is "social"
         return Social
       else if params.objectType is "mblog"
         return Mblog
       return Mblog
+    
+    #fields to omit
+    omit: ['objectType', 'id']
 
-    fields:
-      # give the event an author
-      actor: (actor, params, req) ->
-        return req.auth.credentials.username
-      #check and progagete event s
-      collections: (collections) ->
-        if collections
-          if not _.isArray collections
-            #set collections to an array
-            collections = [collections]
-        return collections
-
-      geometry: (geometry, params)->
-        if params['lat'] and params['lng']
-          geometry =
-            type: "Point"
-            coordinates: [Number(params['lng']),Number(params['lat'])]
-        return geometry
   )
   update: generic.update(
-    getModel: (params)->
-      if params.objectType is "social"
-        return Social
-      else if params.objectType is "mblog"
-        return Mblog
-      return Mblog
+    model: Social
   )
   delete: generic.delete(
     check: (req, model) ->

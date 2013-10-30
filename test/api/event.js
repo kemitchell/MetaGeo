@@ -35,7 +35,7 @@ describe('/event', function() {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
-                res.body.should.have.property('objectType').and.be.equal('Mblog');
+                res.body.should.have.property('objectType').and.be.equal('mblog');
                 mblog_event_id = res.body.id;
                 done();
             });
@@ -55,7 +55,7 @@ describe('/event', function() {
                 res.status.should.equal(200);
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
-                res.body.should.have.property('objectType').and.be.equal('Social');
+                res.body.should.have.property('objectType').and.be.equal('social');
                 social_event_id = res.body.id;
                 done();
             });
@@ -63,16 +63,6 @@ describe('/event', function() {
     });
 
     describe("GET - retrieve an event", function() {
-        it('get without an ID', function(done) {
-            utils.request.get( '/event/')
-                .set('Content-Type', 'application/json')
-                .end(function(err, res) {
-                res.status.should.equal(200);
-                res.body.should.have.property('items').and.be.an('array');
-                done();
-            });
-        });
-
         it('retreive an event', function(done) {
             utils.request.get('/event/' + mblog_event_id)
                 .set('Content-Type', 'application/json')
@@ -87,11 +77,10 @@ describe('/event', function() {
 
     describe("PUT - modiy an event", function() {
         it('modify an event', function(done) {
-            utils.request.put('/event/' + mblog_event_id)
+            utils.request.put('/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",
-                "time": new Date(),
                 content: "testContentModified"
             })
                 .end(function(err, res) {

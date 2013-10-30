@@ -13,12 +13,19 @@ module.exports = (context) ->
     if not Model.modelName?
       Model = Model params
 
-    if params.id
-      params._id = params.id
-      delete params.id
-    
     if context?.options?.before?
       context.options.before params
+
+    #field manipulation and validation
+    fields =  context.options.fields or context.parent.fields
+    if fields
+      for  index, field of fields
+        if field.to
+          if params[index]
+            if _.isFunction field.to
+              field.to = field.to(params[index])
+            params[field.to] = params[index]
+            delete params[index]
 
     Model.findOne(params).exec (err, model)->
       if err

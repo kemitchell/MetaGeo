@@ -7,7 +7,6 @@ describe('/events/', function() {
     var numOfEvents = 30
     before(function(done) {
         utils.createRandomEvents(numOfEvents, config.test.boundsA, done)
-        //utils.createRandomEvents(200, config.test.bounds2)
     });
 
     it('get a list of events', function(done) {
@@ -133,8 +132,29 @@ describe('/events/', function() {
     });
 
     it('should return events by user', function(done) {
-        date = utils.randomDate(new Date(), new Date(2099,0,1))
         utils.request.get('/events/user/' + config.test.username + "/")
+            .set('Content-Type', 'application/json')
+            .end(function(err, res) {
+            res.status.should.equal(200);
+            res.body.items.should.be.an("array");
+            res.body.items.length.should.equal(numOfEvents)
+            done();
+        });
+    });
+
+    it('should return mblog events', function(done) {
+        utils.request.get('/events/mblog/')
+            .set('Content-Type', 'application/json')
+            .end(function(err, res) {
+            res.status.should.equal(200);
+            res.body.items.should.be.an("array");
+            res.body.items.length.should.equal(0)
+            done();
+        });
+    });
+
+    it('should return socail events', function(done) {
+        utils.request.get('/events/social/')
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);

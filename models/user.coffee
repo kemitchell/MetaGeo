@@ -26,6 +26,7 @@ UserSchema = AggregateSchema.extend
 UserSchema.options.toJSON =
   transform: (doc, ret, options)->
     #remove things we dont want the API to return
+    ret.eventsUrl = "/events/user/" + ret.username + "/"
     ret.id = ret._id
     delete ret._id
     delete ret.__v
@@ -38,6 +39,12 @@ validateEmail = (email)->
   emailRegex.test(email)
 
 UserSchema.path('email').validate validateEmail, 'The e-mail field must be a valid email'
-User = mongoose.model('User', UserSchema)
 
+validateUsername = (username)->
+  #usernames cannot be like a mongo id
+  usernameRegex = /^[0-9a-fA-F]{24}$/
+  not usernameRegex.test(username)
+
+UserSchema.path('email').validate validateUsername, 'Invalid username'
+User = mongoose.model('user', UserSchema)
 module.exports = User
