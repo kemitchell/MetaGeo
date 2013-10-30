@@ -61,14 +61,17 @@ module.exports = {
                 },
                 function(callback){
                   count++;
-                  var y = Math.random() * (bounds[0][0] - bounds[1][0]) + bounds[1][0];
-                  var x = Math.random() * (bounds[0][1] - bounds[1][1]) + bounds[1][1];
+                  var y = Math.random() * (bounds[0][0] - bounds[1][0]) + bounds[1][0],
+                  x = Math.random() * (bounds[0][1] - bounds[1][1]) + bounds[1][1],
+                  start = _this.randomDate(new Date(), new Date(2099,0,1)),
+                  end =  _this.randomDate(start, new Date(2099,0,1));
                   request.post('/event/social')
                       .set('Content-Type', 'application/json')
                       .send({
                           title: "test_" + count,
                           content: "testContent",
-                          start: _this.randomDate(new Date(), new Date(2099,0,1)),
+                          start: start,
+                          end: end,
                           lat: x,
                           lng: y
                       })

@@ -1,5 +1,6 @@
 //this config file is merged with the one in the root directory
 module.exports = {
+  //dontDelete:true,
   server: {
     port: 1338 
   },

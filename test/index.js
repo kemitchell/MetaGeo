@@ -9,7 +9,9 @@ before(function(done) {
 
 after(function(done) {
     //clear the db
-    mongoose.connection.db.dropDatabase();
-    server.stop({timeout:200}, done);
+    if(!config.dontDelete){
+      mongoose.connection.db.dropDatabase();
+      server.stop({timeout:200}, done);
+    }
 });
 

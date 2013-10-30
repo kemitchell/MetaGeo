@@ -112,8 +112,7 @@ EventController =
       return Mblog
     
     #fields to omit
-    omit: ['objectType', 'id']
-
+    omit: ['objectType']
   )
   update: generic.update(
     model: Social

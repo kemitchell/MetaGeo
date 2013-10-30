@@ -65,7 +65,7 @@ describe('/events/', function() {
               res.body.items.should.be.an("array");
               res.body.items.forEach(function(item){
                   if(_this.prevItem){
-                    assert(_this.prevItem.start < item.start, 'items not in oder')
+                    assert(_this.prevItem.start <= item.start, 'items not in oder')
                   }
                   _this.prevItem = item
               });
@@ -81,7 +81,7 @@ describe('/events/', function() {
               res.body.items.should.be.an("array");
               res.body.items.forEach(function(item){
                   if(_this.prevItem){
-                    assert(_this.prevItem.title < item.title, 'items not in oder')
+                    assert(_this.prevItem.title <= item.title, 'items not in oder')
                   }
                   _this.prevItem = item
               });
@@ -97,7 +97,7 @@ describe('/events/', function() {
               res.body.items.should.be.an("array");
               res.body.items.forEach(function(item){
                   if(_this.prevItem){
-                    assert(_this.prevItem.title > item.title, 'items not in oder')
+                    assert(_this.prevItem.title >= item.title, 'items not in oder')
                   }
                   _this.prevItem = item
               });
