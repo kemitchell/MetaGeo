@@ -4,13 +4,9 @@
 ###
 List = require "../models/list"
 Aggergate = require "../models/aggregate"
-generic = new require('./generic')()
-generic.model = List
-
-generic.fields =
-  #changes id to _id
-  id:
-    to: '_id'
+Generic = require('./generic')
+generic = new Generic
+  model:List
 
 ListController =
   findOne: generic.findOne(
@@ -23,9 +19,9 @@ ListController =
   )
   update: generic.update()
   delete: generic.delete(
-    check: (req, model) ->
+    check: (model, req) ->
       #check if the user who created the object is the one deleting it
-      if req.user.id is model.actor
+      if req.auth.credentials.username is model.actor
         return true
       return false
   )

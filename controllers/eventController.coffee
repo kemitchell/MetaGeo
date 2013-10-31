@@ -1,53 +1,58 @@
 ###
-  :: Event
-  -> controller
+The Event Controller, handles CRUD for events
 ###
 
-_ = require "lodash"
-querystring = require "querystring"
-config = require "../config"
-Event = require "../models/event"
-Social = require "../models/social"
-Mblog = require "../models/mblog"
-List = require "../models/list"
-generic = new require('./generic')()
+_ = require 'lodash'
+querystring = require 'querystring'
+config = require '../config'
+Event = require '../models/event'
+Social = require '../models/social'
+Mblog = require '../models/mblog'
+List = require '../models/list'
+Generic = require './generic'
 
-generic.getModel = (params)->
-  if params.objectType is "social"
-    return Social
-  else if params.objectType is "mblog"
-    return Mblog
-  else
-    return Event
+#create a new generic controller
+generic = new Generic
+  #get the model based on the query
+  model: (params)->
+    if params.objecType then params.toLocaleLowerCase()
 
-generic.fields =
-  #changes id to _id
-  id:
-    to: '_id'
+    if params.objectType is "social"
+      return Social
+    else if params.objectType is "mblog"
+      return Mblog
+    else
+      return Event
 
-  # give the event an author
-  actor: (actor, params, req) ->
-    return req.auth.credentials.username
+  fields:
+    # give the event an author
+    actor: (actor, params, req) ->
+      return req.auth.credentials.username
 
-  lists:
-    transform: (lists) ->
-      if lists
-        if not _.isArray lists
-          #set collections to an array
-          lists = [lists]
-      return lists
-    validate: (lists)->
-      if lists and lists.length > config.api.events.maxLists
-        return "the max number of lists you can add an event to is:" +  config.api.events.maxLists
+    lists:
+      transform: (lists) ->
+        if lists
+          if not _.isArray lists
+            #set collections to an array
+            lists = [lists]
+        return lists
+      validate: (lists)->
+        if lists and lists.length > config.api.events.maxLists
+          return "the max number of lists you can add an event to is:" +  config.api.events.maxLists
 
-  geometry:
-    transform: (geometry, params)->
-      if params['lat'] and params['lng']
-        geometry =
-          type: "Point"
-          coordinates: [Number(params['lng']),Number(params['lat'])]
-      return geometry
+    geometry:
+      transform: (geometry, params)->
+        if params['lat'] and params['lng']
+          geometry =
+            type: "Point"
+            coordinates: [Number(params['lng']),Number(params['lat'])]
+        return geometry
 
+###
+A helper function that changes a bounding box into a geojson polygon
+@method bboxToPoly
+@param box a bounding box give two comma seperated cooridantes
+###
 bboxToPoly = (box)->
   if not _.isArray box
     box = box.split ','
@@ -57,21 +62,37 @@ bboxToPoly = (box)->
 
   box = [[[box[0], box[1]],[box[0], box[3]],[box[2], box[3]],[box[2], box[1]],[box[0], box[1]]]]
 
+###
+The Event Controller, handles CRUD for events
+@class EventController
+@static
+###
 EventController =
+  ###
+  @method findOne
+  ###
   findOne: generic.findOne()
+
+  ###
+  @method find
+  ###
   find: generic.find(
+    #max number of events to return
     maxLimit: config.api.events.maxLimit
     defaultOrder: config.api.events.defaults.order
+    #scans the query string of these method and if they exists exicutes thems
     queries:
+      #find events within a bounding box
       box: (box, Event)->
-        #find events within a bounding box
         Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
 
+      #find events within a geoJSON polygon
       poly: (poly, Event)->
         if _.isString poly
           poly = JSON.parse poly
         Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
 
+      #find events near a location
       near: (near, Event, params)->
         if params["distance"]
           distance = params["distance"]
@@ -83,6 +104,7 @@ EventController =
           Number e
         Event.find {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
 
+    #wraps the found events
     after: (vals, options)->
       wrapped =
         items: vals
@@ -103,8 +125,12 @@ EventController =
 
       return wrapped
   )
+
+  ###
+  @method create
+  ###
   create: generic.create(
-    getModel: (params)->
+    model: (params)->
       if params.objectType is "social"
         return Social
       else if params.objectType is "mblog"
@@ -114,13 +140,22 @@ EventController =
     #fields to omit
     omit: ['objectType']
   )
+
+  ###
+  @method update
+  ###
   update: generic.update(
+    #only update socail events
     model: Social
   )
+
+  ###
+  @method delete
+  ###
   delete: generic.delete(
-    check: (req, model) ->
+    check: (model, req) ->
       #check if the user who created the object is the one deleting it
-      if req.user.id is model.actor
+      if req.auth.credentials.username is model.actor
         return true
       return false
   )

@@ -3,22 +3,24 @@
   -> controller
 ###
 
+pass = require 'pwd'
 _ = require 'lodash'
 User = require '../models/user'
 Hapi = require 'hapi'
-generic = new require('./generic')()
-pass = require 'pwd'
-generic.model = User
-generic.fields =
-  #changes id to _id
-  id:
-    to: '_id'
-  username:
-    to: (current)->
-        mongoIdRegex = /^[0-9a-fA-F]{24}$/
-        if mongoIdRegex.test current
-          return '_id'
-        return 'username'
+Generic = require('./generic')
+
+generic = new Generic
+  model: User
+  fields:
+    #changes id to _id
+    id:
+      to: '_id'
+    username:
+      to: (current)->
+          mongoIdRegex = /^[0-9a-fA-F]{24}$/
+          if mongoIdRegex.test current
+            return '_id'
+          return 'username'
 
 UserController =
   findOne: generic.findOne()
@@ -43,11 +45,12 @@ UserController =
   
   update: generic.update()
   delete: generic.delete(
-    check: (req, model) ->
+    check: (model, req) ->
      #user can only delete themselves
-      if req.user.id is model.id
+ 
+      if req.auth.credentials.username is model.username
         #logout for the last time :(
-        req.logout()
+        req.auth.session.clear()
         return true
       return false
   )

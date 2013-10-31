@@ -1,6 +1,5 @@
 ###
-  :: Auth
-  -> controller
+Authentication Controller, handles logging in and out
 ###
 
 pass = require 'pwd'

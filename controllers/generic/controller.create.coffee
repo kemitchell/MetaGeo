@@ -1,28 +1,26 @@
 ###
 this is a generic create controller
-@class generic create
 ###
+
 Hapi = require 'hapi'
 mongoose = require 'mongoose'
 socket = require '../../socket'
 _ = require 'lodash'
 
-module.exports = (context) ->
+module.exports = (options) ->
 
   (request) ->
 
     payload = _.merge request.payload, request.params
-    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    Model = options.model
 
     #get the model based of the params
     if not Model.modelName?
       Model = Model payload
 
-    if context?.options?.before?
-      context.options.before params
-
     #field manipulation and validation
-    fields =  context.options.fields or context.parent.fields
+    #TODO: posible replace with a merge
+    fields =  options.fields
     if fields
       for  index, field of fields
         if _.isFunction field
@@ -43,8 +41,9 @@ module.exports = (context) ->
     model = new Model payload
     #and save it
     model.save (err)->
-      if context?.options?.after?
-        model = context.options.after(model, payload)
+      #run callback
+      if options.after?
+        model = options.after(model, payload)
 
       if err
         if err instanceof mongoose.Error
@@ -56,5 +55,6 @@ module.exports = (context) ->
           herror = Hapi.error.internal err
           return request.reply herror
 
+      #broadcast the model to all who are listening
       socket.broadcast model.toJSON()
       return request.reply model.toJSON()

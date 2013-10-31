@@ -4,17 +4,18 @@ CRUD find
 _ = require 'lodash'
 Hapi = require 'hapi'
 
-module.exports = (context) ->
+module.exports = (options) ->
 
   (request) ->
     params = _.merge request.query, request.params
 
-    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    Model = options.model
+    #if the model is not mongoose the run and hope that it gives us a mongoose model
     if not Model.modelName?
       Model = Model params
     
-    if context?.options?.before?
-      context.options.before params
+    if options.before
+      options.before params
 
     limit = Number params.limit
     sort = params.sort or params.order or undefined
@@ -24,7 +25,7 @@ module.exports = (context) ->
     #Remove undefined params
     #(as well as limit, skip, and sort)
     where = _.transform params, (result, param, key)->
-      if key not in ['limit', 'offset', 'skip', 'sort'] and not context?.options?.queries?[key] and param
+      if key not in ['limit', 'offset', 'skip', 'sort'] and not options.queries?[key] and param
         if _.isObject param
           param = _.transform param, (result, prop, key)->
             result["$"+key] = prop
@@ -32,19 +33,19 @@ module.exports = (context) ->
         result[key] = param
 
     #add queries 
-    if context?.options?.queries?
-      for param, query of context.options.queries
+    if options.queries
+      for param, query of options.queries
         if params[param]
           Model = query params[param], Model, params
 
     #add limit
-    if context?.options?.maxLimit?
-      if _.isNaN(limit) or limit > context.options.maxLimit
-        limit = context.options.maxLimit
+    if options.maxLimit
+      if _.isNaN(limit) or limit > options.maxLimit
+        limit = options.maxLimit
 
     #add oder
-    if context?.options?.defaultOrder? and not sort
-      sort = context.options.defaultOrder
+    if options.defaultOrder and not sort
+      sort = options.defaultOrder
 
     Model.find(where).sort(sort).skip(skip).limit(limit).exec (err, models) ->
       # An error occurred 
@@ -57,11 +58,11 @@ module.exports = (context) ->
         modelValues.push model
 
       #add wrapper
-      if context?.options?.after?
+      if options.after
         #some of the params may have mutated
         params.sort = sort
         params.limit = limit
         params.skip = skip
-        modelValues = context.options.after modelValues, params
+        modelValues = options.after modelValues, params
 
       return request.reply modelValues

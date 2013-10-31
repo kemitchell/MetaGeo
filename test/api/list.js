@@ -58,7 +58,7 @@ describe('/list', function() {
       it('modify an collection', function(done) {
           utils.request.put('/list/' + object_id)
           .set('Content-Type', 'application/json')
-          .send({actor: "testActorModified", title: "testCollectionModified" })
+          .send({title: "testCollectionModified" })
           .expect(200)
           .end(function(err, res){
               if(err) throw err;

@@ -3,6 +3,9 @@ extend = require 'mongoose-schema-extend'
 aggregateSchema = require('./aggregate').schema
 
 ListSchema = aggregateSchema.extend
+  actor:
+    type: String
+    required: true
   title:
     type: String
     required: true

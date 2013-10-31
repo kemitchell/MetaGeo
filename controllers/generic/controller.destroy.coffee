@@ -1,35 +1,32 @@
 ###
 CRUD delete
 ###
-Hapi = require('hapi')
 _ = require('lodash')
+Hapi = require('hapi')
 
-module.exports = (context) ->
+module.exports = (options) ->
  
   (request) ->
     params = _.merge  request.query, request.params
 
-    if context?.options?.before?
-      context.options.before params
-
-
-    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
+    Model = options.model
     if not Model.modelName?
       Model = Model params
 
-    if params.id
-      params._id = params.id
-      delete params.id
-
-    Model.findOneAndRemove params, (err, result) ->
-      if context?.options?.after?
-        model = context.options.after result, params
-
+    Model.findOne(params).exec (err, model)->
       if err
-        return request.reply err
+        return request.reply Hapi.error.internal err
+      if not model
+        return request.reply Hapi.error.notFound("model deleted by " + JSON.stringify(params) + " not found")
 
-      # Respond with model which was destoryed
-      if result
-        return request.reply(result)
+      canDelete = if options.check then options.check(model, request) else true
+       
+      if canDelete
+        #remove the doc
+        model.remove ()->
+          if options.after
+            model = options.after result, params
 
-      return request.reply Hapi.error.notFound("model with id of" + params.id + " not found")
+          return request.reply model
+      else
+        return request.reply Hapi.error.forbidden 'permission denied'

@@ -4,23 +4,21 @@ CRUD update
 Hapi = require('hapi')
 _ = require('lodash')
 
-module.exports = (context) ->
+module.exports = (options) ->
   (request) ->
 
     params = request.params
     payload = request.payload
 
-    if context?.options?.before?
-      context.options.before params
+    if options.before
+      options.before params
 
-    # Grab model class based on the controller this blueprint comes from 
-    # If no model exists, move on to the next middleware
-    Model = context.options.getModel or context.options.model or context.parent.getModel or context.parent.model
-    if not Model.modelName?
+    Model = options.model
+    if not Model.modelName
       Model = Model params
 
     #field manipulation and validation
-    fields =  context.options.fields or context.parent.fields
+    fields =  options.fields
     if fields
       for  index, field of fields
         if _.isFunction field
@@ -42,19 +40,22 @@ module.exports = (context) ->
               herror = Hapi.error.badRequest err
               return request.reply herror
 
-          if field.to
-            if params[index]
-              if _.isFunction field.to
-                field.to = field.to(params[index])
-              params[field.to] = params[index]
-              delete params[index]
-
-    Model.findOneAndUpdate params, payload, (err, model) ->
-      if context?.options?.after?
-        model = context.options.after model, params
-
+    #find the event
+    Model.findOne(params).exec (err, model)->
       if err
         return request.reply Hapi.error.internal err
       if not model
         return request.reply Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found")
-      return request.reply model
+
+      canUpdate = if options.check then options.check(model, request) else true
+       
+      if canUpdate
+        #update the doc
+        model.set payload
+        model.save ()->
+          if options.after
+            model = options.after result, params
+
+          return request.reply model
+      else
+        return request.reply Hapi.error.forbidden 'permission denied'

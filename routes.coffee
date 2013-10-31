@@ -63,13 +63,13 @@ module.exports = [
     auth: true
 ,
   method: "GET"
-  path: "/event/{id}"
+  path: "/event/{_id}"
   config:
     handler: require("./controllers/eventController").findOne
     validate:
       path:
         #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "POST"
   path: "/event"
@@ -84,24 +84,24 @@ module.exports = [
     auth: true
 ,
   method: "PUT"
-  path: "/event/{id}"
+  path: "/event/{_id}"
   config:
     handler: require("./controllers/eventController").update
     auth: true
     validate:
       path:
         #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "DELETE"
-  path: "/event/{id}"
+  path: "/event/{_id}"
   config:
     handler: require("./controllers/eventController").delete
     auth: true
     validate:
       path:
         #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   #event collections
   method: "GET"
@@ -121,7 +121,7 @@ module.exports = [
 ,
   #TODO
   method: "GET"
-  path: "/events/list/{id}/"
+  path: "/events/list/{_id}/"
   config:
     handler: require("./controllers/eventController").find
 ,
@@ -133,28 +133,32 @@ module.exports = [
     auth: true
 ,
   method: "GET"
-  path: "/list/{id}"
+  path: "/list/{_id}"
   config:
     handler: require("./controllers/listController").findOne
     auth: true
     validate:
       path:
         #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "PUT"
-  path: "/list/{id}"
+  path: "/list/{_id}"
   config:
     handler: require("./controllers/listController").update
     auth: true
+    validate:
+      path:
+        #id must be an mongo id
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "DELETE"
-  path: "/list/{id}"
+  path: "/list/{_id}"
   config:
     handler: require("./controllers/listController").delete
     auth: true
     validate:
       path:
         #id must be an mongo id
-        id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ]

@@ -1,4 +1,9 @@
 #!/bin/env node
+/**
+ * EventMap. A geospatial and temporial mapping and aggergation system
+ * @module eventmap
+**/
+
 //in the begining a varible was declared and there was a varible. The Programmer saw that the varible was good.
 var eventmap =   {},
 cs =         require('coffee-script'),
