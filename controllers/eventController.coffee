@@ -47,6 +47,13 @@ generic = new Generic
             type: "Point"
             coordinates: [Number(params['lng']),Number(params['lat'])]
         return geometry
+  
+  #checks to be done before modifing operation (update/delete) take place
+  check: (model, req) ->
+    #check if the user who created the object is the one deleting it
+    if req.auth.credentials.username is model.actor
+      return true
+    return false
 
 ###
 A helper function that changes a bounding box into a geojson polygon
@@ -152,12 +159,6 @@ EventController =
   ###
   @method delete
   ###
-  delete: generic.delete(
-    check: (model, req) ->
-      #check if the user who created the object is the one deleting it
-      if req.auth.credentials.username is model.actor
-        return true
-      return false
-  )
+  delete: generic.delete()
 
 module.exports = EventController

@@ -18,10 +18,7 @@ class Generic
   @param {Object} options.fields A dictnary of fields and operations (to,validate, transform) that will be applied to them
   @param {Object} options.model The mongoose model to that the generic will use
   ###
-  constructor: (options) ->
-    if options
-      @fields = options.fields
-      @model = options.model
+  constructor: (@options) ->
 
   ###
   Creates objects from POST payloads
@@ -35,7 +32,7 @@ class Generic
   create: (options) ->
     #combinded options
     combined = {}
-    _.merge combined, @, options
+    _.merge combined, @options, options
     return require("./controller.create.coffee")(combined)
 
   ###
@@ -52,7 +49,7 @@ class Generic
   find: (options) ->
     #combinded options
     combined = {}
-    _.merge combined, @, options
+    _.merge combined, @options, options
     return require("./controller.find.coffee")(combined)
 
   ###
@@ -66,7 +63,7 @@ class Generic
   findOne: (options) ->
     #combinded options
     combined = {}
-    _.merge combined, @, options
+    _.merge combined, @options, options
     return require("./controller.findOne.coffee")(combined)
 
   ###
@@ -81,7 +78,7 @@ class Generic
   update: (options) ->
     #combinded options
     combined = {}
-    _.merge combined, @, options
+    _.merge combined, @options, options
     return require("./controller.update.coffee")(combined)
 
   ###
@@ -96,7 +93,7 @@ class Generic
   delete: (options) ->
     #combinded options
     combined = {}
-    _.merge combined, @, options
+    _.merge combined, @options, options
     return require("./controller.destroy.coffee")(combined)
 
 module.exports = Generic

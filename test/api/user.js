@@ -1,10 +1,11 @@
 var should = require('chai').should(),
   supertest = require('supertest'),
   config = require('../config'),
+  utils = require('../utils'),
   api = supertest.agent(config.test.url);
 
 describe('/user', function() {
-  var object_id = null, 
+  var object_id = null,
   testUser = "testUser8",
   cookie;
 
@@ -13,7 +14,7 @@ describe('/user', function() {
         api.post('/user')
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
-        .expect(400, done)
+        .expect(400, done);
     });
 
     it('should create a new user with valid fields', function(done) {

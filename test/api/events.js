@@ -132,7 +132,7 @@ describe('/events/', function() {
     });
 
     it('should return events by user', function(done) {
-        utils.A.request.get('/events/user/' + config.test.userA.username + "/")
+        utils.A.request.get('/events/user/' + config.A.user.username + "/")
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);

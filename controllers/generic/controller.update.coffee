@@ -48,7 +48,7 @@ module.exports = (options) ->
         return request.reply Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found")
 
       canUpdate = if options.check then options.check(model, request) else true
-       
+
       if canUpdate
         #update the doc
         model.set payload

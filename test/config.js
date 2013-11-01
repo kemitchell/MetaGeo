@@ -10,19 +10,6 @@ module.exports = {
   },
   test:{
     url: 'http://localhost:1338',
-    userA:{
-      username: "userA",
-      password: "password",
-      email: "userA@emial.com"
-    },
-    userB:{
-      username: "B",
-      password: "password",
-      email: "userB@emial.com"
-    },
-    boundsA: [[-87.885132, 42.051332],[-87.533569, 41.71393]],
-    //outside of boundsA
-    boundsB: [[-88.885132, 43.051332],[-88.533569, 42.71393]]
   },
   A:{
     user:{

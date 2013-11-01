@@ -6,6 +6,10 @@ describe('/event', function() {
     var mblog_event_id = null;
     var social_event_id = null;
 
+    before(function(done){
+        utils.login('B', done);
+    });
+
     after(function(done){
         utils.logout(done);
     });
@@ -14,6 +18,7 @@ describe('/event', function() {
         it('create a new event with invalid fields', function(done) {
             utils.A.request.post('/event')
             .end(function(err, res) {
+                //forbidden
                 res.status.should.equal(401);
                 done();
             });
@@ -75,7 +80,20 @@ describe('/event', function() {
         });
     });
 
-    describe("PUT - modiy an event", function() {
+    describe("PUT - modify an event", function() {
+        it('should not be able to be modfied by another user', function(done) {
+            utils.B.request.put('/event/' + social_event_id)
+                .set('Content-Type', 'application/json')
+                .send({
+                title: "testEventModified",
+                content: "testContentModified"
+            })
+                .end(function(err, res) {
+                res.status.should.equal(403);
+                done();
+            });
+        });
+
         it('modify an event', function(done) {
             utils.A.request.put('/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
@@ -93,6 +111,14 @@ describe('/event', function() {
     });
 
     describe("DELETE", function() {
+        it('shouldnt be deleted by a differnet user', function(done) {
+            utils.B.request.del('/event/' + mblog_event_id)
+                .end(function(err, res) {
+                res.status.should.equal(403);
+                done();
+            });
+        });
+
         it('delete a mblog event', function(done) {
             utils.A.request.del('/event/' + mblog_event_id)
                 .end(function(err, res) {

@@ -26,9 +26,10 @@ module.exports = (options) ->
         if _.isFunction field
           payload[index] = field payload[index], payload, request
 
-        else if _.isFunction field.transform
-          #get the value of the paramter being manuplated
-          payload[index] = field.transform payload[index], payload, request
+        else
+          if _.isFunction field.transform
+            #get the value of the paramter being manuplated
+            payload[index] = field.transform payload[index], payload, request
           
           #run validation
           if _.isFunction field.validate

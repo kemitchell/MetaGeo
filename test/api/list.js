@@ -3,6 +3,10 @@ var should = require('chai').should(),
     object_id = null;
 
 describe('/list', function() {
+
+    before(function(done){
+        utils.login('B', done);
+    });
     
     after(function(done){
         utils.logout(done);
@@ -16,9 +20,9 @@ describe('/list', function() {
       it('with invalid fields', function(done) {
           utils.A.request.post('/list')
           .set('Content-Type', 'application/json')
-          .expect(400)
           .end(function(err, res){
               if(err) throw err;
+              res.status.should.equal(400);
               done();
           });
       });
@@ -27,9 +31,9 @@ describe('/list', function() {
           utils.A.request.post('/list')
           .set('Content-Type', 'application/json')
           .send({actor: "testActor", title: "testEvent", description: 'test description' })
-          .expect(200)
           .end(function(err, res){
               if(err) throw err;
+              res.status.should.equal(200);
               res.body.should.have.property('title').and.be.an('string');
               res.body.should.have.property('description').and.be.an('string');
               res.body.should.have.property('subscriptions').and.be.an('array');
@@ -41,12 +45,13 @@ describe('/list', function() {
     });
 
     describe("GET - retrieve lists", function() {
+
       it('retreive a list', function(done) {
           utils.A.request.get('/list/' + object_id)
           .set('Content-Type', 'application/json')
-          .expect(200)
           .end(function(err, res){
               if(err) throw err;
+              res.status.should.equal(200);
               res.body.should.have.property('title').and.be.an('string');
               done();
           });
@@ -54,13 +59,24 @@ describe('/list', function() {
     });
 
     describe("PUT - modify a list", function() {
+
+      it('shouldnt be modfied by another user', function(done) {
+          utils.B.request.put('/list/' + object_id)
+          .set('Content-Type', 'application/json')
+          .send({title: "testCollectionModified" })
+          .end(function(err, res){
+              res.status.should.equal(403);
+              done();
+          });
+      });
+
       it('modify an collection', function(done) {
           utils.A.request.put('/list/' + object_id)
           .set('Content-Type', 'application/json')
           .send({title: "testCollectionModified" })
-          .expect(200)
           .end(function(err, res){
               if(err) throw err;
+              res.status.should.equal(200);
               res.body.should.have.property('title').and.be.equal('testCollectionModified');
               done();
           });
@@ -68,11 +84,21 @@ describe('/list', function() {
     });
 
     describe("DELETE - delete a list", function() {
-      it('delete an collection', function(done) {
-          utils.A.request.del('/list/' + object_id)
-          .expect(200)
+
+      it('it shouldnt be modfied by another user', function(done) {
+          utils.B.request.del('/list/' + object_id)
           .end(function(err, res){
               if(err) throw err;
+              res.status.should.equal(403);
+              done();
+          });
+      });
+
+      it('delete an collection', function(done) {
+          utils.A.request.del('/list/' + object_id)
+          .end(function(err, res){
+              if(err) throw err;
+              res.status.should.equal(200);
               done();
           });
       });
