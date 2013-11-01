@@ -3,14 +3,13 @@ var should = require('chai').should(),
     config = require('../config');
 
 describe('/login', function() {
-
     describe('POST - create a new sesssion', function() {
         it('should create a new session', function(done) {
-            utils.request.post('/login')
+            utils.A.request.post('/login')
             .set('Content-Type', 'application/json')
             .send({
-                username: config.test.username,
-                password: config.test.password
+                username: config.A.user.username,
+                password: config.A.user.password
             })
             .end(function(err, res) {
                 res.body.should.have.property('username').and.be.an('string');
@@ -21,7 +20,7 @@ describe('/login', function() {
 
     describe('GET - get the status of the session', function() {
         it('retreive a session', function(done) {
-            utils.request.get('/login')
+            utils.A.request.get('/login')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function(err, res) {
@@ -33,21 +32,20 @@ describe('/login', function() {
 
     describe('DELETE - destory the session', function() {
         it('delete a session', function(done) {
-            utils.request.del('/login')
+            utils.A.request.del('/login')
             .end(function(err, res) {
                 res.body.should.have.property('authenticated').that.is.equal(false);
-                done()
+                done();
             });
         });
 
         it('GET the login status', function(done) {
-            utils.request.get('/login')
+            utils.A.request.get('/login')
             .end(function(err, res) {
                 res.status.should.equal(200);
                 res.body.should.have.property('authenticated').that.is.equal(false);
                 done();
             });
         });
-
     });
 });

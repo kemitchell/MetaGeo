@@ -12,7 +12,7 @@ describe('/event', function() {
 
     describe("POST - create a new event", function() {
         it('create a new event with invalid fields', function(done) {
-            utils.request.post('/event')
+            utils.A.request.post('/event')
             .end(function(err, res) {
                 res.status.should.equal(401);
                 done();
@@ -20,11 +20,11 @@ describe('/event', function() {
         });
 
         it('login', function(done) {
-            utils.login(done);
+            utils.login('A',done);
         });
 
         it('create a new event with valid fields without an objectType', function(done) {
-            utils.request.post( '/event')
+            utils.A.request.post( '/event')
                 .set('Content-Type', 'application/json')
                 .send({
                 content: "testContent",
@@ -42,7 +42,7 @@ describe('/event', function() {
         });
 
         it('create a new socail event', function(done) {
-            utils.request.post( '/event/social')
+            utils.A.request.post( '/event/social')
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testtr89t",
@@ -64,7 +64,7 @@ describe('/event', function() {
 
     describe("GET - retrieve an event", function() {
         it('retreive an event', function(done) {
-            utils.request.get('/event/' + mblog_event_id)
+            utils.A.request.get('/event/' + mblog_event_id)
                 .set('Content-Type', 'application/json')
                 .end(function(err, res) {
                 res.status.should.equal(200);
@@ -77,7 +77,7 @@ describe('/event', function() {
 
     describe("PUT - modiy an event", function() {
         it('modify an event', function(done) {
-            utils.request.put('/event/' + social_event_id)
+            utils.A.request.put('/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",
@@ -94,7 +94,7 @@ describe('/event', function() {
 
     describe("DELETE", function() {
         it('delete a mblog event', function(done) {
-            utils.request.del('/event/' + mblog_event_id)
+            utils.A.request.del('/event/' + mblog_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 done();
@@ -102,7 +102,7 @@ describe('/event', function() {
         });
 
         it('delete a social event', function(done) {
-            utils.request.del('/event/' + social_event_id)
+            utils.A.request.del('/event/' + social_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 done();

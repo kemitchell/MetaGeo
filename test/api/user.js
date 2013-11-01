@@ -1,13 +1,14 @@
 var should = require('chai').should(),
   supertest = require('supertest'),
-  utils = require('../utils');
-  api = utils.request 
+  config = require('../config'),
+  api = supertest.agent(config.test.url);
 
 describe('/user', function() {
-  var object_id = null; 
-  var testUser = "te3stUser19";
+  var object_id = null, 
+  testUser = "testUser8",
+  cookie;
 
-  describe('POST', function() {
+  describe('POST - a new user', function() {
     it('should return an error invalid fields', function(done) {
         api.post('/user')
         .set('Content-Type', 'application/json')
@@ -18,20 +19,8 @@ describe('/user', function() {
     it('should create a new user with valid fields', function(done) {
         api.post('/user')
         .set('Content-Type', 'application/json')
-        .send({username: testUser, password:"testPassword", email: "testad@email.com" })
-        .end(function(err, res){
-            res.body.should.have.property('username').and.be.an('string');
-            res.body.should.have.property('id').and.be.an('string');
-            object_id = res.body.username;
-            done();
-        });
-    });
-
-    it('should be able to login', function(done) {
-        api.post('/login')
-        .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
-        .send({username: testUser, password:"testPassword" })
+        .send({username: testUser, password:"testPassword", email:"asdf@gmail.com" })
         .expect(200)
         .end(function(err, res){
             res.body.should.have.property('username').and.be.an('string');
@@ -47,6 +36,20 @@ describe('/user', function() {
         api.get('/user/' + object_id)
         .set('Content-Type', 'application/json')
         .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res){
+            res.body.should.have.property('username').and.be.an('string');
+            done();
+        });
+    });
+  });
+
+  describe('Login', function() {
+    it('retreive a user', function(done) {
+        api.post('/login')
+        .set('Content-Type', 'application/json')
+        .expect('Content-Type', /json/)
+        .send({username: testUser, password:"testPassword" })
         .expect(200)
         .end(function(err, res){
             res.body.should.have.property('username').and.be.an('string');

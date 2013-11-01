@@ -1,58 +1,83 @@
 var config = require("../config"),
     supertest = require('supertest'),
     async = require("async"),
-    request = supertest.agent(config.test.url);
+    requestA = supertest.agent(config.test.url),
+    requestB = supertest.agent(config.test.url);
 
 module.exports = {
-    userId: null,
-    request: request,
+    A:{
+        request: requestA,
+        userId: null
+    },
+    B:{
+        request: requestB,
+        userId: null
+    },
     randomDate: function(start, end) {
       return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
     },
     logout: function(cb) {
-        this.request.del('/login')
+        var self = this;
+        this.A.request.del('/login')
             .end(function(err, res) {
-            cb();
+            self.B.request.del('/login')
+                .end(function(err, res) {
+                cb();
+            });
         });
     },
-    login: function(cb) {
+    login: function(AB,cb) {
         var self = this;
-        this.request.post('/login')
+        this[AB].request.post('/login')
             .set('Content-Type', 'application/json')
             .send({
-            username: config.test.username,
-            password: config.test.password
+            username: config[AB].user.username,
+            password: config[AB].user.password
         })
         .end(function(err, res) {
             if (res) {
-                self.userId = res.body.id;
+                self[AB].userId = res.body.id;
             }
             cb();
         });
     },
     createUser: function(cb) {
         var self = this;
-        this.request.post('/user')
+        this.A.request.post('/user')
             .set('Content-Type', 'application/json')
             .send({
-            username: config.test.username,
-            password: config.test.password,
-            email: config.test.email
+            username: config.A.user.username,
+            password: config.A.user.password,
+            email: config.A.user.email
         })
             .end(function(err, res) {
             if (res) {
-                self.userId = res.body.id;
+                self.A.userId = res.body.id;
             }
-            cb();
+            //create user B
+            self.B.request.post('/user')
+                .set('Content-Type', 'application/json')
+                .send({
+                username: config.B.user.username,
+                password: config.B.user.password,
+                email: config.B.user.email
+            })
+                .end(function(err, res) {
+                if (res) {
+                    self.B.userId = res.body.id;
+                }
+                cb();
+            });
         });
     },
-    createRandomEvents: function(num, bounds, cb) {
-        var count = 0;
-        request = this.request;
-        _this = this
+    createRandomEvents: function(AB, num, bounds, cb) {
+        var count = 0,
+        request = this[AB].request,
+        self = this;
+
         async.series([
             function(callback){
-                _this.login.bind(_this)(callback);
+                self.login.bind(self)([AB],callback);
             },
             function(callback){
               async.whilst(
@@ -63,13 +88,14 @@ module.exports = {
                   count++;
                   var y = Math.random() * (bounds[0][0] - bounds[1][0]) + bounds[1][0],
                   x = Math.random() * (bounds[0][1] - bounds[1][1]) + bounds[1][1],
-                  start = _this.randomDate(new Date(), new Date(2099,0,1)),
-                  end =  _this.randomDate(start, new Date(2099,0,1));
+                  start = self.randomDate(new Date(), new Date(2099,0,1)),
+                  end = self.randomDate(start, new Date(2099,0,1));
+
                   request.post('/event/social')
                       .set('Content-Type', 'application/json')
                       .send({
                           title: "test_" + count,
-                          content: "testContent",
+                          content: "testContent" + count,
                           start: start,
                           end: end,
                           lat: x,
@@ -92,4 +118,4 @@ module.exports = {
         }
       );
     }
-}
+};
