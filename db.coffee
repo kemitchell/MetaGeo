@@ -1,8 +1,8 @@
 mongoose = require 'mongoose'
+server =       require('hapi').server
 
 db =
   start:(options, cb)->
-
     #build connection string
     if options.password and options.user
       dbURI = "mongodb://" +

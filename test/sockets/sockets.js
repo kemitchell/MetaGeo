@@ -1,5 +1,4 @@
-var server = require('../../server'),
-config = require("../config"),
+var config = require("../config"),
 SockJS = require('sockjs-client-node'),
 options ={
     transports: ['websocket'],

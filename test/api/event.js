@@ -1,5 +1,5 @@
 var should = require('chai').should(),
-    config = require("../config");
+    config = require("../config"),
     utils = require('../utils');
 
 describe('/event', function() {

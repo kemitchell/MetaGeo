@@ -22,13 +22,13 @@ module.exports =
     stop:
       timeout: 60 * 1000
 
-  authentication:
-    name: 'session'
-    options:
-      scheme: 'cookie',
-      password: 'secret sauce',
-      cookie: 'sid-em',
-      isSecure: false
+    authentication:
+      name: 'session'
+      options:
+        scheme: 'cookie',
+        password: 'secret sauce',
+        cookie: 'sid-em',
+        isSecure: false
 
   sockjs:
     url:'http://0.0.0.0:1337/echo'

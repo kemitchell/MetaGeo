@@ -1,4 +1,4 @@
-var server = require('../server'),
+var server = require('../index'),
     config = require('./config'),
     utils = require('./utils'),
     mongoose = require('mongoose');
