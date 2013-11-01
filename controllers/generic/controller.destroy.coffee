@@ -20,12 +20,12 @@ module.exports = (options) ->
         return request.reply Hapi.error.notFound("model deleted by " + JSON.stringify(params) + " not found")
 
       canDelete = if options.check then options.check(model, request) else true
-       
+
       if canDelete
         #remove the doc
         model.remove ()->
           if options.after
-            model = options.after result, params
+            options.after model, request
 
           return request.reply model
       else

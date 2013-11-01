@@ -12,15 +12,17 @@ Generic = require('./generic')
 generic = new Generic
   model: User
   fields:
-    #changes id to _id
-    id:
-      to: '_id'
     username:
       to: (current)->
           mongoIdRegex = /^[0-9a-fA-F]{24}$/
           if mongoIdRegex.test current
             return '_id'
           return 'username'
+  check: (model, req) ->
+   #user can only modify themselves
+    if req.auth.credentials.username is model.username
+      return true
+    return false
 
 UserController =
   findOne: generic.findOne()
@@ -45,14 +47,9 @@ UserController =
   
   update: generic.update()
   delete: generic.delete(
-    check: (model, req) ->
-     #user can only delete themselves
- 
-      if req.auth.credentials.username is model.username
-        #logout for the last time :(
-        req.auth.session.clear()
-        return true
-      return false
+    after: (model, req )->
+      #logout for the last time :(
+      req.auth.session.clear()
   )
 
 module.exports = UserController

@@ -49,6 +49,7 @@ module.exports = [
   config:
     handler: require("./controllers/userController").update
     payload: "parse"
+    auth: true
 ,
   method: "POST"
   path: "/user"

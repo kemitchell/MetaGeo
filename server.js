@@ -22,7 +22,7 @@ eventmap.start = function(options, cb){
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
   }else{
-    _.merge(config, options)
+    _.merge(config, options);
   }
 
   //fire up the database
@@ -37,8 +37,8 @@ eventmap.start = function(options, cb){
 
   server.ext('onRequest', function (request, next) {
     //add nested query strings
-    if(request.method == "get"){ 
-      request.query = qs.parse(request.url.search.slice(1))
+    if(request.method == "get"){
+      request.query = qs.parse(request.url.search.slice(1));
     }
     next();
   });
@@ -46,7 +46,8 @@ eventmap.start = function(options, cb){
   //log error
   server.ext('onPreResponse', function (request, next) {
     var response = request.response();
-    if (response.isBoom) {
+    //log internal errors
+    if (response.isBoom && response.code === 500) {
       server.log(['error'], response.message);
     }
     return next();
@@ -70,7 +71,7 @@ eventmap.start = function(options, cb){
 }
 
 eventmap.stop = function(options, cb){
-  var options; 
+  var options;
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
     options = config.server.stop;
@@ -84,7 +85,7 @@ eventmap.stop = function(options, cb){
     }
   });
 }
-
+//if runing the app direcly start the server else just export it
 if(require.main === module){
   eventmap.start();
 }else{

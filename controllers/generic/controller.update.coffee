@@ -1,8 +1,8 @@
 ###
 CRUD update
 ###
-Hapi = require('hapi')
-_ = require('lodash')
+Hapi = require 'hapi'
+_ = require 'lodash'
 
 module.exports = (options) ->
   (request) ->
@@ -12,6 +12,9 @@ module.exports = (options) ->
 
     if options.before
       options.before params
+
+    if options.omit
+      payload = _.omit payload, options.omit
 
     Model = options.model
     if not Model.modelName
@@ -54,7 +57,7 @@ module.exports = (options) ->
         model.set payload
         model.save ()->
           if options.after
-            model = options.after result, params
+            model = options.after model, request
 
           return request.reply model
       else

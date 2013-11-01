@@ -94,6 +94,20 @@ describe('/event', function() {
             });
         });
 
+        it('should not be able to be modfiy the objectType', function(done) {
+            utils.A.request.put('/event/' + social_event_id)
+                .set('Content-Type', 'application/json')
+                .send({
+                objectType: "TestType",
+                content: "testContentModified"
+            })
+                .end(function(err, res) {
+                res.body.objectType.should.equal('social');
+
+                done();
+            });
+        });
+
         it('modify an event', function(done) {
             utils.A.request.put('/event/' + social_event_id)
                 .set('Content-Type', 'application/json')

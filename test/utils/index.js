@@ -14,7 +14,7 @@ module.exports = {
         userId: null
     },
     randomDate: function(start, end) {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     },
     logout: function(cb) {
         var self = this;

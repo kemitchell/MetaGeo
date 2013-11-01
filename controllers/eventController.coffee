@@ -154,6 +154,7 @@ EventController =
   update: generic.update(
     #only update socail events
     model: Social
+    omit: ['objectType']
   )
 
   ###
