@@ -114,6 +114,7 @@ EventController =
     #wraps the found events
     after: (vals, options)->
       wrapped =
+        serverTime: (new Date()).toJSON()
         items: vals
         pages:
           more: true
