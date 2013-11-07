@@ -19,7 +19,6 @@ module.exports = (options) ->
       Model = Model payload
 
     #field manipulation and validation
-    #TODO: posible replace with a merge
     fields =  options.fields
     if fields
       for  index, field of fields
