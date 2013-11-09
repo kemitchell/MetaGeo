@@ -50,9 +50,12 @@ metageo.start = function(options, cb){
       if(response.code === 500){
         //log internal errors
         server.log(['error'], response.message);
+      }else{
+        //show unescaped message
+        response.response.payload.message = response.message;
       }
     }
-    return next();
+    return next(response);
   });
 
   //write errors to console

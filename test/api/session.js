@@ -12,7 +12,9 @@ describe('/login', function() {
                 password: config.A.user.password
             })
             .end(function(err, res) {
+                console.log(res.body)
                 res.body.should.have.property('username').and.be.an('string');
+                res.body.should.have.property('authenticated').that.is.equal(true);
                 done();
             });
         });
@@ -25,6 +27,7 @@ describe('/login', function() {
                 .expect(200)
                 .end(function(err, res) {
                 res.body.should.have.property('username').and.be.an('string');
+                res.body.should.have.property('authenticated').that.is.equal(true);
                 done();
             });
         });

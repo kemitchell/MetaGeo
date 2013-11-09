@@ -1,6 +1,5 @@
 ###
-  :: User
-  -> controller
+User Controller
 ###
 
 pass = require 'pwd'
@@ -24,8 +23,22 @@ generic = new Generic
       return true
     return false
 
+###
+The User Controller, handles CRUD for users
+@class UserController
+@static
+###
 UserController =
+  ###
+  finds a user
+  @method findOne
+  ###
   findOne: generic.findOne()
+
+  ###
+  creates a user and hashes their password
+  @method create
+  ###
   create: (request) ->
     #salt passwords
     pass.hash request.payload.password, (err, salt, hash) ->
@@ -46,19 +59,24 @@ UserController =
           if err.code is 11000
             #extract the field name from the mongo error message
             field = err.err.match(/\$(.*?)_/)[1]
-            message = {}
-            message[field] =  field + " already exists. Please use a different one"
-            error = Hapi.error.badRequest()
-            #refommating in Boom will turn the message object in to an empty string
-            error.response.payload.message = message
+            error = {}
+            error[field] =  field + " already exists. Please use a different one"
           else
-            error = Hapi.error.badRequest(err.err)
-
-          return request.reply error
+            error = err.err
+          return request.reply Hapi.error.badRequest(error)
         else
           return request.reply user
   
+  ###
+  Updates an user 
+  @method update
+  ###
   update: generic.update()
+
+  ###
+  Deletes an user 
+  @method delete
+  ###
   delete: generic.delete(
     after: (model, req )->
       #logout for the last time :(

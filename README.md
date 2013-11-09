@@ -1,5 +1,5 @@
-# event map
-### a real-time event mapping application
+# MetaGeo
+### a real-time spatial and temporal mapping application
 
 ### Setup
 * install redis and mongdb
