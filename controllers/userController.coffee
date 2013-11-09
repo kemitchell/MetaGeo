@@ -38,12 +38,25 @@ UserController =
       #params.title = params.username
       # don't save the password
       delete params.password
-
+      #create a new user and save it
       user = new User(params)
       user.save (err) ->
         if err
-          request.reply err
-        request.reply user
+          # 11000 is the mongo error code for dupicalate entries
+          if err.code is 11000
+            #extract the field name from the mongo error message
+            field = err.err.match(/\$(.*?)_/)[1]
+            message = {}
+            message[field] =  field + " already exists. Please use a different one"
+            error = Hapi.error.badRequest()
+            #refommating in Boom will turn the message object in to an empty string
+            error.response.payload.message = message
+          else
+            error = Hapi.error.badRequest(err.err)
+
+          return request.reply error
+        else
+          return request.reply user
   
   update: generic.update()
   delete: generic.delete(

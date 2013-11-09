@@ -46,9 +46,11 @@ eventmap.start = function(options, cb){
   //log error
   server.ext('onPreResponse', function (request, next) {
     var response = request.response();
-    //log internal errors
-    if (response.isBoom && response.code === 500) {
-      server.log(['error'], response.message);
+    if (response.isBoom) {
+      if(response.code === 500){
+        //log internal errors
+        server.log(['error'], response.message);
+      }
     }
     return next();
   });
