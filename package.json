@@ -1,6 +1,6 @@
 {
-  "name": "eventmap",
-  "version": "0.0.2",
+  "name": "metageo",
+  "version": "0.0.3",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.5"

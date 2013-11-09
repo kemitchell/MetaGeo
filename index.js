@@ -1,11 +1,11 @@
 #!/bin/env node
 /**
- * EventMap. A geospatial and temporial mapping and aggergation system
- * @module eventmap
+ * MetaGeo. A geospatial and temporial mapping and aggergation system
+ * @module metageo
 **/
 
 //in the begining a varible was declared and there was a varible. The Programmer saw that the varible was good.
-var eventmap =   {},
+var metageo =   {},
 cs =         require('coffee-script'),
 Hapi =       require('hapi'),
 _ =          require('lodash'),
@@ -16,9 +16,9 @@ db =         require('./db'),
 sockets =    require('./socket'),
 server =     null;
 
-eventmap.start = function(options, cb){
+metageo.start = function(options, cb){
 
-  var options; 
+  var options;
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
   }else{
@@ -72,7 +72,7 @@ eventmap.start = function(options, cb){
   });
 }
 
-eventmap.stop = function(options, cb){
+metageo.stop = function(options, cb){
   var options;
   if( _.isFunction(options) && _.isUndefined(cb)){
     cb = options;
@@ -89,8 +89,8 @@ eventmap.stop = function(options, cb){
 }
 //if runing the app direcly start the server else just export it
 if(require.main === module){
-  eventmap.start();
+  metageo.start();
 }else{
-  module.exports = eventmap;
+  module.exports = metageo;
 }
 
