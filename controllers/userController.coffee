@@ -40,15 +40,22 @@ UserController =
   @method create
   ###
   create: (request) ->
+    #validate payload for hashing
+    password = request.payload.password
+    username = request.payload.username
+    if not username
+      return request.reply Hapi.error.badRequest 'Missing UserName'
+
+    if not password
+      return request.reply Hapi.error.badRequest 'Missing Password'
+
     #salt passwords
     pass.hash request.payload.password, (err, salt, hash) ->
       if(err)
         #something went wrong with hashing
-        herror = Hapi.error.badRequest(err.message)
-        return request.reply herror
+        return request.reply Hapi.error.internal(err.message)
 
       params = _.merge request.payload, {hash: hash, salt: salt }
-      #params.title = params.username
       # don't save the password
       delete params.password
       #create a new user and save it

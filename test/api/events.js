@@ -3,14 +3,14 @@ var should = require('chai').should(),
     config = require("../config"),
     utils = require('../utils');
 
-describe('/events/', function() {
+describe('/api/events/', function() {
     var numOfEvents = 30;
     before(function(done) {
         utils.createRandomEvents('A', numOfEvents, config.A.bounds, done);
     });
 
     it('get a list of events', function(done) {
-        utils.A.request.get('/events/')
+        utils.A.request.get('/api/events/')
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -23,7 +23,7 @@ describe('/events/', function() {
     it('get events inside a bounds A', function(done) {
         var bounds = config.A.bounds;
         bounds = bounds[0][0] + "," + bounds[0][1] + "," + bounds[1][0] + "," + bounds[1][1];
-        utils.A.request.get('/events/?box='+bounds)
+        utils.A.request.get('/api/events/?box='+bounds)
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -36,7 +36,7 @@ describe('/events/', function() {
     it('get events inside a bounds B', function(done) {
         var bounds = config.B.bounds;
         bounds = bounds[0][0] + "," + bounds[0][1] + "," + bounds[1][0] + "," + bounds[1][1];
-        utils.A.request.get('/events/?box='+bounds)
+        utils.A.request.get('/api/events/?box='+bounds)
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -47,7 +47,7 @@ describe('/events/', function() {
     });
 
     it('get events inside a with title of test_2', function(done) {
-        utils.A.request.get('/events/?title=test_2')
+        utils.A.request.get('/api/events/?title=test_2')
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -58,7 +58,7 @@ describe('/events/', function() {
     });
 
     it('should sort event by start', function(done) {
-        utils.A.request.get('/events/').set('Content-Type', 'application/json').end(function(err, res) {
+        utils.A.request.get('/api/events/').set('Content-Type', 'application/json').end(function(err, res) {
               prevItem = false;
               _this = this;
               res.status.should.equal(200);
@@ -74,7 +74,7 @@ describe('/events/', function() {
     });
 
     it('should sort event by title', function(done) {
-        utils.A.request.get('/events/?sort=title').set('Content-Type', 'application/json').end(function(err, res) {
+        utils.A.request.get('/api/events/?sort=title').set('Content-Type', 'application/json').end(function(err, res) {
               prevItem = false;
               _this = this;
               res.status.should.equal(200);
@@ -90,7 +90,7 @@ describe('/events/', function() {
     });
 
     it('should sort event by title descending', function(done) {
-        utils.A.request.get('/events/?sort=-title').set('Content-Type', 'application/json').end(function(err, res) {
+        utils.A.request.get('/api/events/?sort=-title').set('Content-Type', 'application/json').end(function(err, res) {
               prevItem = false;
               _this = this;
               res.status.should.equal(200);
@@ -107,7 +107,7 @@ describe('/events/', function() {
 
     it('should return events great than', function(done) {
         date = utils.randomDate(new Date(), new Date(2099,0,1));
-        utils.A.request.get('/events/?start[gt]='+ date.toJSON()).set('Content-Type', 'application/json').end(function(err, res) {
+        utils.A.request.get('/api/events/?start[gt]='+ date.toJSON()).set('Content-Type', 'application/json').end(function(err, res) {
               res.status.should.equal(200);
               res.body.items.should.be.an("array");
               res.body.items.forEach(function(item){
@@ -119,7 +119,7 @@ describe('/events/', function() {
 
     it('should return events less than', function(done) {
         var date = utils.randomDate(new Date(), new Date(2099,0,1));
-        utils.A.request.get('/events/?start[lt]=' + date.toJSON())
+        utils.A.request.get('/api/events/?start[lt]=' + date.toJSON())
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -132,7 +132,7 @@ describe('/events/', function() {
     });
 
     it('should return events by user', function(done) {
-        utils.A.request.get('/events/user/' + config.A.user.username + "/")
+        utils.A.request.get('/api/events/user/' + config.A.user.username + "/")
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -143,7 +143,7 @@ describe('/events/', function() {
     });
 
     it('should return mblog events', function(done) {
-        utils.A.request.get('/events/mblog/')
+        utils.A.request.get('/api/events/mblog/')
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);
@@ -154,7 +154,7 @@ describe('/events/', function() {
     });
 
     it('should return socail events', function(done) {
-        utils.A.request.get('/events/social/')
+        utils.A.request.get('/api/events/social/')
             .set('Content-Type', 'application/json')
             .end(function(err, res) {
             res.status.should.equal(200);

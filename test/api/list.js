@@ -2,7 +2,7 @@ var should = require('chai').should(),
     utils = require('../utils'),
     object_id = null;
 
-describe('/list', function() {
+describe('/api/list', function() {
 
     before(function(done){
         utils.login('B', done);
@@ -18,7 +18,7 @@ describe('/list', function() {
 
     describe("POST - create a new list", function() {
       it('with invalid fields', function(done) {
-          utils.A.request.post('/list')
+          utils.A.request.post('/api/list')
           .set('Content-Type', 'application/json')
           .end(function(err, res){
               if(err) throw err;
@@ -28,7 +28,7 @@ describe('/list', function() {
       });
 
       it('valid fields', function(done) {
-          utils.A.request.post('/list')
+          utils.A.request.post('/api/list')
           .set('Content-Type', 'application/json')
           .send({actor: "testActor", title: "testEvent", description: 'test description' })
           .end(function(err, res){
@@ -47,7 +47,7 @@ describe('/list', function() {
     describe("GET - retrieve lists", function() {
 
       it('retreive a list', function(done) {
-          utils.A.request.get('/list/' + object_id)
+          utils.A.request.get('/api/list/' + object_id)
           .set('Content-Type', 'application/json')
           .end(function(err, res){
               if(err) throw err;
@@ -61,7 +61,7 @@ describe('/list', function() {
     describe("PUT - modify a list", function() {
 
       it('shouldnt be modfied by another user', function(done) {
-          utils.B.request.put('/list/' + object_id)
+          utils.B.request.put('/api/list/' + object_id)
           .set('Content-Type', 'application/json')
           .send({title: "testCollectionModified" })
           .end(function(err, res){
@@ -71,7 +71,7 @@ describe('/list', function() {
       });
 
       it('modify an collection', function(done) {
-          utils.A.request.put('/list/' + object_id)
+          utils.A.request.put('/api/list/' + object_id)
           .set('Content-Type', 'application/json')
           .send({title: "testCollectionModified" })
           .end(function(err, res){
@@ -86,7 +86,7 @@ describe('/list', function() {
     describe("DELETE - delete a list", function() {
 
       it('it shouldnt be modfied by another user', function(done) {
-          utils.B.request.del('/list/' + object_id)
+          utils.B.request.del('/api/list/' + object_id)
           .end(function(err, res){
               if(err) throw err;
               res.status.should.equal(403);
@@ -95,7 +95,7 @@ describe('/list', function() {
       });
 
       it('delete an collection', function(done) {
-          utils.A.request.del('/list/' + object_id)
+          utils.A.request.del('/api/list/' + object_id)
           .end(function(err, res){
               if(err) throw err;
               res.status.should.equal(200);

@@ -18,9 +18,9 @@ module.exports = {
     },
     logout: function(cb) {
         var self = this;
-        this.A.request.del('/login')
+        this.A.request.del('/api/login')
             .end(function(err, res) {
-            self.B.request.del('/login')
+            self.B.request.del('/api/login')
                 .end(function(err, res) {
                 cb();
             });
@@ -28,7 +28,7 @@ module.exports = {
     },
     login: function(AB,cb) {
         var self = this;
-        this[AB].request.post('/login')
+        this[AB].request.post('/api/login')
             .set('Content-Type', 'application/json')
             .send({
             username: config[AB].user.username,
@@ -43,7 +43,7 @@ module.exports = {
     },
     createUser: function(cb) {
         var self = this;
-        this.A.request.post('/user')
+        this.A.request.post('/api/user')
             .set('Content-Type', 'application/json')
             .send({
             username: config.A.user.username,
@@ -55,7 +55,7 @@ module.exports = {
                 self.A.userId = res.body.id;
             }
             //create user B
-            self.B.request.post('/user')
+            self.B.request.post('/api/user')
                 .set('Content-Type', 'application/json')
                 .send({
                 username: config.B.user.username,
@@ -91,7 +91,7 @@ module.exports = {
                   start = self.randomDate(new Date(), new Date(2099,0,1)),
                   end = self.randomDate(start, new Date(2099,0,1));
 
-                  request.post('/event/social')
+                  request.post('/api/event/social')
                       .set('Content-Type', 'application/json')
                       .send({
                           title: "test_" + count,

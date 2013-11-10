@@ -1,5 +1,4 @@
 module.exports =
-
   api:
     geo:
       #the bouds that users can post within, in a geoJSON ploygon 
@@ -31,7 +30,7 @@ module.exports =
         isSecure: false
 
   sockjs:
-    url:'http://0.0.0.0:1337/echo'
+    prefix: '/stream'
 
   mongo:
     host: process.env.MONGO_HOST || process.env.OPENSHIFT_MONGODB_DB_HOST || "localhost"

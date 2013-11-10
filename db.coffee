@@ -1,7 +1,19 @@
+###
+Manages the DB
+###
+
 mongoose = require 'mongoose'
-server =       require('hapi').server
+server   = require('hapi').server
 
 db =
+  ###
+  Connects to the DB
+  @options {Object}
+  @options.user {String}
+  @options.password {String}
+  @options.host {String}
+  @options.database {String}
+  ###
   start:(options, cb)->
     #build connection string
     if options.password and options.user
@@ -37,6 +49,10 @@ db =
         console.log "Mongoose default connection disconnected through app termination"
         process.exit 0
 
+  ###
+  @method stop
+  @param {Function} cb A callback
+  ###
   stop:(cb)->
     mongoose.disconnect cb
 

@@ -4,7 +4,7 @@ var should = require('chai').should(),
     utils = require('../utils'),
     api = supertest.agent(config.test.url);
 
-describe('/user', function() {
+describe('/api/user', function() {
     var object_id = null,
         testUser = "testUser8",
         cookie;
@@ -15,7 +15,7 @@ describe('/user', function() {
 
     describe('POST - a new user', function() {
         it('should return an error invalid fields', function(done) {
-            api.post('/user')
+            api.post('/api/user')
                 .set('Content-Type', 'application/json')
                 .expect('Content-Type', /json/)
                 .end(function(err, res){
@@ -25,7 +25,7 @@ describe('/user', function() {
         });
 
         it('should create a new user with valid fields', function(done) {
-            api.post('/user')
+            api.post('/api/user')
                 .set('Content-Type', 'application/json')
                 .expect('Content-Type', /json/)
                 .send({
@@ -45,7 +45,7 @@ describe('/user', function() {
 
     describe('GET', function() {
         it('retreive a user', function(done) {
-            api.get('/user/' + object_id)
+            api.get('/api/user/' + object_id)
                 .set('Content-Type', 'application/json')
                 .expect('Content-Type', /json/)
                 .end(function(err, res) {
@@ -58,7 +58,7 @@ describe('/user', function() {
 
     describe('Login', function() {
         it('retreive a user', function(done) {
-            api.post('/login')
+            api.post('/api/login')
                 .set('Content-Type', 'application/json')
                 .expect('Content-Type', /json/)
                 .send({
@@ -75,7 +75,7 @@ describe('/user', function() {
 
     describe('PUT', function() {
         it('should not be able to be modfied by another user', function(done) {
-            utils.B.request.put('/user/' + object_id)
+            utils.B.request.put('/api/user/' + object_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 password: "modiefed password"
@@ -87,7 +87,7 @@ describe('/user', function() {
         });
 
         it('modify an user', function(done) {
-            api.put('/user/' + object_id)
+            api.put('/api/user/' + object_id)
                 .set('Content-Type', 'application/json')
                 .expect('Content-Type', /json/)
                 .send({
@@ -102,7 +102,7 @@ describe('/user', function() {
 
     describe('DELETE', function() {
         it('shouldnt be deleted by a differnet user', function(done) {
-            utils.B.request.del('/user/' + object_id)
+            utils.B.request.del('/api/user/' + object_id)
                 .end(function(err, res) {
                 res.status.should.equal(403);
                 done();
@@ -110,7 +110,7 @@ describe('/user', function() {
         });
 
         it('delete an user', function(done) {
-            api.del('/user/' + object_id)
+            api.del('/api/user/' + object_id)
                 .expect('Content-Type', /json/)
                 .end(function(err, res) {
                 if (err) throw err;

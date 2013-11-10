@@ -1,13 +1,18 @@
 # MetaGeo
-### a real-time spatial and temporal mapping application
+### a real-time spatial and temporal mapping API server
 
 ### Setup
-* install redis and mongdb
+* install [mongodb](http://docs.mongodb.org/manual/installation/)
 * clone the repositry: `git clone https://github.com/CraveProgrammingInc/MetaGeo.git`  
 * `cd MetaGeo`  
 * install packages: `npm install`  
-* run `node server.js` 
+* run `node .` 
+
+### Configuration
+Configuration is done through the `./config.coffee` file. 
+
+### Documentation
+
 
 ### Test API
-* Make sure redis and mongdb are running
 * run test: `npm test`   

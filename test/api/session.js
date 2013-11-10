@@ -2,10 +2,10 @@ var should = require('chai').should(),
     utils = require('../utils'),
     config = require('../config');
 
-describe('/login', function() {
+describe('/api/login', function() {
     describe('POST - create a new sesssion', function() {
         it('should create a new session', function(done) {
-            utils.A.request.post('/login')
+            utils.A.request.post('/api/login')
             .set('Content-Type', 'application/json')
             .send({
                 username: config.A.user.username,
@@ -22,7 +22,7 @@ describe('/login', function() {
 
     describe('GET - get the status of the session', function() {
         it('retreive a session', function(done) {
-            utils.A.request.get('/login')
+            utils.A.request.get('/api/login')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function(err, res) {
@@ -35,7 +35,7 @@ describe('/login', function() {
 
     describe('DELETE - destory the session', function() {
         it('delete a session', function(done) {
-            utils.A.request.del('/login')
+            utils.A.request.del('/api/login')
             .end(function(err, res) {
                 res.body.should.have.property('authenticated').that.is.equal(false);
                 done();
@@ -43,7 +43,7 @@ describe('/login', function() {
         });
 
         it('GET the login status', function(done) {
-            utils.A.request.get('/login')
+            utils.A.request.get('/api/login')
             .end(function(err, res) {
                 res.status.should.equal(200);
                 res.body.should.have.property('authenticated').that.is.equal(false);

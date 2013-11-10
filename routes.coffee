@@ -1,5 +1,8 @@
-Types = require("hapi").types
+###
+Defines the hapi routes for the API
+###
 
+Types = require("hapi").types
 module.exports = [
   #static assests
   #TODO: change to /static maybe
@@ -12,20 +15,20 @@ module.exports = [
 ,
   #config
   method: "GET"
-  path: "/config"
+  path: "/api/config"
   config:
     handler: require("./controllers/configController")
 ,
   #auth
   method: "GET"
-  path: "/login"
+  path: "/api/login"
   config:
     handler: require("./controllers/authController").status
     auth:
       mode: 'try'
 ,
   method: "POST"
-  path: "/login"
+  path: "/api/login"
   config:
     handler: require("./controllers/authController").process
     auth:
@@ -33,38 +36,38 @@ module.exports = [
     payload: "parse"
 ,
   method: "DELETE"
-  path: "/login"
+  path: "/api/login"
   config:
     handler: require("./controllers/authController").logout
     auth: true
 ,
   #user
   method: "GET"
-  path: "/user/{username}"
+  path: "/api/user/{username}"
   config:
     handler: require("./controllers/userController").findOne
 ,
   method: "PUT"
-  path: "/user/{username}"
+  path: "/api/user/{username}"
   config:
     handler: require("./controllers/userController").update
     payload: "parse"
     auth: true
 ,
   method: "POST"
-  path: "/user"
+  path: "/api/user"
   config:
     handler: require("./controllers/userController").create
     payload: "parse"
 ,
   method: "DELETE"
-  path: "/user/{username}"
+  path: "/api/user/{username}"
   config:
     handler: require("./controllers/userController").delete
     auth: true
 ,
   method: "GET"
-  path: "/event/{_id}"
+  path: "/api/event/{_id}"
   config:
     handler: require("./controllers/eventController").findOne
     validate:
@@ -73,19 +76,19 @@ module.exports = [
         _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "POST"
-  path: "/event"
+  path: "/api/event"
   config:
     handler: require("./controllers/eventController").create
     auth: true
 ,
   method: "POST"
-  path: "/event/{objectType}"
+  path: "/api/event/{objectType}"
   config:
     handler: require("./controllers/eventController").create
     auth: true
 ,
   method: "PUT"
-  path: "/event/{_id}"
+  path: "/api/event/{_id}"
   config:
     handler: require("./controllers/eventController").update
     auth: true
@@ -95,7 +98,7 @@ module.exports = [
         _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "DELETE"
-  path: "/event/{_id}"
+  path: "/api/event/{_id}"
   config:
     handler: require("./controllers/eventController").delete
     auth: true
@@ -106,35 +109,35 @@ module.exports = [
 ,
   #event collections
   method: "GET"
-  path: '/events/'
+  path: '/api/events/'
   config:
     handler: require("./controllers/eventController").find
 ,
   method: "GET"
-  path: "/events/{objectType}/"
+  path: "/api/events/{objectType}/"
   config:
     handler: require("./controllers/eventController").find
 ,
   method: "GET"
-  path: "/events/user/{actor}/"
+  path: "/api/events/user/{actor}/"
   config:
     handler: require("./controllers/eventController").find
 ,
   #TODO
   method: "GET"
-  path: "/events/list/{_id}/"
+  path: "/api/events/list/{_id}/"
   config:
     handler: require("./controllers/eventController").find
 ,
   #lists
   method: "POST"
-  path: "/list"
+  path: "/api/list"
   config:
     handler: require("./controllers/listController").create
     auth: true
 ,
   method: "GET"
-  path: "/list/{_id}"
+  path: "/api/list/{_id}"
   config:
     handler: require("./controllers/listController").findOne
     auth: true
@@ -144,7 +147,7 @@ module.exports = [
         _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "PUT"
-  path: "/list/{_id}"
+  path: "/api/list/{_id}"
   config:
     handler: require("./controllers/listController").update
     auth: true
@@ -154,7 +157,7 @@ module.exports = [
         _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   method: "DELETE"
-  path: "/list/{_id}"
+  path: "/api/list/{_id}"
   config:
     handler: require("./controllers/listController").delete
     auth: true

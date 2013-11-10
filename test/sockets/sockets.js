@@ -7,13 +7,13 @@ options ={
 
 describe('Sockets', function() {
     it("should connect", function(done){
-      sock =  new SockJS(config.test.url + "/echo");
+      sock =  new SockJS(config.test.url + "/stream");
       sock.onopen = function() {
         done();
       };
     });
 
     it("should broadcast new events to everyone ever", function(done){
-      done()
+      done();
     });
 });

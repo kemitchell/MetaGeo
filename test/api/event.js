@@ -2,7 +2,7 @@ var should = require('chai').should(),
     config = require("../config"),
     utils = require('../utils');
 
-describe('/event', function() {
+describe('/api/event', function() {
     var mblog_event_id = null;
     var social_event_id = null;
 
@@ -16,7 +16,7 @@ describe('/event', function() {
 
     describe("POST - create a new event", function() {
         it('create a new event with invalid fields', function(done) {
-            utils.A.request.post('/event')
+            utils.A.request.post('/api/event')
             .end(function(err, res) {
                 //forbidden
                 res.status.should.equal(401);
@@ -29,7 +29,7 @@ describe('/event', function() {
         });
 
         it('create a new event with valid fields without an objectType', function(done) {
-            utils.A.request.post( '/event')
+            utils.A.request.post( '/api/event')
                 .set('Content-Type', 'application/json')
                 .send({
                 content: "testContent",
@@ -47,7 +47,7 @@ describe('/event', function() {
         });
 
         it('create a new socail event', function(done) {
-            utils.A.request.post( '/event/social')
+            utils.A.request.post( '/api/event/social')
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testtr89t",
@@ -69,7 +69,7 @@ describe('/event', function() {
 
     describe("GET - retrieve an event", function() {
         it('retreive an event', function(done) {
-            utils.A.request.get('/event/' + mblog_event_id)
+            utils.A.request.get('/api/event/' + mblog_event_id)
                 .set('Content-Type', 'application/json')
                 .end(function(err, res) {
                 res.status.should.equal(200);
@@ -82,7 +82,7 @@ describe('/event', function() {
 
     describe("PUT - modify an event", function() {
         it('should not be able to be modfied by another user', function(done) {
-            utils.B.request.put('/event/' + social_event_id)
+            utils.B.request.put('/api/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",
@@ -95,7 +95,7 @@ describe('/event', function() {
         });
 
         it('should not be able to be modfiy the objectType', function(done) {
-            utils.A.request.put('/event/' + social_event_id)
+            utils.A.request.put('/api/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 objectType: "TestType",
@@ -109,7 +109,7 @@ describe('/event', function() {
         });
 
         it('modify an event', function(done) {
-            utils.A.request.put('/event/' + social_event_id)
+            utils.A.request.put('/api/event/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",
@@ -126,7 +126,7 @@ describe('/event', function() {
 
     describe("DELETE", function() {
         it('shouldnt be deleted by a differnet user', function(done) {
-            utils.B.request.del('/event/' + mblog_event_id)
+            utils.B.request.del('/api/event/' + mblog_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(403);
                 done();
@@ -134,7 +134,7 @@ describe('/event', function() {
         });
 
         it('delete a mblog event', function(done) {
-            utils.A.request.del('/event/' + mblog_event_id)
+            utils.A.request.del('/api/event/' + mblog_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 done();
@@ -142,7 +142,7 @@ describe('/event', function() {
         });
 
         it('delete a social event', function(done) {
-            utils.A.request.del('/event/' + social_event_id)
+            utils.A.request.del('/api/event/' + social_event_id)
                 .end(function(err, res) {
                 res.status.should.equal(200);
                 done();
