@@ -1,9 +1,14 @@
 {
-  "name": "metageo",
+  "name": "MetaGeo",
+  "keywords": ["geospatial", "meta"],
   "version": "0.0.3",
-  "main": "index.js",
+  "main": "./index.js",
   "engines": {
     "node": ">=0.10.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craveprogramminginc/MetaGeo"
   },
   "dependencies": {
     "hapi": "~1.16.1",
@@ -17,7 +22,6 @@
     "sockjs": "~0.3.8",
     "qs": "~0.6.5"
   },
-  "private": "true",
   "devDependencies": {
     "chai": "~1.7.2",
     "supertest": "~0.7.1",
@@ -27,6 +31,23 @@
     "async": "~0.2.9"
   },
   "scripts": {
+    "start": "node .",
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive  --reporter spec ./test/"
-  }
+  },
+  "contributors":[
+    {
+      "name": "Cris Vergara",
+      "email": "cvergara@craveprogramming.com"
+    },{
+      "name": "null_radix",
+      "email": "null_radix@riseup.net",
+      "bitmessage": "BM-orUNCNMuF4K4nGhNSKM9pJoMNmkdagPRw",
+      "i2pbote": "-kmLYmfbyg-5lvqPxXV4WiySxnhv3vshKjXW~BcTjZh8ONGKvc929y~YWMF3MMMWqV2LKTWlPJnt5LnlRrwdRW"
+    },
+    {
+      "name": "The Author"  
+    }
+  ],
+  "author": "The Contributors",
+  "license": "AGPL"
 }
