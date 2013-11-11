@@ -10,11 +10,18 @@ AuthController =
   process: (request) ->
     password = request.payload.password
     username = request.payload.username
+
     if not username
-      return request.reply Hapi.error.badRequest 'Missing UserName'
+      return request.reply Hapi.error.badRequest
+        fields:
+          username: 'Username is Required'
+        message: 'Missing Username'
 
     if not password
-      return request.reply Hapi.error.badRequest 'Missing Password'
+      return request.reply Hapi.error.badRequest
+        fields:
+          username: 'Password is Required'
+        message: 'Missing Password'
 
     User.findOne {username:username}, (err, user)->
       if err

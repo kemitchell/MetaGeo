@@ -21,6 +21,7 @@ module.exports = (options) ->
     #field manipulation and validation
     fields =  options.fields
     if fields
+      errors = {}
       for  index, field of fields
         if _.isFunction field
           payload[index] = field payload[index], payload, request
@@ -34,8 +35,11 @@ module.exports = (options) ->
           if _.isFunction field.validate
             err = field.validate payload[index], payload, request
             if err
-              herror = Hapi.error.badRequest err
-              return request.reply herror
+              errors[index] = err
+
+      if not _.isEmpty(errors)
+        herror = Hapi.error.badRequest {fields: errors}
+        return request.reply herror
 
     #create a new model
     model = new Model payload
@@ -47,8 +51,13 @@ module.exports = (options) ->
 
       if err
         if err instanceof mongoose.Error
+          fields = {}
+          for key, error of err.errors
+            fields[key] = key + ' is ' + error.type
           #moongoose error, probably validation
-          herror = Hapi.error.badRequest err.toString()
+          herror = Hapi.error.badRequest
+            fields: fields
+
           return request.reply herror
         else
           #mongo db itself is erroring

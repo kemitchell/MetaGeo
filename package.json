@@ -1,8 +1,12 @@
 {
-  "name": "MetaGeo",
-  "keywords": ["geospatial", "meta"],
-  "version": "0.0.3",
+  "name": "metageo",
+  "keywords": [
+    "geospatial",
+    "meta"
+  ],
+  "version": "0.0.4",
   "main": "./index.js",
+  "description": "a real-time spatial and temporal mapping server",
   "engines": {
     "node": ">=0.10.5"
   },
@@ -18,7 +22,7 @@
     "mongoose-schema-extend": "~0.1.5",
     "pwd": "0.0.2",
     "lodash": "~2.2.1",
-    "geojson-validation": "~0.1.3",
+    "geojson-validation": "~0.1.4",
     "sockjs": "~0.3.8",
     "qs": "~0.6.5"
   },
@@ -34,18 +38,20 @@
     "start": "node .",
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive  --reporter spec ./test/"
   },
-  "contributors":[
+  "contributors": [
     {
       "name": "Cris Vergara",
       "email": "cvergara@craveprogramming.com"
-    },{
+    },
+    {
       "name": "null_radix",
       "email": "null_radix@riseup.net",
+      "pgp": "http://pgp.mit.edu:11371/pks/lookup?op=get&search=0xEBAC34C5015FA8F6",
       "bitmessage": "BM-orUNCNMuF4K4nGhNSKM9pJoMNmkdagPRw",
       "i2pbote": "-kmLYmfbyg-5lvqPxXV4WiySxnhv3vshKjXW~BcTjZh8ONGKvc929y~YWMF3MMMWqV2LKTWlPJnt5LnlRrwdRW"
     },
     {
-      "name": "The Author"  
+      "name": "The Author"
     }
   ],
   "author": "The Contributors",

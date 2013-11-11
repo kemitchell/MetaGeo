@@ -10,6 +10,7 @@ Social = require '../models/social'
 Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
+gjVal = require "geojson-validation"
 
 #create a new generic controller
 generic = new Generic
@@ -47,6 +48,10 @@ generic = new Generic
             type: "Point"
             coordinates: [Number(params['lng']),Number(params['lat'])]
         return geometry
+
+      validate: (point)->
+        if not gjVal.isPoint(point)
+          return "invalid geoJSON"
   
   #checks to be done before modifing operation (update/delete) take place
   check: (model, req) ->

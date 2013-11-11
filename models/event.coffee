@@ -2,7 +2,6 @@
   :: Event
   -> model
 ###
-gjVal = require "geojson-validation"
 mongoose = require 'mongoose'
 createdModifiedPlugin = require('mongoose-createdmodified').createdModifiedPlugin
 Schema = mongoose.Schema
@@ -17,6 +16,7 @@ EventSchema = new Schema({
   geometry:
     type:
       type: String
+      required: true
     coordinates: []
   content:
     required: true

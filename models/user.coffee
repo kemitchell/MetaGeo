@@ -26,7 +26,7 @@ UserSchema = AggregateSchema.extend
 UserSchema.options.toJSON =
   transform: (doc, ret, options)->
     #remove things we dont want the API to return
-    ret.eventsUrl = "/events/user/" + ret.username + "/"
+    ret.eventsUrl = "api/events/user/" + ret.username + "/"
     ret.id = ret._id
     delete ret._id
     delete ret.__v

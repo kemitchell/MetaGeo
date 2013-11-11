@@ -23,6 +23,7 @@ module.exports = (options) ->
     #field manipulation and validation
     fields =  options.fields
     if fields
+      errors = {}
       for  index, field of fields
         if _.isFunction field
           result = field payload[index], payload, request
@@ -36,12 +37,16 @@ module.exports = (options) ->
             if result
               payload[index] = result
 
-          #run validation
-          if _.isFunction field.validate
+          #run validation but only if it exists in the payload
+          if payload[index] and  _.isFunction field.validate
             err = field.validate payload[index], payload, request
             if err
               herror = Hapi.error.badRequest err
               return request.reply herror
+
+      if not _.isEmpty(errors)
+        herror = Hapi.error.badRequest {fields: errors}
+        return request.reply herror
 
     #find the event
     Model.findOne(params).exec (err, model)->

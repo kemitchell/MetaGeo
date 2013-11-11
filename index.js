@@ -56,8 +56,10 @@ metageo.start = function(options, cb) {
                 //log internal errors
                 server.log(['error'], response.message);
             } else {
-                //use unflattened message
-                response.response.payload.message = response.message;
+                if(response.message.fields){
+                    response.response.payload.fields = response.message.fields;
+                    response.response.payload.message = response.message.message;
+                }
             }
         }
         return next(response);

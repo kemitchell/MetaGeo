@@ -18,7 +18,7 @@ generic = new Generic
             return '_id'
           return 'username'
   check: (model, req) ->
-   #user can only modify themselves
+    #user can only modify themselves
     if req.auth.credentials.username is model.username
       return true
     return false
@@ -44,13 +44,19 @@ UserController =
     password = request.payload.password
     username = request.payload.username
     if not username
-      return request.reply Hapi.error.badRequest 'Missing UserName'
+      return request.reply Hapi.error.badRequest
+        fields:
+          username: 'Username is Required'
+        message: 'Missing Username'
 
     if not password
-      return request.reply Hapi.error.badRequest 'Missing Password'
+      return request.reply Hapi.error.badRequest
+        fields:
+          username: 'Password is Required'
+        message: 'Missing Password'
 
     #salt passwords
-    pass.hash request.payload.password, (err, salt, hash) ->
+    pass.hash password, (err, salt, hash) ->
       if(err)
         #something went wrong with hashing
         return request.reply Hapi.error.internal(err.message)
@@ -70,7 +76,7 @@ UserController =
             error[field] =  field + " already exists. Please use a different one"
           else
             error = err.err
-          return request.reply Hapi.error.badRequest(error)
+          return request.reply Hapi.error.badRequest {fields:error}
         else
           return request.reply user
   
