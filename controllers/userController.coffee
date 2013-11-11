@@ -68,15 +68,17 @@ UserController =
       user = new User(params)
       user.save (err) ->
         if err
+          fields = {}
           # 11000 is the mongo error code for dupicalate entries
           if err.code is 11000
             #extract the field name from the mongo error message
             field = err.err.match(/\$(.*?)_/)[1]
-            error = {}
-            error[field] =  field + " already exists. Please use a different one"
+            fields[field] =  field + " already exists. Please use a different one"
           else
-            error = err.err
-          return request.reply Hapi.error.badRequest {fields:error}
+            for key, error of err.errors
+              fields[key] = key + ' is ' + error.type
+
+          return request.reply Hapi.error.badRequest {fields:fields}
         else
           return request.reply user
   

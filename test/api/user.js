@@ -17,9 +17,13 @@ describe('/api/user', function() {
         it('should return an error invalid fields', function(done) {
             api.post('/api/user')
                 .set('Content-Type', 'application/json')
+                .send({
+                username: testUser,
+                password: "testPassword"})
                 .expect('Content-Type', /json/)
                 .end(function(err, res){
                     res.status.should.equal(400);
+                    res.body.should.have.property('fields').and.be.an('object');
                     done();
                 });
         });
