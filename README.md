@@ -1,5 +1,5 @@
 # MetaGeo
-### a real-time spatial and temporal mapping API server
+### a real-time spatial and temporal mapping server
 
 ### Setup
 * install [mongodb](http://docs.mongodb.org/manual/installation/)
