@@ -9,10 +9,10 @@
 * run `node .` 
 
 ### Configuration
-Configuration is done through the `./config.coffee` file. 
+Configuration is done through the [./config.coffee](config.coffee) file. 
 
 ### Documentation
+* [API](https://github.com/craveprogramminginc/MetaGeo/wiki/API)
 
-
-### Test API
+### API Tests
 * run test: `npm test`   
