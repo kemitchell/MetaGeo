@@ -63,6 +63,6 @@ module.exports = (options) ->
         params.sort = sort
         params.limit = limit
         params.skip = skip
-        modelValues = options.after modelValues, params
+        modelValues = options.after modelValues, 'find', params
 
       return request.reply modelValues

@@ -25,7 +25,7 @@ module.exports = (options) ->
         #remove the doc
         model.remove ()->
           if options.after
-            options.after model, request
+            options.after model, 'delete', request
 
           return request.reply model
       else

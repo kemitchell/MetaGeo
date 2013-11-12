@@ -16,9 +16,6 @@ module.exports = (options) ->
 
     #find the model
     Model.findOne(params).exec (err, model)->
-      if options.after?
-        model = options.after result, params
-
       if err
         return request.reply Hapi.error.internal err
       if not model

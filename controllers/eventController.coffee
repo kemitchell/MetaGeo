@@ -10,13 +10,17 @@ Social = require '../models/social'
 Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
+socket = require '../socket'
 gjVal = require "geojson-validation"
 
-#create a new generic controller
+#define generic logic for event CRUD
 generic = new Generic
+
+  #fields to omit
+  omit: ['objectType']
   #get the model based on the query
   model: (params)->
-    if params.objecType then params.toLocaleLowerCase()
+    if params.objecType then params.objecType.toLocaleLowerCase()
 
     if params.objectType is "social"
       return Social
@@ -59,6 +63,10 @@ generic = new Generic
     if req.auth.credentials.username is model.actor
       return true
     return false
+
+  after: (model, action)->
+    #broadcast the model to all who are listening
+    socket.broadcast  model.toJSON(), action
 
 ###
 A helper function that changes a bounding box into a geojson polygon
@@ -117,7 +125,7 @@ EventController =
         Event.find {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
 
     #wraps the found events
-    after: (vals, options)->
+    after: (vals, action ,options)->
       wrapped =
         serverTime: (new Date()).toJSON()
         items: vals
@@ -149,9 +157,6 @@ EventController =
       else if params.objectType is "mblog"
         return Mblog
       return Mblog
-    
-    #fields to omit
-    omit: ['objectType']
   )
 
   ###
@@ -160,7 +165,6 @@ EventController =
   update: generic.update(
     #only update socail events
     model: Social
-    omit: ['objectType']
   )
 
   ###

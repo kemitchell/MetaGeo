@@ -1,17 +1,20 @@
 var config = require("../config"),
     supertest = require('supertest'),
     async = require("async"),
+    _ = require('lodash'),
     requestA = supertest.agent(config.test.url),
     requestB = supertest.agent(config.test.url);
 
 module.exports = {
     A:{
         request: requestA,
-        userId: null
+        userId: null,
+        eventId: null
     },
     B:{
         request: requestB,
-        userId: null
+        userId: null,
+        eventId: null
     },
     randomDate: function(start, end) {
       return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -102,6 +105,7 @@ module.exports = {
                           lng: y
                       })
                       .end(function(err, res){
+                          self[AB].eventId = res.body.id
                           if(err){
                             console.error("creating events broke", err);
                           }
@@ -114,8 +118,26 @@ module.exports = {
             }
         ],
         function(err, results){
+          if(_.isFunction(cb)){
             cb();
+          }
         }
       );
+    },
+    updateEvent: function(AB, cb){
+        this[AB].request.put('/api/event/' + this[AB].eventId)
+        .end(function(){
+            if(_.isFunction(cb)){
+              cb();
+            }
+        });
+    },
+    deleteEvent: function(AB, cb){
+        this[AB].request.del('/api/event/' + this[AB].eventId)
+        .end(function(){
+            if(_.isFunction(cb)){
+              cb();
+            }
+        });
     }
 };

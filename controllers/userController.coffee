@@ -97,7 +97,7 @@ UserController =
   @method delete
   ###
   delete: generic.delete(
-    after: (model, req )->
+    after: (model, action, req )->
       #logout for the last time :(
       req.auth.session.clear()
   )

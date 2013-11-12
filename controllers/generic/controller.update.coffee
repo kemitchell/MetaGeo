@@ -62,7 +62,7 @@ module.exports = (options) ->
         model.set payload
         model.save ()->
           if options.after
-            model = options.after model, request
+            options.after model, 'update', request
 
           return request.reply model
       else

@@ -4,7 +4,6 @@ this is a generic create controller
 
 Hapi = require 'hapi'
 mongoose = require 'mongoose'
-socket = require '../../socket'
 _ = require 'lodash'
 
 module.exports = (options) ->
@@ -45,9 +44,6 @@ module.exports = (options) ->
     model = new Model payload
     #and save it
     model.save (err)->
-      #run callback
-      if options.after?
-        model = options.after(model, payload)
 
       if err
         if err instanceof mongoose.Error
@@ -63,7 +59,9 @@ module.exports = (options) ->
           #mongo db itself is erroring
           herror = Hapi.error.internal err
           return request.reply herror
+      else
+        #run after function only if there is no errors
+        if options.after
+          options.after model, 'create', payload
 
-      #broadcast the model to all who are listening
-      socket.broadcast model.toJSON()
-      return request.reply model.toJSON()
+        return request.reply model.toJSON()
