@@ -23,7 +23,6 @@ var metageo = {},
  * @cb {Function} cb A callback for when everything is up and running
  **/
 metageo.start = function(options, cb) {
-
     if (_.isFunction(options) && _.isUndefined(cb)) {
         cb = options;
     } else {
@@ -32,12 +31,9 @@ metageo.start = function(options, cb) {
     }
 
     //fire up the database
-    db.start(config.mongo);
+    db.start(config.db);
     //setup the API server
     server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
-    //set authentication
-    server.auth(config.server.authentication.name, config.server.authentication.options);
-
     //add routes
     server.addRoutes(routes);
 

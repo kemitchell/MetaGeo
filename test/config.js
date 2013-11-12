@@ -5,7 +5,7 @@ module.exports = {
   server: {
     port: 1338
   },
-  mongo:{
+  db:{
     database: "test"
   },
   test:{
