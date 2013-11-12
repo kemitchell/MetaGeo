@@ -59,6 +59,8 @@ module.exports = [
   config:
     handler: require("./controllers/userController").create
     payload: "parse"
+    auth:
+      mode: 'try'
 ,
   method: "DELETE"
   path: "/api/user/{username}"

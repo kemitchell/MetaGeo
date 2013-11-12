@@ -5,6 +5,7 @@ User Controller
 pass = require 'pwd'
 _ = require 'lodash'
 User = require '../models/user'
+AuthController = require './authController'
 Hapi = require 'hapi'
 Generic = require('./generic')
 
@@ -29,6 +30,7 @@ The User Controller, handles CRUD for users
 @static
 ###
 UserController =
+
   ###
   finds a user
   @method findOne
@@ -80,7 +82,9 @@ UserController =
 
           return request.reply Hapi.error.badRequest {fields:fields}
         else
-          return request.reply user
+          #log the user in
+          request.payload.password = password
+          return AuthController.process request
   
   ###
   Updates an user 

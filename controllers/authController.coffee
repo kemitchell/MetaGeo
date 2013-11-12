@@ -20,7 +20,7 @@ AuthController =
     if not password
       return request.reply Hapi.error.badRequest
         fields:
-          username: 'Password is Required'
+          password: 'Password is Required'
         message: 'Missing Password'
 
     User.findOne {username:username}, (err, user)->

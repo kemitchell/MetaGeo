@@ -66,7 +66,7 @@ module.exports = {
                 if (res) {
                     self.B.userId = res.body.id;
                 }
-                cb();
+                self.logout(cb);
             });
         });
     },
