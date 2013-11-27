@@ -61,6 +61,13 @@ module.exports = (options) ->
         #update the doc
         model.set payload
         model.save ()->
+
+          if options.tailableModel
+            json = model.toJSON()
+            json.action = 'update'
+            tailableModel = new options.tailableModel  json
+            tailableModel.save()
+
           if options.after
             options.after model, 'update', request
 

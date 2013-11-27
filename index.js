@@ -14,6 +14,7 @@ var metageo = {},
     config  = require('./config'),
     db      = require('./db'),
     sockets = require('./socket'),
+    Uuid    = require('node-uuid'),
     server  = null;
 
 /**
@@ -34,10 +35,12 @@ metageo.start = function(options, cb) {
     db.start(config.db);
     //setup the API server
     server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
+
     //add routes
     server.addRoutes(routes);
 
     server.ext('onRequest', function(request, next) {
+        //request.state.set('example', { key: 'value' });
         //add nested query strings
         if (request.method == "get") {
             request.query = qs.parse(request.url.search.slice(1));
@@ -71,7 +74,7 @@ metageo.start = function(options, cb) {
     //start the server
     server.start(function() {
         //start sockets
-        sockets.start(server.listener, config.sockjs);
+        sockets.start(server, config.sockjs);
         if (_.isFunction(cb)) {
             cb();
         }

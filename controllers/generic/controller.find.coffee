@@ -3,12 +3,12 @@ CRUD find
 ###
 _ = require 'lodash'
 Hapi = require 'hapi'
+socket = require '../../socket'
 
 module.exports = (options) ->
 
   (request) ->
     params = _.merge request.query, request.params
-
     Model = options.model
     #if the model is not mongoose the run and hope that it gives us a mongoose model
     if not Model.modelName?
@@ -25,7 +25,7 @@ module.exports = (options) ->
     #Remove undefined params
     #(as well as limit, skip, and sort)
     where = _.transform params, (result, param, key)->
-      if key not in ['limit', 'offset', 'skip', 'sort'] and not options.queries?[key] and param
+      if key not in ['limit', 'offset', 'skip', 'sort', 'sub'] and not options.queries?[key] and param
         if _.isObject param
           param = _.transform param, (result, prop, key)->
             result["$"+key] = prop
@@ -36,7 +36,7 @@ module.exports = (options) ->
     if options.queries
       for param, query of options.queries
         if params[param]
-          Model = query params[param], Model, params
+          where = _.merge(where, query(params[param], params))
 
     #add limit
     if options.maxLimit
@@ -56,6 +56,11 @@ module.exports = (options) ->
       modelValues = []
       models.forEach (model) ->
         modelValues.push model
+
+      #subscirbe to this query
+      if options.tailableModel and params.sub
+        if not socket.subscribe params.sub, where, options.tailableModel
+          return request.reply Hapi.error.badRequest 'invalid session id'
 
       #add wrapper
       if options.after

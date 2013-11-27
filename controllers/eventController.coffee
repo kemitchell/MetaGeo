@@ -6,11 +6,11 @@ _ = require 'lodash'
 querystring = require 'querystring'
 config = require '../config'
 Event = require '../models/event'
+TailableEvent = require '../models/tailableEvents'
 Social = require '../models/social'
 Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
-socket = require '../socket'
 gjVal = require "geojson-validation"
 
 #define generic logic for event CRUD
@@ -19,6 +19,7 @@ generic = new Generic
   #fields to omit
   omit: ['objectType']
   #get the model based on the query
+  tailableModel: TailableEvent
   model: (params)->
     if params.objecType then params.objecType.toLocaleLowerCase()
 
@@ -64,10 +65,6 @@ generic = new Generic
       return true
     return false
 
-  after: (model, action)->
-    #broadcast the model to all who are listening
-    socket.broadcast  model.toJSON(), action
-
 ###
 A helper function that changes a bounding box into a geojson polygon
 @method bboxToPoly
@@ -103,17 +100,17 @@ EventController =
     #scans the query string of these method and if they exists exicutes thems
     queries:
       #find events within a bounding box
-      box: (box, Event)->
-        Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
+      box: (box)->
+        return {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
 
       #find events within a geoJSON polygon
-      poly: (poly, Event)->
+      poly: (poly)->
         if _.isString poly
           poly = JSON.parse poly
-        Event.find {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
+        return {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
 
       #find events near a location
-      near: (near, Event, params)->
+      near: (near, params)->
         if params["distance"]
           distance = params["distance"]
         else
@@ -122,10 +119,12 @@ EventController =
           near = near.split ','
         near = near.map (e)->
           Number e
-        Event.find {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
+        return {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
 
     #wraps the found events
     after: (vals, action ,options)->
+      #options.sub
+      #  sockets.subscribe options.sub, options.where
       wrapped =
         serverTime: (new Date()).toJSON()
         items: vals

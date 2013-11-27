@@ -24,6 +24,13 @@ module.exports = (options) ->
       if canDelete
         #remove the doc
         model.remove ()->
+
+          if options.tailableModel
+            json = model.toJSON()
+            json.action = 'delete'
+            tailableModel = new options.tailableModel  json
+            tailableModel.save()
+
           if options.after
             options.after model, 'delete', request
 

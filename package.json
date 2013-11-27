@@ -24,7 +24,10 @@
     "lodash": "~2.2.1",
     "geojson-validation": "~0.1.4",
     "sockjs": "~0.3.8",
-    "qs": "~0.6.5"
+    "qs": "~0.6.5",
+    "yar": "~0.4.0",
+    "node-uuid": "~1.4.1",
+    "mongoose-eventify": "0.0.2"
   },
   "devDependencies": {
     "chai": "~1.7.2",
@@ -36,7 +39,7 @@
   },
   "scripts": {
     "start": "node .",
-    "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive  --reporter spec ./test/"
+    "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive --debug --reporter spec ./test/"
   },
   "contributors": [
     {

@@ -29,7 +29,7 @@ module.exports = (options) ->
           if _.isFunction field.transform
             #get the value of the paramter being manuplated
             payload[index] = field.transform payload[index], payload, request
-          
+
           #run validation
           if _.isFunction field.validate
             err = field.validate payload[index], payload, request
@@ -60,6 +60,13 @@ module.exports = (options) ->
           herror = Hapi.error.internal err
           return request.reply herror
       else
+
+        if options.tailableModel
+          json = model.toJSON()
+          json.action = 'create'
+          tailableModel = new options.tailableModel json
+          tailableModel.save()
+
         #run after function only if there is no errors
         if options.after
           options.after model, 'create', payload
