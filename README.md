@@ -9,10 +9,15 @@
 * run `node .` 
 
 ### Configuration
-Configuration is done through the [./config.coffee](config.coffee) file. 
+See the [configuration documentation](https://github.com/craveprogramminginc/MetaGeo/wiki/Configuration)
 
-### Documentation
-* [API](https://github.com/craveprogramminginc/MetaGeo/wiki/API)
+### API
+* [RESTful API](https://github.com/craveprogramminginc/MetaGeo/wiki/API)
+* [Streaming API](https://github.com/craveprogramminginc/MetaGeo/wiki/Streaming-API)
 
 ### API Tests
 * run test: `npm test`   
+
+### Contact
+* [Mailing List](https://groups.google.com/a/craveprogramming.com/forum/#!forum/metageo-dev)
+* IRC #metageo on freenode
