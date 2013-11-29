@@ -49,25 +49,43 @@ sockets =
     Social.on 'change', (model)=>
       if not model._isNew
         @onAction model, 'update'
-
+  ###
+  Broadcast changes  when a model is updated, delete, created or modified to 
+  the appropate clients
+  @method onAction
+  @param {Object} model the model that is being broadcasted
+  @param {String} action
+  ###
   onAction: (model, action)->
     #iterate thought the filters
     for index, query of openQueries
       #only select events that new or equal to this event.
       filter = query.filter
-      filter._id = model.id
-      Event.find(filter).exec (err, results)->
-        if results
-          #for every found event
-          for result in results
-            response =
-              publish:
-                model: result.toJSON()
-                action: action
-            string = JSON.stringify response
-            #publish to every listening 
-            for sid in query.sids
-              connections[sid].write string
+      #if subscribed to all skip requering
+      if filter is {}
+        response =
+          publish:
+            model: model.toJSON()
+            action: action
+        string = JSON.stringify response
+        #publish to every listening 
+        for sid in query.sids
+          connections[sid].write string
+      else
+        #requery the event to make to see if it fits in any of the filters
+        filter._id = model.id
+        Event.find(filter).exec (err, results)->
+          if results
+            #for every found event
+            for result in results
+              response =
+                publish:
+                  model: result.toJSON()
+                  action: action
+              string = JSON.stringify response
+              #publish to every listening 
+              for sid in query.sids
+                connections[sid].write string
   ###
   a helper function that broadcast a message to all connections
   @method broadcast
@@ -90,7 +108,7 @@ sockets =
   ###
   subscribe: (sid, filter, Model)->
     conn = connections[sid]
-    index = JSON.stringify _.omit(filter,'updated')
+    index = JSON.stringify filter
     #check if we have a connection and that it is not already subscribed to the given filter
     if conn?.filter isnt index
       conn.filter = index
@@ -108,7 +126,6 @@ sockets =
         openQueries[index].sids.push sid
 
       conn.unsubscribe = ()->
-        debugger
         openQueries[index].sids = _.without(openQueries[index].sids, sid)
         if openQueries[index].sids.length is 0
           delete openQueries[index]
