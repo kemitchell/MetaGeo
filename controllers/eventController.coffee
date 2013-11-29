@@ -6,20 +6,20 @@ _ = require 'lodash'
 querystring = require 'querystring'
 config = require '../config'
 Event = require '../models/event'
-TailableEvent = require '../models/tailableEvents'
 Social = require '../models/social'
 Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
 gjVal = require "geojson-validation"
 
+
 #define generic logic for event CRUD
 generic = new Generic
-
+  #allow subscribable queries
+  sub: true
   #fields to omit
   omit: ['objectType']
   #get the model based on the query
-  tailableModel: TailableEvent
   model: (params)->
     if params.objecType then params.objecType.toLocaleLowerCase()
 

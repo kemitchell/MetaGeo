@@ -18,4 +18,5 @@ SocialSchema = EventSchema.extend
   repeat:
     type: Boolean
 
+SocialSchema.plugin require('mongoose-eventify')
 module.exports  =  mongoose.model 'social' ,  SocialSchema

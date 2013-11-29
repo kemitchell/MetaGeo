@@ -1,12 +1,15 @@
 ###
 Socket Functions
 ###
-EventEmitter = require('events').EventEmitter
 sockjs      = require 'sockjs'
 _           = require 'lodash'
 sockets     = {}
 connections = {}
-openStreams = {}
+openQueries = {}
+Mblog       = require './models/mblog'
+Social      = require './models/social'
+Event       = require './models/event'
+
 
 sockets =
   ###
@@ -35,6 +38,36 @@ sockets =
         if conn.unsubscribe then conn.unsubscribe()
         delete connections[conn.id]
 
+    Mblog.on 'add', (model)=>
+      @onAction model, 'create'
+    Social.on 'add', (model)=>
+      @onAction model, 'create'
+    Mblog.on 'change', (model)=>
+      #a hack because mongoose-eventify mess with isNew
+      if not model._isNew
+        @onAction model, 'update'
+    Social.on 'change', (model)=>
+      if not model._isNew
+        @onAction model, 'update'
+
+  onAction: (model, action)->
+    #iterate thought the filters
+    for index, query of openQueries
+      #only select events that new or equal to this event.
+      filter = query.filter
+      filter._id = model.id
+      Event.find(filter).exec (err, results)->
+        if results
+          #for every found event
+          for result in results
+            response =
+              publish:
+                model: result.toJSON()
+                action: action
+            string = JSON.stringify response
+            #publish to every listening 
+            for sid in query.sids
+              connections[sid].write string
   ###
   a helper function that broadcast a message to all connections
   @method broadcast
@@ -51,58 +84,35 @@ sockets =
       connection.write data
 
 
+  
   ###
   sends a stream to an client identified by their sid
   ###
-  subscribe: (sid, filter, Model, reconnecting)->
+  subscribe: (sid, filter, Model)->
     conn = connections[sid]
     index = JSON.stringify _.omit(filter,'updated')
     #check if we have a connection and that it is not already subscribed to the given filter
-    if reconnecting or (conn?.tail?.filter isnt index)
+    if conn?.filter isnt index
+      conn.filter = index
       #send the subscription acknolagement
-      if not reconnecting
-        conn.write JSON.stringify {'suback':index}
-        #unsubscribe if subscribed to another filter
-        if conn.unsubscribe
-          conn.unsubscribe()
-      
-        #open a new tailable cursor if nessicary
-        if not openStreams[index]
-          #console.log((new Date()).toISOString())
-          filter.updated = {$gte: new Date()}
-
-      openStreams[index] = Model.find(filter).tailable().stream()
-      openStreams[index].filter = index
-
-      tail = conn.tail = openStreams[index]
-
-      onData = (message)->
-        data =
-          publish: {}
-          topic: index
-         
-        data.publish = message
-        data.action = message.action
-        data = JSON.stringify data
-        conn.write data
+      conn.write JSON.stringify {'suback':index}
+      #unsubscribe if subscribed to another filter
+      if conn.unsubscribe
+        conn.unsubscribe()
+      #open a new tailable cursor if nessicary
+      if index not in openQueries
+        openQueries[index] =
+          filter: filter
+          sids: [sid]
+      else
+        openQueries[index].sids.push sid
 
       conn.unsubscribe = ()->
-        tail.removeListener 'data', onData
-        #no one is listening. Destory the cursor
-        if EventEmitter.listenerCount(tail, 'on') is 0
-          tail.removeAllListeners 'data'
-          tail.removeAllListeners 'end'
-          tail.destroy()
-          delete openStreams[tail.filter]
-        console.log('unsubcribe')
+        debugger
+        openQueries[index].sids = _.without(openQueries[index].sids, sid)
+        if openQueries[index].sids.length is 0
+          delete openQueries[index]
 
-      tail.on 'data', onData
-      tail.once 'end', (message)=>
-        console.log 'stream closed ' + tail.filter
-        Model.once 'add', (model)=>
-          #console.log model.toJSON()
-          console.log 'stream reconnecting'
-          @subscribe(sid, filter, Model, true)
     else
       return false
 

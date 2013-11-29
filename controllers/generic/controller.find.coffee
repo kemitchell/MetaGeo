@@ -58,8 +58,8 @@ module.exports = (options) ->
         modelValues.push model
 
       #subscirbe to this query
-      if options.tailableModel and params.sub
-        if not socket.subscribe params.sub, where, options.tailableModel
+      if options.sub and params.sub
+        if not socket.subscribe params.sub, where
           return request.reply Hapi.error.badRequest 'invalid session id'
 
       #add wrapper

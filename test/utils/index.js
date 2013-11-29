@@ -6,18 +6,18 @@ var config = require("../config"),
     requestB = supertest.agent(config.test.url);
 
 module.exports = {
-    A:{
+    A: {
         request: requestA,
         userId: null,
         eventId: null
     },
-    B:{
+    B: {
         request: requestB,
         userId: null,
         eventId: null
     },
     randomDate: function(start, end) {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     },
     logout: function(cb) {
         var self = this;
@@ -29,7 +29,7 @@ module.exports = {
             });
         });
     },
-    login: function(AB,cb) {
+    login: function(AB, cb) {
         var self = this;
         this[AB].request.post('/api/login')
             .set('Content-Type', 'application/json')
@@ -37,7 +37,7 @@ module.exports = {
             username: config[AB].user.username,
             password: config[AB].user.password
         })
-        .end(function(err, res) {
+            .end(function(err, res) {
             if (res) {
                 self[AB].userId = res.body.id;
             }
@@ -75,68 +75,67 @@ module.exports = {
     },
     createRandomEvents: function(AB, num, bounds, cb) {
         var count = 0,
-        request = this[AB].request,
-        self = this;
+            request = this[AB].request,
+            self = this;
 
         async.series([
-            function(callback){
-                self.login.bind(self)([AB],callback);
+            function(callback) {
+                self.login.bind(self)([AB], callback);
             },
-            function(callback){
-              async.whilst(
-                function(){ 
-                    return count < num+1;
-                },
-                function(callback){
-                  count++;
-                  var y = Math.random() * (bounds[0][0] - bounds[1][0]) + bounds[1][0],
-                  x = Math.random() * (bounds[0][1] - bounds[1][1]) + bounds[1][1],
-                  start = self.randomDate(new Date(), new Date(2099,0,1)),
-                  end = self.randomDate(start, new Date(2099,0,1));
+            function(callback) {
+                async.whilst(function() {
+                    return count < num + 1;
+                }, function(callback) {
+                    count++;
+                    var y = Math.random() * (bounds[0][0] - bounds[1][0]) + bounds[1][0],
+                        x = Math.random() * (bounds[0][1] - bounds[1][1]) + bounds[1][1],
+                        start = self.randomDate(new Date(), new Date(2099, 0, 1)),
+                        end = self.randomDate(start, new Date(2099, 0, 1));
 
-                  request.post('/api/event/social')
-                      .set('Content-Type', 'application/json')
-                      .send({
-                          title: "test_" + count,
-                          content: "testContent" + count,
-                          start: start,
-                          end: end,
-                          lat: x,
-                          lng: y
-                      })
-                      .end(function(err, res){
-                          self[AB].eventId = res.body.id
-                          if(err){
+                    request.post('/api/event/social')
+                        .set('Content-Type', 'application/json')
+                        .send({
+                        title: "test_" + count,
+                        content: "testContent" + count,
+                        start: start,
+                        end: end,
+                        lat: x,
+                        lng: y
+                    })
+                        .end(function(err, res) {
+                        if (err) {
                             console.error("creating events broke", err);
-                          }
-                          callback();
-                      });
-                },
-                function(err){
-                  callback();
+                        }else{
+                            self[AB].eventId = res.body.id;
+                        }
+                        callback();
+                    });
+                }, function(err) {
+                    callback();
                 });
             }
-        ],
-        function(err, results){
-          if(_.isFunction(cb)){
-            cb();
-          }
-        }
-      );
-    },
-    updateEvent: function(AB, cb){
-        this[AB].request.put('/api/event/' + this[AB].eventId)
-        .end(function(){
-            if(_.isFunction(cb)){
-              cb();
+        ], function(err, results) {
+            if (_.isFunction(cb)) {
+                cb();
             }
         });
     },
-    deleteEvent: function(AB, cb){
+    updateEvent: function(AB, cb) {
+        this[AB].request.put('/api/event/' + this[AB].eventId)
+            .send({
+            title: 'updated tilte'
+        })
+            .end(function() {
+            if (_.isFunction(cb)) {
+                cb();
+            }
+        });
+    },
+    deleteEvent: function(AB, cb) {
         this[AB].request.del('/api/event/' + this[AB].eventId)
-        .end(function(){
-            if(_.isFunction(cb)){
-              cb();
+            .end(function() {
+            if (_.isFunction(cb)) {
+                cb();
             }
         });
     }

@@ -60,13 +60,6 @@ module.exports = (options) ->
           herror = Hapi.error.internal err
           return request.reply herror
       else
-
-        if options.tailableModel
-          json = model.toJSON()
-          json.action = 'create'
-          tailableModel = new options.tailableModel json
-          tailableModel.save()
-
         #run after function only if there is no errors
         if options.after
           options.after model, 'create', payload
