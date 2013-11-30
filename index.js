@@ -14,7 +14,6 @@ var metageo = {},
     config  = require('./config'),
     db      = require('./db'),
     sockets = require('./socket'),
-    Uuid    = require('node-uuid'),
     server  = null;
 
 /**
