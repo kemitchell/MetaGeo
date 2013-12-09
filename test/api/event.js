@@ -46,13 +46,16 @@ describe('/api/event', function() {
             });
         });
 
-        it('create a new socail event', function(done) {
+        it('create a new social event', function(done) {
             utils.A.request.post( '/api/event/social')
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testtr89t",
                 content: "testContent",
-                start: new Date(),
+                start: (new Date()).toJSON(),
+                end: (new Date()).toJSON(),
+                address: "test address",
+                venue: "test venue",
                 lat: 34,
                 lng: -90
             })
@@ -61,6 +64,12 @@ describe('/api/event', function() {
                 res.body.should.have.property('actor').and.be.an('string');
                 res.body.should.have.property('content').and.be.an('string');
                 res.body.should.have.property('objectType').and.be.equal('social');
+
+                res.body.should.have.property('start').and.be.an('string');
+                res.body.should.have.property('end').and.be.an('string');
+                res.body.should.have.property('address').and.be.an('string');
+                res.body.should.have.property('venue').and.be.an('string');
+
                 social_event_id = res.body.id;
                 done();
             });

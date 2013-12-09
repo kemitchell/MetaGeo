@@ -12,6 +12,8 @@ SocialSchema = EventSchema.extend
     type: String
   venue:
     type: String
+  link:
+    type: String
   # many to one
   repeat_id:
     type: String
