@@ -4,7 +4,7 @@
 ###
 List = require "../models/list"
 Aggergate = require "../models/aggregate"
-Generic = require('./generic')
+Generic = require './generic'
 generic = new Generic
   model:List
 
