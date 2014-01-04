@@ -43,17 +43,12 @@ db =
     mongoose.connection.on "disconnected", ->
       console.log "Mongoose default connection disconnected"
 
-    # If the Node process ends, close the Mongoose connection
-    process.on "SIGINT", ->
-      mongoose.connection.close ->
-        console.log "Mongoose default connection disconnected through app termination"
-        process.exit 0
-
   ###
   @method stop
   @param {Function} cb A callback
   ###
   stop:(cb)->
-    mongoose.disconnect cb
+    mongoose.connection.close ->
+      console.log "Mongoose default connection disconnected through app termination"
 
 module.exports = db

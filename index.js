@@ -13,7 +13,7 @@ var metageo = {},
     routes  = require('./routes'),
     config  = require('./config'),
     db      = require('./db'),
-    sockets = require('./socket'),
+    pubsub  = require('./pubsub'),
     server  = null;
 
 /**
@@ -30,7 +30,7 @@ metageo.start = function(options, cb) {
         _.merge(config, options);
     }
 
-    //fire up the database
+    //fire up the database connection
     db.start(config.db);
     //setup the API server
     server = new Hapi.Server(config.server.host, Number(config.server.port), config.server.options);
@@ -73,10 +73,7 @@ metageo.start = function(options, cb) {
     //start the server
     server.start(function() {
         //start sockets
-        sockets.start(server, config.sockjs);
-        if (_.isFunction(cb)) {
-            cb();
-        }
+        pubsub.start(server, config.pubsub, cb);
     });
 };
 
@@ -85,7 +82,6 @@ metageo.start = function(options, cb) {
  * @method stop
  * @param {Object}
  * @param.timeout {Time} Passed to hapi.stop
- *
  **/
 metageo.stop = function(options, cb) {
     var options;
@@ -93,10 +89,11 @@ metageo.stop = function(options, cb) {
         cb = options;
         options = config.server.stop;
     }
-
     server.stop(options, function() {
+        //shutdown subpub before shutting down the the DB, so it can clear the
+        //subscription table
+        pubsub.stop();
         db.stop();
-        console.log('Server stopped');
         if (_.isFunction(cb)) {
             cb();
         }
@@ -105,6 +102,9 @@ metageo.stop = function(options, cb) {
 
 //if runing the app directly start the server else just export it
 if (require.main === module) {
+    process.on('SIGINT',function(){
+      metageo.stop();
+    });
     metageo.start();
 } else {
     module.exports = metageo;

@@ -3,7 +3,7 @@ CRUD find
 ###
 _ = require 'lodash'
 Hapi = require 'hapi'
-socket = require '../../socket'
+pubsub = require '../../pubsub'
 
 module.exports = (options) ->
 
@@ -25,14 +25,14 @@ module.exports = (options) ->
     #Remove undefined params
     #(as well as limit, skip, and sort)
     where = _.transform params, (result, param, key)->
-      if key not in ['limit', 'offset', 'skip', 'sort', 'sub'] and not options.queries?[key] and param
+      if key not in ['limit', 'offset', 'skip', 'sort', 'client'] and not options.queries?[key] and param
         if _.isObject param
           param = _.transform param, (result, prop, key)->
             result["$"+key] = prop
 
         result[key] = param
 
-    #add queries 
+    #add queries
     if options.queries
       for param, query of options.queries
         if params[param]
@@ -43,12 +43,12 @@ module.exports = (options) ->
       if _.isNaN(limit) or limit > options.maxLimit
         limit = options.maxLimit
 
-    #add oder
+    #add order
     if options.defaultOrder and not sort
       sort = options.defaultOrder
 
     Model.find(where).sort(sort).skip(skip).limit(limit).exec (err, models) ->
-      # An error occurred 
+      # An error occurred
       if err
         return request.reply Hapi.error.internal err
 
@@ -58,9 +58,8 @@ module.exports = (options) ->
         modelValues.push model
 
       #subscirbe to this query
-      if options.sub and params.sub
-        if not socket.subscribe params.sub, where
-          return request.reply Hapi.error.badRequest 'invalid session id'
+      if options.pubsub and params.client
+        pubsub.sub params
 
       #add wrapper
       if options.after

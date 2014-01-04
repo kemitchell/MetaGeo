@@ -2,9 +2,10 @@
 this is a generic create controller
 ###
 
-Hapi = require 'hapi'
+Hapi     = require 'hapi'
 mongoose = require 'mongoose'
-_ = require 'lodash'
+_        = require 'lodash'
+subpub   = require '../../pubsub'
 
 module.exports = (options) ->
 
@@ -23,7 +24,9 @@ module.exports = (options) ->
       errors = {}
       for  index, field of fields
         if _.isFunction field
-          payload[index] = field payload[index], payload, request
+          val = field payload[index], payload, request
+          if not _.isUndefined val
+            payload[index] = val
 
         else
           if _.isFunction field.transform
@@ -44,7 +47,6 @@ module.exports = (options) ->
     model = new Model payload
     #and save it
     model.save (err)->
-
       if err
         if err instanceof mongoose.Error
           fields = {}
@@ -63,5 +65,9 @@ module.exports = (options) ->
         #run after function only if there is no errors
         if options.after
           options.after model, 'create', payload
+
+        #push the model
+        if options.pubsub
+          subpub.pub model.toJSON(), 'create'
 
         return request.reply model.toJSON()

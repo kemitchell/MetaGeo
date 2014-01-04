@@ -3,6 +3,7 @@ CRUD delete
 ###
 _ = require('lodash')
 Hapi = require('hapi')
+subpub   = require '../../pubsub'
 
 module.exports = (options) ->
  
@@ -26,6 +27,9 @@ module.exports = (options) ->
         model.remove ()->
           if options.after
             options.after model, 'delete', request
+
+          if options.pubsub
+            subpub.pub model.toJSON(), 'delete'
 
           return request.reply model
       else

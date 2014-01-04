@@ -167,4 +167,20 @@ module.exports = [
       path:
         #id must be an mongo id
         _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
+,
+  #subscriptions
+  method: "POST"
+  path: "/api/subscription"
+  config:
+    handler: require("./controllers/subscriptionController").create
+,
+  method: "PUT"
+  path: "/api/subscription/{_id}"
+  config:
+    handler: require("./controllers/subscriptionController").update
+,
+  method: "DELETE"
+  path: "/api/subsciption/{_id}"
+  config:
+    handler: require("./controllers/subscriptionController").delete
 ]

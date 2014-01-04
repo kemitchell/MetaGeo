@@ -25,7 +25,9 @@
     "lodash": "~2.2.1",
     "geojson-validation": "~0.1.4",
     "sockjs": "~0.3.8",
-    "qs": "~0.6.5"
+    "qs": "~0.6.5",
+    "websocket-stream": "~0.4.0",
+    "uuid": "~1.4.1"
   },
   "devDependencies": {
     "chai": "~1.7.2",

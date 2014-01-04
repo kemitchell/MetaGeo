@@ -1,7 +1,6 @@
 module.exports =
   api:
     timezone: 'America/Chicago'
-    #timezone offset
     geo:
       #the bouds that users can post within, in a geoJSON ploygon 
       bounds:[[[-88.41796875, 41.1455697310095], [-88.41796875, 42.48019996901214], [-86.737060546875, 42.48019996901214], [-86.737060546875, 41.1455697310095], [-88.41796875, 41.1455697310095]]]
@@ -31,6 +30,11 @@ module.exports =
 
   sockjs:
     prefix: '/stream'
+
+  pubsub:
+    transports:
+      'metageo-pubsub-websockets':
+        path: '/pubsub/ws'
 
   ###
   Configures Mongo 

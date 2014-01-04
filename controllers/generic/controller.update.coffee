@@ -3,6 +3,7 @@ CRUD update
 ###
 Hapi = require 'hapi'
 _ = require 'lodash'
+subpub   = require '../../pubsub'
 
 module.exports = (options) ->
   (request) ->
@@ -26,9 +27,9 @@ module.exports = (options) ->
       errors = {}
       for  index, field of fields
         if _.isFunction field
-          result = field payload[index], payload, request
-          if result
-            payload[index] = result
+          val = field payload[index], payload, request
+          if not _.isUndefined val
+            payload[index] = val
 
         else
           if _.isFunction field.transform
@@ -63,6 +64,10 @@ module.exports = (options) ->
         model.save ()->
           if options.after
             options.after model, 'update', request
+
+          #push the model
+          if options.pubsub
+            subpub.pub model.toJSON(), 'update'
 
           return request.reply model
       else

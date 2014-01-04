@@ -11,12 +11,13 @@ Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
 gjVal = require "geojson-validation"
+utils = require '../utils'
 
 
 #define generic logic for event CRUD
 generic = new Generic
   #allow subscribable queries
-  sub: true
+  pubsub: true
   #fields to omit
   omit: ['objectType']
   #get the model based on the query
@@ -65,19 +66,6 @@ generic = new Generic
       return true
     return false
 
-###
-A helper function that changes a bounding box into a geojson polygon
-@method bboxToPoly
-@param box a bounding box give two comma seperated cooridantes
-###
-bboxToPoly = (box)->
-  if not _.isArray box
-    box = box.split ','
-
-  box = box.map (e)->
-    Number e
-
-  box = [[[box[0], box[1]],[box[0], box[3]],[box[2], box[3]],[box[2], box[1]],[box[0], box[1]]]]
 
 ###
 The Event Controller, handles CRUD for events
@@ -101,7 +89,7 @@ EventController =
     queries:
       #find events within a bounding box
       box: (box)->
-        return {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: bboxToPoly(box)}}}}
+        return {geometry:{$geoWithin:{$geometry: utils.bboxToPoly(box)}}}
 
       #find events within a geoJSON polygon
       poly: (poly)->
