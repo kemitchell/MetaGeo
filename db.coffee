@@ -51,6 +51,5 @@ db =
     mongoose.connection.close ->
       if cb
         cb()
-      console.log "Mongoose default connection disconnected through app termination"
 
 module.exports = db

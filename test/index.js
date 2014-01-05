@@ -11,10 +11,10 @@ after(function(done) {
     //clear the db
     if (!config.dontDelete) {
         //waht
-        mongoose.connection.db.dropDatabase(done);
-        server.stop({
-            timeout: 200
-        }, done);
+        mongoose.connection.db.dropDatabase(
+          server.stop({
+              timeout: 200
+          }, done));
     } else {
         done();
     }
