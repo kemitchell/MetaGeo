@@ -9,5 +9,4 @@ MblogSchema.pre 'validate', (next)->
   @start = new Date()
   next()
 
-MblogSchema.plugin require('mongoose-eventify')
 module.exports  =  mongoose.model 'mblog' , MblogSchema
