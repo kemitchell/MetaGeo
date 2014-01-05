@@ -1,6 +1,7 @@
-# MetaGeo
-### a real-time spatial and temporal mapping server
-
+# MetaGeo 
+### a real-time spatial and temporal mapping server 
+[![Build Status](https://travis-ci.org/craveprogramminginc/MetaGeo.png?branch=master)](https://travis-ci.org/craveprogramminginc/MetaGeo)
+ 
 ### Setup
 * install [mongodb](http://docs.mongodb.org/manual/installation/)
 * clone the repositry: `git clone https://github.com/CraveProgrammingInc/MetaGeo.git`  
