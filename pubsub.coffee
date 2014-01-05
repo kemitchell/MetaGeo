@@ -43,17 +43,18 @@ pubsub =
     promise = Subscription.aggregate(
       $match:{$or: [{"filter.geometry":{$geoIntersects:{$geometry: model.geometry}}},{"filter.geometry.type":  $exists:false}]}
       ).exec (err, subscriptions)=>
-        #iterate thourgh teh subscriptions
-        for subscription in subscriptions
-          p1 = subscription.filter.near
-          p2 = model.geometry.coordinates
-          #if the subscription was to `near` objects then calculate the distace
-          #to see of the event model is near enought
-          if p1 and  subscription.filter.distance > utils.distance(p1[0], p1[1], p2[0], p2[1]) or not p1
-            clientID = subscription.client
-            #iterate thourght the transports
-            for transport in subscription.transports
-              @transports[transport].pub clientID, model, action
+        if not err
+          #iterate thourgh teh subscriptions
+          for subscription in subscriptions
+            p1 = subscription.filter.near
+            p2 = model.geometry.coordinates
+            #if the subscription was to `near` objects then calculate the distace
+            #to see of the event model is near enought
+            if p1 and  subscription.filter.distance > utils.distance(p1[0], p1[1], p2[0], p2[1]) or not p1
+              clientID = subscription.client
+              #iterate thourght the transports
+              for transport in subscription.transports
+                @transports[transport].pub clientID, model, action
 
   ###
   Creates a subscription given a clientID and filter
