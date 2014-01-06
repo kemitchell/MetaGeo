@@ -4,7 +4,6 @@ _ = require 'lodash'
 uuid = require 'uuid'
 utils = require './utils'
 
-
 pubsub =
   transports: {}
   ###
@@ -64,14 +63,33 @@ pubsub =
   @param {String} id, an optional id for the subscription, if not given default
   mongo ids are used
   ###
-  sub: (payload)->
-    @server.inject  {method:'POST', url:'/api/subscription', payload: JSON.stringify(payload)}, (res)->
+  sub: (client, filter, id)->
+    filter.client = client
+    if id
+      filter._id = id
 
+    @server.inject  {method:'POST', url:'/api/subscription', payload: JSON.stringify(filter)}, (res)->
 
+  ###
+  Unsubscribes from a given a subscription
+  @method unsub
+  @param {String} clientID
+  @param {Object} id the id of the subscription
+  ###
   unsub: (clientID, id)->
-    console.log('todo')
+    url = '/api/subscription/' + id + '?client=' + clientID
+    @server.inject  {method:'DELETE', url:url}, (res)->
 
-  rest: (method, payload)->
-    console.log method
+
+  ###
+
+  @method sub
+  @param {String} clientID
+  @param {Object} filter
+  @param {String} id, an optional id for the subscription, if not given default
+  mongo ids are used
+  ###
+  rest: (method, url, payload)->
+    @server.inject  {method:methid, url:url, payload: payload}, (res)->
 
 module.exports = pubsub

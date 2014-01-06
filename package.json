@@ -32,9 +32,7 @@
     "chai": "~1.7.2",
     "supertest": "~0.7.1",
     "superagent": "~0.15.4",
-    "mocha": "~1.13.0",
-    "msgpack": "~0.2.1",
-    "ws": "~0.4.31"
+    "mocha": "~1.13.0"
   },
   "scripts": {
     "start": "node .",

@@ -10,7 +10,6 @@ before(function(done) {
 after(function(done) {
     //clear the db
     if (!config.dontDelete) {
-        //waht
         mongoose.connection.db.dropDatabase(
           server.stop({
               timeout: 200

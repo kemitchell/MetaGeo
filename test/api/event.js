@@ -28,8 +28,8 @@ describe('/api/event', function() {
             utils.login('A',done);
         });
 
-        it('create a new event with valid fields without an objectType', function(done) {
-            utils.A.request.post( '/api/event')
+        it('create a new mblog event', function(done) {
+            utils.A.request.post( '/api/event/mblog')
                 .set('Content-Type', 'application/json')
                 .send({
                 content: "testContent",

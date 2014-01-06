@@ -59,7 +59,7 @@ module.exports = (options) ->
 
       #subscirbe to this query
       if options.pubsub and params.client
-        pubsub.sub params
+        pubsub.sub params.client, params
 
       #add wrapper
       if options.after

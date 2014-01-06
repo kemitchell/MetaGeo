@@ -9,4 +9,5 @@ MblogSchema.pre 'validate', (next)->
   @start = new Date()
   next()
 
+
 module.exports  =  mongoose.model 'mblog' , MblogSchema

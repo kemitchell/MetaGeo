@@ -1,7 +1,7 @@
 ###
 Defines the hapi routes for the API
 ###
-
+eventController = new (require('./controllers/eventController'))()
 Types = require("hapi").types
 module.exports = [
   #static assests
@@ -71,7 +71,7 @@ module.exports = [
   method: "GET"
   path: "/api/event/{_id}"
   config:
-    handler: require("./controllers/eventController").findOne
+    handler: eventController.findOne
     validate:
       path:
         #id must be an mongo id
@@ -80,19 +80,20 @@ module.exports = [
   method: "POST"
   path: "/api/event"
   config:
-    handler: require("./controllers/eventController").create
+    handler: eventController.create
     auth: true
 ,
   method: "POST"
   path: "/api/event/{objectType}"
   config:
-    handler: require("./controllers/eventController").create
+    handler: (request)->
+      require("./controllers/"+request.params.objectType+"Controller.coffee" ).create.apply @, arguments
     auth: true
 ,
   method: "PUT"
   path: "/api/event/{_id}"
   config:
-    handler: require("./controllers/eventController").update
+    handler: eventController.update
     auth: true
     validate:
       path:
@@ -102,7 +103,7 @@ module.exports = [
   method: "DELETE"
   path: "/api/event/{_id}"
   config:
-    handler: require("./controllers/eventController").delete
+    handler: eventController.delete
     auth: true
     validate:
       path:
@@ -113,23 +114,23 @@ module.exports = [
   method: "GET"
   path: '/api/events/'
   config:
-    handler: require("./controllers/eventController").find
+    handler: eventController.find
 ,
   method: "GET"
   path: "/api/events/{objectType}/"
   config:
-    handler: require("./controllers/eventController").find
+    handler: eventController.find
 ,
   method: "GET"
   path: "/api/events/user/{actor}/"
   config:
-    handler: require("./controllers/eventController").find
+    handler: eventController.find
 ,
   #TODO
   method: "GET"
   path: "/api/events/list/{_id}/"
   config:
-    handler: require("./controllers/eventController").find
+    handler: eventController.find
 ,
   #lists
   method: "POST"

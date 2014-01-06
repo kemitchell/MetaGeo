@@ -6,32 +6,25 @@ _ = require 'lodash'
 querystring = require 'querystring'
 config = require '../config'
 Event = require '../models/event'
-Social = require '../models/social'
-Mblog = require '../models/mblog'
 List = require '../models/list'
 Generic = require './generic'
 gjVal = require "geojson-validation"
 utils = require '../utils'
 
-
+generic = {}
 #define generic logic for event CRUD
-generic = new Generic
+genericOptions =
   #allow subscribable queries
   pubsub: true
   #fields to omit
   omit: ['objectType']
   #get the model based on the query
-  model: (params)->
-    if params.objecType then params.objecType.toLocaleLowerCase()
-
-    if params.objectType is "social"
-      return Social
-    else if params.objectType is "mblog"
-      return Mblog
-    else
-      return Event
-
+  model: Event
   fields:
+    objectType:
+      validate: (objectType)->
+        if not objectType
+          return "objectType Required"
     # give the event an author
     actor: (actor, params, req) ->
       return req.auth.credentials.username
@@ -72,91 +65,86 @@ The Event Controller, handles CRUD for events
 @class EventController
 @static
 ###
-EventController =
-  ###
-  @method findOne
-  ###
-  findOne: generic.findOne()
+class EventController
+  constructor: (options) ->
+    _.merge genericOptions, options
+    generic = new Generic genericOptions
 
-  ###
-  @method find
-  ###
-  find: generic.find(
-    #max number of events to return
-    maxLimit: config.api.events.maxLimit
-    defaultOrder: config.api.events.defaults.order
-    #scans the query string of these method and if they exists exicutes thems
-    queries:
-      #find events within a bounding box
-      box: (box)->
-        return {geometry:{$geoWithin:{$geometry: utils.bboxToPoly(box)}}}
+    ###
+    @method findOne
+    ###
+    @findOne = generic.findOne()
 
-      #find events within a geoJSON polygon
-      poly: (poly)->
-        if _.isString poly
-          poly = JSON.parse poly
-        return {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
+    ###
+    @method find
+    ###
+    @find = generic.find(
+      #max number of events to return
+      maxLimit: config.api.events.maxLimit
+      defaultOrder: config.api.events.defaults.order
+      #scans the query string of these method and if they exists exicutes thems
 
-      #find events near a location
-      near: (near, params)->
-        if params["distance"]
-          distance = params["distance"]
-        else
-          distance = 9000
-        if not _.isArray near
-          near = near.split ','
-        near = near.map (e)->
-          Number e
-        return {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
+      queries:
+        #find events within a bounding box
+        box: (box)->
+          return {geometry:{$geoWithin:{$geometry: utils.bboxToPoly(box)}}}
 
-    #wraps the found events
-    after: (vals, action ,options)->
-      #options.sub
-      #  sockets.subscribe options.sub, options.where
-      wrapped =
-        serverTime: (new Date()).toJSON()
-        items: vals
-        pages:
-          more: true
+        #find events within a geoJSON polygon
+        poly: (poly)->
+          if _.isString poly
+            poly = JSON.parse poly
+          return {geometry:{$geoWithin:{$geometry:{type:"Polygon",coordinates: poly}}}}
 
-      if vals.length < options.limit
-        wrapped.pages.more = false
+        #find events near a location
+        near: (near, params)->
+          if params["distance"]
+            distance = params["distance"]
+          else
+            distance = 9000
+          if not _.isArray near
+            near = near.split ','
+          near = near.map (e)->
+            Number e
+          return {geometry:{$near:{$geometry:{type:"Point", coordinates:near},$maxDistance:distance}}}
 
-      wrapped.pages.next = "offset=" + ((options.skip or 0) + options.limit)
-      wrapped.pages.prev = "offset=" + (- options.limit + (options.skip or 0))
+      #wraps the found events
+      after: (vals, action ,options)->
+        #options.sub
+        #  sockets.subscribe options.sub, options.where
+        wrapped =
+          serverTime: (new Date()).toJSON()
+          items: vals
+          pages:
+            more: true
 
-      delete options.skip
-      delete options.offset
-      where = querystring.stringify options
-      wrapped.pages.next += "&" + where
-      wrapped.pages.prev += "&" + where
+        if vals.length < options.limit
+          wrapped.pages.more = false
 
-      return wrapped
-  )
+        wrapped.pages.next = "offset=" + ((options.skip or 0) + options.limit)
+        wrapped.pages.prev = "offset=" + (- options.limit + (options.skip or 0))
 
-  ###
-  @method create
-  ###
-  create: generic.create(
-    model: (params)->
-      if params.objectType is "social"
-        return Social
-      else if params.objectType is "mblog"
-        return Mblog
-      return Mblog
-  )
+        delete options.skip
+        delete options.offset
+        where = querystring.stringify options
+        wrapped.pages.next += "&" + where
+        wrapped.pages.prev += "&" + where
 
-  ###
-  @method update
-  ###
-  update: generic.update(
-    #only update socail events
-    model: Social
-  )
+        return wrapped
+    )
 
-  ###
-  @method delete
-  ###
-  delete: generic.delete()
+    ###
+    @method create
+    ###
+    @create = generic.create()
+
+    ###
+    @method update
+    ###
+    @update = generic.update()
+
+    ###
+    @method delete
+    ###
+    @delete = generic.delete()
 
 module.exports = EventController
