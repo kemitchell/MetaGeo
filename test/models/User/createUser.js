@@ -1,8 +1,6 @@
 require('coffee-script')
-var mongoConf = require('../../config').mongo;
 var should = require('chai').should();
-var User = require('../../../models/user');
-var mongoose = require('mongoose');
+var User = require('../../../lib/models/user');
 
 describe.skip('Create User',function(){
     before(function(done){

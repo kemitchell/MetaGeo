@@ -19,7 +19,6 @@ EventSchema = new Schema({
       required: true
     coordinates: []
   content:
-    required: true
     type: String
   #what lists this event is in
   lists:

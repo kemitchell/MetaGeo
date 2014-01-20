@@ -2,12 +2,10 @@
 
 require('coffee-script')
 var should = require('chai').should();
-var mongoConf = require('../../config').mongo;
-var Collection = require('../../../models/list');
-var User = require('../../../models/user');
-var Subscription = require('../../../models/subscription');
+var Collection = require('../../../lib/models/list');
+var User = require('../../../lib/models/user');
+var Subscription = require('../../../lib/models/subscription');
 var async = require('async');
-var mongoose = require('mongoose');
 
 var user1 = new User({
     "title":"my collection",

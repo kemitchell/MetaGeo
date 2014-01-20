@@ -91,6 +91,27 @@ module.exports = [
     auth: true
 ,
   method: "PUT"
+  path: "/api/event/{objectType}/{_id}"
+  config:
+    handler: (request)->
+      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
+    auth: true
+,
+  method: "DELETE"
+  path: "/api/event/{objectType}/{_id}"
+  config:
+    handler: (request)->
+      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
+    auth: true
+,
+  method: "GET"
+  path: "/api/event/{objectType}/{_id}"
+  config:
+    handler: (request)->
+      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
+    auth: true
+,
+  method: "PUT"
   path: "/api/event/{_id}"
   config:
     handler: eventController.update

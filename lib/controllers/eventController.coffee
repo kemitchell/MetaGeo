@@ -4,8 +4,11 @@ The Event Controller, handles CRUD for events
 
 _ = require 'lodash'
 querystring = require 'querystring'
-config = require '../config'
 Event = require '../models/event'
+Social = require '../models/social'
+Mblog = require '../models/mblog'
+Request = require '../models/request'
+Response = require '../models/response'
 List = require '../models/list'
 Generic = require './generic'
 gjVal = require "geojson-validation"
@@ -36,9 +39,10 @@ genericOptions =
             #set collections to an array
             lists = [lists]
         return lists
-      validate: (lists)->
+      validate: (lists, params, request)->
+        config = request.server.settings.app.api
         if lists and lists.length > config.api.events.maxLists
-          return "the max number of lists you can add an event to is:" +  config.api.events.maxLists
+          return "the max number of lists you can add an event to is:" +  config.events.maxLists
 
     geometry:
       transform: (geometry, params)->
@@ -49,6 +53,7 @@ genericOptions =
         return geometry
 
       validate: (point)->
+        debugger
         if not gjVal.isPoint(point)
           return "invalid geoJSON"
   
@@ -79,10 +84,11 @@ class EventController
     @method find
     ###
     @find = generic.find(
-      #max number of events to return
-      maxLimit: config.api.events.maxLimit
-      defaultOrder: config.api.events.defaults.order
-      #scans the query string of these method and if they exists exicutes thems
+      config: (config)->
+        #max number of events to return
+        maxLimit: config.events.maxLimit
+        defaultOrder: config.events.defaults.order
+        #scans the query string of these method and if they exists exicutes thems
 
       queries:
         #find events within a bounding box

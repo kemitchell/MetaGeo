@@ -2,6 +2,9 @@
 A few utilitly functions, mostly geospatial related
 ###
 _ = require 'lodash'
+geoLocation = require 'GeoLocation'
+#in meters
+EarthsRadus = 6356752
 
 utils =
   ###
@@ -31,12 +34,12 @@ utils =
   @param {Number} radius
   @returns {Object}
   ###
-  circleToPoly: (center, radius)->
-    type: "Polygon"
-    coordinates: [[[center[0] - radius], [center[1] - radius],
-                  [center[0] + radius], [center[0] - radius],
-                  [center[0] - radius], [center[0] + radius],
-                  [center[0] + radius], [center[0] + radius]]]
+  circleToPoly: (center, distance)->
+    geoLoc = geoLocation(center[1], center[0])
+    bounds = geoLoc.boundingCoordinates(distance, EarthsRadus)
+    return bboxToPoly [bounds[0].lng, bounds[0].lat, bounds[1].lng, bounds[1].lat]
+
+
 
   ###
   Cacluates the distance between to points
@@ -46,6 +49,11 @@ utils =
   @returns {Number}
   ###
   distance: (p1, p2)->
-    Math.squrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1]))
+    geoP1 = geoLocation.fromDegrees p1[1], p1[0]
+    geoP2 = geoLocation.fromDegrees p2[1], p2[0]
+    return geoP1.distanceTo(geoP2, EarthsRadus)
+    
+
+
 
 module.exports = utils

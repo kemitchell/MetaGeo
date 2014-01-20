@@ -28,9 +28,6 @@ module.exports =
           cookie: 'sid-em',
           isSecure: false
 
-  sockjs:
-    prefix: '/stream'
-
   pubsub:
     transports:
       'metageo-pubsub-websockets':

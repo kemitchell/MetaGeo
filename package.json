@@ -26,7 +26,8 @@
     "geojson-validation": "~0.1.4",
     "qs": "~0.6.6",
     "uuid": "~1.4.1",
-    "metageo-pubsub-websockets": "git+https://github.com/craveprogramminginc/metageo-pubsub-websockets.git"
+    "metageo-pubsub-websockets": "git+https://github.com/craveprogramminginc/metageo-pubsub-websockets.git",
+    "GeoLocation": "git+https://github.com/wanderer/GeoLocation"
   },
   "devDependencies": {
     "chai": "~1.7.2",
@@ -34,8 +35,10 @@
     "superagent": "~0.15.4",
     "mocha": "~1.13.0"
   },
+  "bin": {
+    "metageo": "./bin/metageo"
+  },
   "scripts": {
-    "start": "node .",
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive --reporter spec ./test/"
   },
   "contributors": [

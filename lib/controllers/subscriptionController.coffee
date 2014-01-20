@@ -24,7 +24,7 @@ generic = new Generic
         if params.client
           for index, transport of pubsub.transports
             #if a client exists on a transport then publish the model
-            if transport.getClient params.client
+            if _.isFunction(transport.getClient) and transport.getClient params.client
               clientTransports.push index
         return clientTransports
 
@@ -43,7 +43,7 @@ generic = new Generic
 
       if not _.isEmpty filter
         if filter.near and filter.distance
-          returnFilter.geometry = utils.nearToBox(filter.near, filter.distance)
+          returnFilter.geometry = utils.circleToPoly(filter.near, filter.distance)
 
         else if filter.box
           returnFilter.geometry = utils.bboxToPoly filter.box

@@ -1,4 +1,5 @@
 Subscription = require './models/subscription'
+Social = require './models/social'
 mongoose = require 'mongoose'
 _ = require 'lodash'
 uuid = require 'uuid'
@@ -14,6 +15,7 @@ pubsub =
   start: (server, config, cb)->
     @server = server
     for transport, transconfig of config.transports
+      debugger
       @transports[transport] = require(transport)
       @transports[transport].start(transconfig, @, server.listener)
       #TODO: make this do what its suppose too
@@ -27,9 +29,18 @@ pubsub =
   stop: ()->
     #clear the subscription collection
     mongoose.connection.collections.subscriptions.remove (err)->
-      console.log('subscription cleared')
     for index, transport of @transports
-      transport.stop()
+      if _.isFunction transport.stop
+        transport.stop()
+
+  upsert: (query, model, cb)->
+    Social.update query, model, {upsert:true}, (err)=>
+      if not err
+        @pub model, 'upsert'
+      else
+        console.log err
+      cb err
+    
 
   ###
   Publish a model, finds the subscriptions that match it and then publishes the
@@ -53,7 +64,17 @@ pubsub =
               clientID = subscription.client
               #iterate thourght the transports
               for transport in subscription.transports
-                @transports[transport].pub clientID, model, action
+                if _.isFunction @transports[transport].pub
+                  @transports[transport].pub clientID, model, action
+
+  ###
+  When a client disconnects, clear its subscriptions
+  @method disconnect
+  @param {String} the client's id
+  ###
+  disconnect: (client)->
+    query = Subscription.remove({client:client})
+    query.exec()
 
   ###
   Creates a subscription given a clientID and filter
@@ -82,7 +103,6 @@ pubsub =
 
 
   ###
-
   @method sub
   @param {String} clientID
   @param {Object} filter

@@ -20,6 +20,7 @@ module.exports = (options) ->
     limit = Number params.limit
     sort = params.sort or params.order or undefined
     skip = Number(params.skip or params.offset) or undefined
+    config = {}
 
     #Build the query
     #Remove undefined params
@@ -38,14 +39,18 @@ module.exports = (options) ->
         if params[param]
           where = _.merge(where, query(params[param], params))
 
+    #add config
+    if options.config
+      config = options.config(request.server.settings.app.api)
+
     #add limit
-    if options.maxLimit
-      if _.isNaN(limit) or limit > options.maxLimit
-        limit = options.maxLimit
+    if config.maxLimit
+      if _.isNaN(limit) or limit > config.maxLimit
+        limit = config.maxLimit
 
     #add order
-    if options.defaultOrder and not sort
-      sort = options.defaultOrder
+    if config.defaultOrder and not sort
+      sort = config.defaultOrder
 
     Model.find(where).sort(sort).skip(skip).limit(limit).exec (err, models) ->
       # An error occurred

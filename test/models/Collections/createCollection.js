@@ -1,10 +1,6 @@
 // NOTE: TEST INCOMPLETE. DO NOT RELY ON THIS
-
-require('coffee-script')
-var mongoConf = require('../../config').mongo;
 var should = require('chai').should();
-var Collection = require('../../../models/list');
-var mongoose = require('mongoose');
+var Collection = require('../../../lib/models/list');
 
 describe.skip('Create Collection',function(){
     before(function(done){

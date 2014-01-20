@@ -6,12 +6,14 @@ SocialSchema = EventSchema.extend
   title:
     type: String
     required: true
+  externalId: String
   end:
     type: Date
   address:
     type: String
   venue:
     type: String
+  venueId: String
   link:
     type: String
   # many to one
