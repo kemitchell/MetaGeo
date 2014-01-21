@@ -16,20 +16,13 @@ db =
   ###
   start:(options, cb)->
     #build connection string
-    if options.password and options.user
-      dbURI = "mongodb://" +
-        options.user + ":" +
-        options.password + "@" +
-        options.host +  ":" +
-        options.port + "/" +
-        options.database
-    else
-      dbURI = "mongodb://" +
-        options.host + ":" +
-        options.port + "/" +
-        options.database
+    dbURI = "mongodb://" +
+      options.uri.host + ":" +
+      options.uri.port + "/" +
+      options.uri.database
 
-    mongoose.connect dbURI, cb
+    console.log dbURI
+    mongoose.connect dbURI, options, cb
     # CONNECTION EVENTS
     # When successfully connected
     mongoose.connection.on "connected", ->

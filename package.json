@@ -39,6 +39,7 @@
     "metageo": "./bin/metageo"
   },
   "scripts": {
+    "start": "node ./bin/metageo",
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --recursive --reporter spec ./test/"
   },
   "contributors": [
