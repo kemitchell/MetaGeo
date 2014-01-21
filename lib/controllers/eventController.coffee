@@ -17,7 +17,7 @@ generic = {}
 genericOptions =
   #allow subscribable queries
   pubsub: true
-  #fields to omit
+  #fields to omit on creating objects
   omit: ['objectType']
   #get the model based on the query
   model: Event
