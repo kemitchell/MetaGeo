@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var metageo = require('../'),
+    path    = require('path'),
+    fs      = require('fs'),
+    _       = require('lodash'),
+    config  = {}; 
+
+process.on('SIGINT',function(){
+  metageo.stop();
+});
+
+
+fs.readdirSync(path.resolve(__dirname, '../config')).forEach(function(file){
+    if(/(\.js|\.coffee)$/.test(file)){
+      _.merge(config, require('../config/'+file));
+    }
+});
+
+metageo.start(config);
+

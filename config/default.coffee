@@ -43,5 +43,6 @@ module.exports =
       database: process.env.MONGO_DB || process.env.OPENSHIFT_APP_NAME || "em"
     server:
       keepAlive: 1
-    password: process.env.MONGO_PASSWORD || process.env.OPENSHIFT_MONGODB_DB_PASSWORD
+      auto_reconnect:true
+    pass: process.env.MONGO_PASSWORD || process.env.OPENSHIFT_MONGODB_DB_PASSWORD
     user: process.env.MONGO_USERNAME || process.env.OPENSHIFT_MONGODB_DB_USERNAME
