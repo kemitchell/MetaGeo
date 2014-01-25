@@ -4,7 +4,7 @@
 
 
 ### Setup
-* install [mongodb](http://docs.mongodb.org/manual/installation/)
+* install [mongodb](http://docs.mongodb.org/manual/installation/) 2.4 or above
 * clone the repositry: `git clone https://github.com/CraveProgrammingInc/MetaGeo.git`  
 * `cd MetaGeo`  
 * install packages: `npm install`  
