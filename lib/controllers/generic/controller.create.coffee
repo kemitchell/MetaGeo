@@ -5,11 +5,10 @@ this is a generic create controller
 Hapi     = require 'hapi'
 mongoose = require 'mongoose'
 _        = require 'lodash'
-subpub   = require '../../pubsub'
 
 module.exports = (options) ->
 
-  (request) ->
+  (request, reply) ->
 
     payload = _.merge request.payload, request.params
     Model = options.model
@@ -40,8 +39,9 @@ module.exports = (options) ->
               errors[index] = err
 
       if not _.isEmpty(errors)
-        herror = Hapi.error.badRequest {fields: errors}
-        return request.reply herror
+        herror = Hapi.error.badRequest()
+        herror.output.payload =  {fields: errors}
+        return reply herror
 
     #create a new model
     model = new Model payload
@@ -53,14 +53,14 @@ module.exports = (options) ->
           for key, error of err.errors
             fields[key] = key + ' is ' + error.type
           #moongoose error, probably validation
-          herror = Hapi.error.badRequest
-            fields: fields
+          herror = Hapi.error.badRequest()
+          herror.output.payload =  {fields: fields}
 
-          return request.reply herror
+          return reply herror
         else
           #mongo db itself is erroring
           herror = Hapi.error.internal err
-          return request.reply herror
+          return reply herror
       else
         #run after function only if there is no errors
         if options.after
@@ -68,6 +68,6 @@ module.exports = (options) ->
 
         #push the model
         if options.pubsub
-          subpub.pub model.toJSON(), 'create'
+          request.server.plugins['metageo-pubsub'].pub model.toJSON(), 'create'
 
-        return request.reply model.toJSON()
+        return reply model.toJSON()

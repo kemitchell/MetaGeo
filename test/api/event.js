@@ -15,14 +15,6 @@ describe('/api/event', function() {
     });
 
     describe("POST - create a new event", function() {
-        it('create a new event with invalid fields', function(done) {
-            utils.A.request.post('/api/event')
-            .end(function(err, res) {
-                //forbidden
-                res.status.should.equal(401);
-                done();
-            });
-        });
 
         it('login', function(done) {
             utils.login('A',done);

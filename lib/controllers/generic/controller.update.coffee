@@ -3,10 +3,9 @@ CRUD update
 ###
 Hapi = require 'hapi'
 _ = require 'lodash'
-subpub   = require '../../pubsub'
 
 module.exports = (options) ->
-  (request) ->
+  (request, reply) ->
 
     params = request.params
     payload = request.payload
@@ -43,18 +42,18 @@ module.exports = (options) ->
             err = field.validate payload[index], payload, request
             if err
               herror = Hapi.error.badRequest err
-              return request.reply herror
+              return reply herror
 
       if not _.isEmpty(errors)
         herror = Hapi.error.badRequest {fields: errors}
-        return request.reply herror
+        return reply herror
 
     #find the event
     Model.findOne(params).exec (err, model)->
       if err
-        return request.reply Hapi.error.internal err
+        return reply Hapi.error.internal err
       if not model
-        return request.reply Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found")
+        return reply Hapi.error.notFound(Model.modelName + " with id of" + params.id + " not found")
 
       canUpdate = if options.check then options.check(model, request) else true
 
@@ -67,8 +66,8 @@ module.exports = (options) ->
 
           #push the model
           if options.pubsub
-            subpub.pub model.toJSON(), 'update'
+            request.server.plugins['metageo-pubsub'].pub model.toJSON(), 'update'
 
-          return request.reply model
+          return reply model
       else
-        return request.reply Hapi.error.forbidden 'permission denied'
+        return reply Hapi.error.forbidden 'permission denied'

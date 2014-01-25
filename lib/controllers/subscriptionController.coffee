@@ -1,6 +1,5 @@
 Generic = require './generic'
 Subscription = require '../models/subscription'
-pubsub = require '../pubsub'
 utils = require '../utils'
 _ = require 'lodash'
 
@@ -19,10 +18,10 @@ generic = new Generic
           return "client required"
 
     transports:
-      transform: (trans, params)->
+      transform: (trans, params, request)->
         clientTransports = []
         if params.client
-          for index, transport of pubsub.transports
+          for index, transport of request.server.plugins['metageo-pubsub'].transports
             #if a client exists on a transport then publish the model
             if _.isFunction(transport.getClient) and transport.getClient params.client
               clientTransports.push index

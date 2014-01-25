@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "async": "~0.2.9",
-    "hapi": "~1.16.1",
+    "hapi": "~2.1.1",
     "coffee-script": "~1.6.3",
     "mongoose": "~3.8.4",
     "mongoose-createdmodified": "0.0.2",
@@ -27,7 +27,11 @@
     "qs": "~0.6.6",
     "uuid": "~1.4.1",
     "metageo-pubsub-websockets": "git+https://github.com/craveprogramminginc/metageo-pubsub-websockets.git",
-    "GeoLocation": "git+https://github.com/wanderer/GeoLocation"
+    "GeoLocation": "git+https://github.com/wanderer/GeoLocation",
+    "bcrypt": "~0.7.7",
+    "hapi-auth-basic": "~1.0.0",
+    "yar": "~1.1.0",
+    "hapi-auth-cookie": "~1.0.0"
   },
   "devDependencies": {
     "chai": "~1.7.2",

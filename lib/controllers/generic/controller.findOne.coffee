@@ -6,7 +6,7 @@ Hapi = require 'hapi'
 
 module.exports = (options) ->
 
-  (request) ->
+  (request, reply) ->
     params = request.params
 
     #get the model
@@ -19,5 +19,5 @@ module.exports = (options) ->
       if err
         return request.reply Hapi.error.internal err
       if not model
-        return request.reply Hapi.error.notFound("model searched for by " + JSON.stringify(params) + " not found")
-      return request.reply model
+        return reply Hapi.error.notFound("model searched for by " + JSON.stringify(params) + " not found")
+      return reply model

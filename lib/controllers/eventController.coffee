@@ -51,7 +51,6 @@ genericOptions =
         return geometry
 
       validate: (point)->
-        debugger
         if not gjVal.isPoint(point)
           return "invalid geoJSON"
   

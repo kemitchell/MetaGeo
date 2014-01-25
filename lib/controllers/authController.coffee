@@ -7,25 +7,25 @@ Hapi = require 'hapi'
 User = require "../models/user"
 
 AuthController =
-  process: (request) ->
+  process: (request, reply) ->
     password = request.payload.password
     username = request.payload.username
 
     if not username
-      return request.reply Hapi.error.badRequest
+      return reply Hapi.error.badRequest
         fields:
           username: 'Username is Required'
         message: 'Missing Username'
 
     if not password
-      return request.reply Hapi.error.badRequest
+      return reply Hapi.error.badRequest
         fields:
           password: 'Password is Required'
         message: 'Missing Password'
 
     User.findOne {username:username}, (err, user)->
       if err
-        return @reply Hapi.error.internal err
+        return reply Hapi.error.internal err
 
       if user
         pass.hash password, user.salt, (err, hash)->
@@ -33,22 +33,22 @@ AuthController =
             request.auth.session.set user
             user = user.toJSON()
             user.authenticated = true
-            return request.reply user
+            return reply user
           #invalid password
-          return request.reply Hapi.error.badRequest 'Invalid User or Password'
+          return reply Hapi.error.badRequest 'Invalid User or Password'
       else
         #invalid user
-        request.reply Hapi.error.badRequest 'Invalid User or Password'
+        reply Hapi.error.badRequest 'Invalid User or Password'
 
-  status: () ->
-    if @auth.isAuthenticated
-      @auth.credentials.authenticated = true
-      return @reply @auth.credentials
+  status: (request, reply) ->
+    if request.auth.isAuthenticated
+      request.auth.credentials.authenticated = true
+      return reply request.auth.credentials
     else
-      return @reply {authenticated: false}
+      return reply {authenticated: false}
 
-  logout: () ->
-    @auth.session.clear()
-    return @reply {authenticated: false}
+  logout: (request, reply) ->
+    request.auth.session.clear()
+    return reply {authenticated: false}
 
 module.exports = AuthController

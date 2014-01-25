@@ -3,11 +3,10 @@ CRUD find
 ###
 _ = require 'lodash'
 Hapi = require 'hapi'
-pubsub = require '../../pubsub'
 
 module.exports = (options) ->
 
-  (request) ->
+  (request, reply) ->
     params = _.merge request.query, request.params
     Model = options.model
     #if the model is not mongoose the run and hope that it gives us a mongoose model
@@ -55,7 +54,7 @@ module.exports = (options) ->
     Model.find(where).sort(sort).skip(skip).limit(limit).exec (err, models) ->
       # An error occurred
       if err
-        return request.reply Hapi.error.internal err
+        return reply Hapi.error.internal err
 
       #Build set of model values
       modelValues = []
@@ -64,7 +63,7 @@ module.exports = (options) ->
 
       #subscirbe to this query
       if options.pubsub and params.client
-        pubsub.sub params.client, params
+        request.server.plugins['metageo-pubsub'].sub params.client, params
 
       #add wrapper
       if options.after
@@ -74,4 +73,4 @@ module.exports = (options) ->
         params.skip = skip
         modelValues = options.after modelValues, 'find', params
 
-      return request.reply modelValues
+      return reply modelValues

@@ -33,7 +33,6 @@ module.exports = [
     handler: require("./controllers/authController").process
     auth:
       mode: 'try'
-    payload: "parse"
 ,
   method: "DELETE"
   path: "/api/login"
@@ -51,14 +50,12 @@ module.exports = [
   path: "/api/user/{username}"
   config:
     handler: require("./controllers/userController").update
-    payload: "parse"
     auth: true
 ,
   method: "POST"
   path: "/api/user"
   config:
     handler: require("./controllers/userController").create
-    payload: "parse"
     auth:
       mode: 'try'
 ,

@@ -3,11 +3,10 @@ CRUD delete
 ###
 _ = require('lodash')
 Hapi = require('hapi')
-subpub   = require '../../pubsub'
 
 module.exports = (options) ->
  
-  (request) ->
+  (request, reply) ->
     params = _.merge  request.query, request.params
 
     Model = options.model
@@ -16,9 +15,9 @@ module.exports = (options) ->
 
     Model.findOne(params).exec (err, model)->
       if err
-        return request.reply Hapi.error.internal err
+        return reply Hapi.error.internal err
       if not model
-        return request.reply Hapi.error.notFound("model deleted by " + JSON.stringify(params) + " not found")
+        return reply Hapi.error.notFound("model deleted by " + JSON.stringify(params) + " not found")
 
       canDelete = if options.check then options.check(model, request) else true
 
@@ -29,8 +28,8 @@ module.exports = (options) ->
             options.after model, 'delete', request
 
           if options.pubsub
-            subpub.pub model.toJSON(), 'delete'
+            request.server.plugins['metageo-pubsub'].pub model.toJSON(), 'delete'
 
-          return request.reply model
+          return reply model
       else
-        return request.reply Hapi.error.forbidden 'permission denied'
+        return reply Hapi.error.forbidden 'permission denied'

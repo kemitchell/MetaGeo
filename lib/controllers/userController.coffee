@@ -41,18 +41,18 @@ UserController =
   creates a user and hashes their password
   @method create
   ###
-  create: (request) ->
+  create: (request, reply) ->
     #validate payload for hashing
     password = request.payload.password
     username = request.payload.username
     if not username
-      return request.reply Hapi.error.badRequest
+      return reply Hapi.error.badRequest
         fields:
           username: 'Username is Required'
         message: 'Missing Username'
 
     if not password
-      return request.reply Hapi.error.badRequest
+      return reply Hapi.error.badRequest
         fields:
           username: 'Password is Required'
         message: 'Missing Password'
@@ -61,7 +61,7 @@ UserController =
     pass.hash password, (err, salt, hash) ->
       if(err)
         #something went wrong with hashing
-        return request.reply Hapi.error.internal(err.message)
+        return reply Hapi.error.internal(err.message)
 
       params = _.merge request.payload, {hash: hash, salt: salt }
       # don't save the password
@@ -79,12 +79,14 @@ UserController =
           else
             for key, error of err.errors
               fields[key] = key + ' is ' + error.type
-
-          return request.reply Hapi.error.badRequest {fields:fields}
+        
+          error = Hapi.error.badRequest()
+          error.output.payload = {fields:fields}
+          return reply error
         else
           #log the user in
           request.payload.password = password
-          return AuthController.process request
+          return AuthController.process request, reply
   
   ###
   Updates an user 
