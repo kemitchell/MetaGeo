@@ -55,7 +55,6 @@ module.exports = (options) ->
           #moongoose error, probably validation
           herror = Hapi.error.badRequest()
           herror.output.payload =  {fields: fields}
-
           return reply herror
         else
           #mongo db itself is erroring
@@ -64,7 +63,7 @@ module.exports = (options) ->
       else
         #run after function only if there is no errors
         if options.after
-          options.after model, 'create', payload
+          options.after model, 'create', payload, request
 
         #push the model
         if options.pubsub

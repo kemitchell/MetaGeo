@@ -21,10 +21,11 @@ generic = new Generic
       transform: (trans, params, request)->
         clientTransports = []
         if params.client
-          for index, transport of request.server.plugins['metageo-pubsub'].transports
+          for transport in request.server.plugins['metageo-pubsub'].transports
             #if a client exists on a transport then publish the model
-            if _.isFunction(transport.getClient) and transport.getClient params.client
-              clientTransports.push index
+            plugin = request.server.plugins[transport]
+            if _.isFunction( plugin.getClient) and plugin.getClient params.client
+              clientTransports.push transport
         return clientTransports
 
       validate: (transports)->
@@ -61,9 +62,11 @@ The Controller, handles CRUD for events
 ###
 SubscriptionController =
   create: generic.create(
-    after:(model)->
-      for transport in model.transports
-        pubsub.transports[transport].sub(model.get('client'), model.get('_id').toString(), model.get('filter'))
+    after:(model, action, payload, request)->
+      for transport in request.server.plugins['metageo-pubsub'].transports
+        plugin = request.server.plugins[transport]
+        if plugin.sub
+          plugin.sub(model.get('client'), model.get('_id').toString(), model.get('filter'))
   )
   update: generic.update()
   delete: generic.delete()

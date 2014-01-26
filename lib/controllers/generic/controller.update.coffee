@@ -45,7 +45,8 @@ module.exports = (options) ->
               return reply herror
 
       if not _.isEmpty(errors)
-        herror = Hapi.error.badRequest {fields: errors}
+        herror = Hapi.error.badRequest()
+        error.output.payload =  {fields: erros}
         return reply herror
 
     #find the event

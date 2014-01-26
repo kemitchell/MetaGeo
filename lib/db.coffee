@@ -22,7 +22,6 @@ db =
       options.uri.database
 
     console.log dbURI
-    mongoose.connect dbURI, options, cb
     # CONNECTION EVENTS
     # When successfully connected
     mongoose.connection.on "connected", (err)->
@@ -39,13 +38,13 @@ db =
     mongoose.connection.on "disconnected", ->
       console.log "Mongoose default connection disconnected"
 
+    mongoose.connect dbURI, options, cb
+
   ###
   @method stop
   @param {Function} cb A callback
   ###
   stop:(cb)->
-    mongoose.connection.close ->
-      if cb
-        cb()
+    mongoose.connection.close cb
 
 module.exports = db

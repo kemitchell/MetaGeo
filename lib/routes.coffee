@@ -5,7 +5,7 @@ eventController = new (require('./controllers/eventController'))()
 Types = require("hapi").types
 module.exports = [
   #static assests
-  #TODO: change to /static maybe
+  #TODO: change to /prefix
   method: "GET"
   path: "/{path*}"
   config:
@@ -144,7 +144,6 @@ module.exports = [
   config:
     handler: eventController.find
 ,
-  #TODO
   method: "GET"
   path: "/api/events/list/{_id}/"
   config:
