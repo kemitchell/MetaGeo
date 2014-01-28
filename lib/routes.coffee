@@ -3,6 +3,12 @@ Defines the hapi routes for the API
 ###
 eventController = new (require('./controllers/eventController'))()
 Types = require("hapi").types
+Event = require './models/event'
+
+findEvent = (request, reply)->
+  Event.findOne(request.params).exec (err, model)->
+    reply model
+
 module.exports = [
   #static assests
   #TODO: change to /prefix
@@ -68,51 +74,8 @@ module.exports = [
   method: "GET"
   path: "/api/event/{_id}"
   config:
+    pre: [{method: findEvent, assign:'model'}]
     handler: eventController.findOne
-    validate:
-      path:
-        #id must be an mongo id
-        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
-,
-  method: "POST"
-  path: "/api/event"
-  config:
-    handler: eventController.create
-    auth: true
-,
-  method: "POST"
-  path: "/api/event/{objectType}"
-  config:
-    handler: (request)->
-      require("./controllers/"+request.params.objectType+"Controller.coffee" ).create.apply @, arguments
-    auth: true
-,
-  method: "PUT"
-  path: "/api/event/{objectType}/{_id}"
-  config:
-    handler: (request)->
-      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
-    auth: true
-,
-  method: "DELETE"
-  path: "/api/event/{objectType}/{_id}"
-  config:
-    handler: (request)->
-      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
-    auth: true
-,
-  method: "GET"
-  path: "/api/event/{objectType}/{_id}"
-  config:
-    handler: (request)->
-      require("./controllers/"+request.params.objectType+"Controller.coffee" ).update.apply @, arguments
-    auth: true
-,
-  method: "PUT"
-  path: "/api/event/{_id}"
-  config:
-    handler: eventController.update
-    auth: true
     validate:
       path:
         #id must be an mongo id

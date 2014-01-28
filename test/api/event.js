@@ -110,7 +110,7 @@ describe('/api/event', function() {
         });
 
         it('modify an event', function(done) {
-            utils.A.request.put('/api/event/' + social_event_id)
+            utils.A.request.put('/api/event/social/' + social_event_id)
                 .set('Content-Type', 'application/json')
                 .send({
                 title: "testEventModified",

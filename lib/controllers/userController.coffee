@@ -7,7 +7,7 @@ _ = require 'lodash'
 User = require '../models/user'
 AuthController = require './authController'
 Hapi = require 'hapi'
-Generic = require('./generic')
+Generic = require 'metageo-generic-controller'
 
 generic = new Generic
   model: User

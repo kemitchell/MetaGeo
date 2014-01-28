@@ -1,4 +1,4 @@
-Generic = require './generic'
+Generic = require 'metageo-generic-controller'
 Subscription = require '../models/subscription'
 utils = require '../utils'
 _ = require 'lodash'

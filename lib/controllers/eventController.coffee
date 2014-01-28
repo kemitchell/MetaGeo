@@ -5,10 +5,8 @@ The Event Controller, handles CRUD for events
 _ = require 'lodash'
 querystring = require 'querystring'
 Event = require '../models/event'
-Social = require '../models/social'
-Mblog = require '../models/mblog'
 List = require '../models/list'
-Generic = require './generic'
+Generic = require 'metageo-generic-controller'
 gjVal = require "geojson-validation"
 utils = require '../utils'
 
@@ -22,10 +20,6 @@ genericOptions =
   #get the model based on the query
   model: Event
   fields:
-    objectType:
-      validate: (objectType)->
-        if not objectType
-          return "objectType Required"
     # give the event an author
     actor: (actor, params, req) ->
       return req.auth.credentials.username
