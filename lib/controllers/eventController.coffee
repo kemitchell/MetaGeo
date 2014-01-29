@@ -6,7 +6,7 @@ _ = require 'lodash'
 querystring = require 'querystring'
 Event = require '../models/event'
 List = require '../models/list'
-Generic = require 'metageo-generic-controller'
+Generic = require 'hapi-mongoose-handler'
 gjVal = require "geojson-validation"
 utils = require '../utils'
 

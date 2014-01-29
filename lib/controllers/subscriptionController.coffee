@@ -1,4 +1,4 @@
-Generic = require 'metageo-generic-controller'
+Generic = require 'hapi-mongoose-handler'
 Subscription = require '../models/subscription'
 utils = require '../utils'
 _ = require 'lodash'

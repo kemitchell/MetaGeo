@@ -4,7 +4,7 @@
 ###
 List = require "../models/list"
 Aggergate = require "../models/aggregate"
-Generic = require 'metageo-generic-controller'
+Generic = require 'hapi-mongoose-handler'
 generic = new Generic
   model:List
 

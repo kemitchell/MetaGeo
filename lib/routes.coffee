@@ -5,10 +5,6 @@ eventController = new (require('./controllers/eventController'))()
 Types = require("hapi").types
 Event = require './models/event'
 
-findEvent = (request, reply)->
-  Event.findOne(request.params).exec (err, model)->
-    reply model
-
 module.exports = [
   #static assests
   #TODO: change to /prefix
@@ -70,26 +66,6 @@ module.exports = [
   config:
     handler: require("./controllers/userController").delete
     auth: true
-,
-  method: "GET"
-  path: "/api/event/{_id}"
-  config:
-    pre: [{method: findEvent, assign:'model'}]
-    handler: eventController.findOne
-    validate:
-      path:
-        #id must be an mongo id
-        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
-,
-  method: "DELETE"
-  path: "/api/event/{_id}"
-  config:
-    handler: eventController.delete
-    auth: true
-    validate:
-      path:
-        #id must be an mongo id
-        _id: Types.String().regex(/^[0-9a-fA-F]{24}$/)
 ,
   #event collections
   method: "GET"
