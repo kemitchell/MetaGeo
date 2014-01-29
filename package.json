@@ -31,7 +31,9 @@
     "bcrypt": "~0.7.7",
     "hapi-auth-basic": "~1.0.0",
     "yar": "~1.1.0",
-    "hapi-auth-cookie": "~1.0.0"
+    "hapi-auth-cookie": "~1.0.0",
+    "metageo-social-api": "git+https://github.com/craveprogramminginc/metageo-social-api",
+    "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api"
   },
   "devDependencies": {
     "chai": "~1.7.2",
