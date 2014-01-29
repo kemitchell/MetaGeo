@@ -26,7 +26,7 @@
     "geojson-validation": "~0.1.4",
     "qs": "~0.6.6",
     "uuid": "~1.4.1",
-    "metageo-pubsub-websockets": "git+https://github.com/craveprogramminginc/metageo-pubsub-websockets.git",
+    "metageo-pubsub": "git+https://github.com/craveprogramminginc/metageo-pubsub",
     "GeoLocation": "git+https://github.com/wanderer/GeoLocation",
     "bcrypt": "~0.7.7",
     "hapi-auth-basic": "~1.0.0",
