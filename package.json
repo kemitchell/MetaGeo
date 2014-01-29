@@ -33,7 +33,8 @@
     "yar": "~1.1.0",
     "hapi-auth-cookie": "~1.0.0",
     "metageo-social-api": "git+https://github.com/craveprogramminginc/metageo-social-api",
-    "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api"
+    "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api",
+    "hapi-mongoose-handler": "git+https://github.com/craveprogramminginc/hapi-mongoose-handler"
   },
   "devDependencies": {
     "chai": "~1.7.2",
