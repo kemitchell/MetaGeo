@@ -30,10 +30,11 @@ module.exports =
 
   plugins:
     'metageo-pubsub':{}
-    #'metageo-pubsub-websockets':
-    #  path: '/pubsub/ws'
     'metageo-social-api': {}
     'metageo-mblog-api': {}
+    '../plugins/basicfb': {}
+    #'metageo-pubsub-websockets':
+    #  path: '/pubsub/ws'
 
   ###
   Configures Mongo 
