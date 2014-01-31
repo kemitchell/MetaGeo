@@ -76,6 +76,9 @@ metageo.start = function(config, cb) {
         }
     ],cb);
 
+    //expose the server
+    this.server = server
+
 };
 
 /**
