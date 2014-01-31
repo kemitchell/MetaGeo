@@ -29,12 +29,12 @@ module.exports =
       isSecure: false
 
   plugins:
-    'metageo-pubsub':{}
     'metageo-social-api': {}
     'metageo-mblog-api': {}
-    '../plugins/basicfb': {}
-    #'metageo-pubsub-websockets':
-    #  path: '/pubsub/ws'
+    #'../plugins/basicfb': {}
+    'metageo-pubsub': {}
+    'metageo-pubsub-websockets':
+      path: '/pubsub/ws'
 
   ###
   Configures Mongo 

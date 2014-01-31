@@ -7,7 +7,9 @@ var server = require('../index'),
 
 before(function(done) {
     _.merge(config, testConfig);
-    server.start(config, utils.createUser(done));
+    server.start(config, function(){
+      utils.createUser(done);
+    });
 });
 
 after(function(done) {
