@@ -33,8 +33,8 @@ module.exports =
     'metageo-mblog-api': {}
     #'../plugins/basicfb': {}
     'metageo-pubsub': {}
-    'metageo-pubsub-websockets':
-      path: '/pubsub/ws'
+    #'metageo-pubsub-websockets':
+    #  path: '/pubsub/ws'
 
   ###
   Configures Mongo 
