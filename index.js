@@ -22,6 +22,18 @@ var metageo = {},
 metageo.start = function(config, cb) {
 
     server = new Hapi.Server(config.server.host, Number(config.server.port), {app:config.app});
+    
+    server.route({
+        method: "GET",
+        path: "/{path*}",
+        config:{
+            handler:{
+                directory:{
+                    path: '../../assets/dist'
+                }
+            }
+        }
+    });
 
     //setup the API server
     server.ext('onPreResponse', function(request, next) {
