@@ -2,8 +2,7 @@ var metageo = require('../index'),
     testConfig = require('./config'),
     config = require('../config/default'),
     utils = require('./utils'),
-    _ = require('lodash'),
-    mongoose = require('mongoose');
+    _ = require('lodash');
 
 before(function(done) {
     _.merge(config, testConfig);
