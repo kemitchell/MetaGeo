@@ -1,5 +1,8 @@
 # MetaGeo 
-### a real-time spatial and temporal mapping server 
+### a real-time event mapping framework
+
+Metageo is a set of hapi plugins that form a spatial and temporal RESTful server. It allows you to easy map anything that happens somewhere and at sometime.  
+
 [![Build Status](https://travis-ci.org/craveprogramminginc/MetaGeo.png?branch=master)](https://travis-ci.org/craveprogramminginc/MetaGeo)
 
 
