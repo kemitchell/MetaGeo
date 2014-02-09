@@ -85,7 +85,7 @@ describe('/api/user', function() {
                 password: "modiefed password"
             })
                 .end(function(err, res) {
-                res.status.should.equal(403);
+                res.status.should.equal(401);
                 done();
             });
         });
@@ -108,7 +108,7 @@ describe('/api/user', function() {
         it('shouldnt be deleted by a differnet user', function(done) {
             utils.B.request.del('/api/user/' + object_id)
                 .end(function(err, res) {
-                res.status.should.equal(403);
+                res.status.should.equal(401);
                 done();
             });
         });

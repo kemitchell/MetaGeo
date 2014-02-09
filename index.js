@@ -29,7 +29,7 @@ metageo.start = function(config, cb) {
         config:{
             handler:{
                 directory:{
-                    path: '../../assets/dist'
+                    path: './assets/dist'
                 }
             }
         }
@@ -49,7 +49,7 @@ metageo.start = function(config, cb) {
 
     server.ext('onRequest', function (request, next) {
         var parts = request.path.split('/')
-        if(parts.length === 4  && parts[2] == 'event'){
+        if(request.method != 'post'  && parts[2] == 'event'){
             server.plugins['metageo-core'].models.event.findOne({_id:parts[3]}).exec(function(err, model){
                 if(model){
                     request.app.model = model;

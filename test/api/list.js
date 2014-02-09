@@ -65,7 +65,7 @@ describe('/api/list', function() {
           .set('Content-Type', 'application/json')
           .send({title: "testCollectionModified" })
           .end(function(err, res){
-              res.status.should.equal(403);
+              res.status.should.equal(401);
               done();
           });
       });
@@ -89,7 +89,7 @@ describe('/api/list', function() {
           utils.B.request.del('/api/list/' + object_id)
           .end(function(err, res){
               if(err) throw err;
-              res.status.should.equal(403);
+              res.status.should.equal(401);
               done();
           });
       });
