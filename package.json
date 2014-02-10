@@ -24,7 +24,6 @@
     "metageo-pubsub": "git+https://github.com/craveprogramminginc/metageo-pubsub",
     "metageo-social-api": "git+https://github.com/craveprogramminginc/metageo-social-api",
     "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api",
-    "hapi-mongoose-handler": "~0.0.4",
     "metageo-core": "git+https://github.com/craveprogramminginc/metageo-core"
   },
   "devDependencies": {
