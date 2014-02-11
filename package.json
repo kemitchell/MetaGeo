@@ -4,7 +4,7 @@
     "geospatial",
     "meta"
   ],
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./index.js",
   "description": "a real-time spatial and temporal mapping server",
   "engines": {
