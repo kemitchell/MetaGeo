@@ -29,9 +29,9 @@ module.exports =
       isSecure: false
 
   plugins:
+    'metageo-frontend': {}
     'metageo-social-api': {}
     'metageo-mblog-api': {}
-    #'../plugins/basicfb': {}
     'metageo-pubsub': {}
     #'metageo-pubsub-websockets':
     #  path: '/pubsub/ws'
