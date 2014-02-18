@@ -4,18 +4,21 @@ var metageo = require('../'),
     path    = require('path'),
     fs      = require('fs'),
     _       = require('lodash'),
-    config  = {}; 
+    path;
 
-process.on('SIGINT',function(){
-  metageo.stop();
-});
+process.once('SIGQUIT', metageo.stop);
+//restart
+process.on('SIGUSR2', metageo.stop);
 
+path = process.argv[2];
 
-fs.readdirSync(path.resolve(__dirname, '../config')).forEach(function(file){
-    if(/(\.js|\.coffee)$/.test(file)){
-      _.merge(config, require('../config/'+file));
-    }
-});
+if(path){
+   path = path[0] !== '/' ? process.cwd() + '/' + path : path;
+}else{
+   path = path.resolve(__dirname, '../config/default');
+}
+
+var config = require(path);
 
 metageo.start(config);
 

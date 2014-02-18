@@ -20,6 +20,7 @@ var metageo = {},
  * @cb {Function} cb A callback for when everything is up and running
  **/
 metageo.start = function(config, cb) {
+    console.log('starting...');
 
     server = new Hapi.Server(config.server.host, Number(config.server.port), {app:config.app});
     
@@ -88,6 +89,7 @@ metageo.start = function(config, cb) {
  * @param {Function} a callback function
  **/
 metageo.stop = function(options, cb) {
+    console.log('stoping...');
     var options;
     if (_.isFunction(options) && _.isUndefined(cb)) {
         cb = options;
