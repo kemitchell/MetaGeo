@@ -10,15 +10,15 @@ process.once('SIGQUIT', metageo.stop);
 //restart
 process.on('SIGUSR2', metageo.stop);
 
-path = process.argv[2];
+configPath = process.argv[2];
 
-if(path){
-   path = path[0] !== '/' ? process.cwd() + '/' + path : path;
+if(configPath){
+   configPath = configPath[0] !== '/' ? process.cwd() + '/' + configPath : configPath;
 }else{
-   path = path.resolve(__dirname, '../config/default');
+   configPath = path.resolve(__dirname, '../config/default');
 }
 
-var config = require(path);
+var config = require(configPath);
 
 metageo.start(config);
 
