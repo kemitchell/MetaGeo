@@ -31,6 +31,9 @@ module.exports =
   plugins:
     'metageo-frontend': {}
     'metageo-social-api': {}
+    'metageo-mblog-api': {}
+    #'metageo-pubsub-websockets':
+    #  path: '/pubsub/ws'
 
   ###
   Configures Mongo 

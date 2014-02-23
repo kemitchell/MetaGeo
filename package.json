@@ -21,8 +21,9 @@
     "lodash": "~2.2.1",
     "coffee-script": "~1.6.3",
     "hapi-auth-cookie": "1.0.0",
-    "metageo-social-api": "~0.0.1"
-    "metageo-core": "~0.0.4"
+    "metageo-social-api": "~0.0.1",
+    "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api",
+    "metageo-core": "~0.0.4",
     "metegeo-frontend": "git+https://github.com/craveprogramminginc/metgeo-frontend"
   },
   "devDependencies": {
