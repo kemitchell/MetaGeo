@@ -43,18 +43,11 @@
     {
       "name": "Cris Vergara",
       "email": "cvergara@craveprogramming.com"
-    },
-    {
-      "name": "null_radix",
-      "email": "null_radix@riseup.net",
-      "pgp": "http://pgp.mit.edu:11371/pks/lookup?op=get&search=0xEBAC34C5015FA8F6",
-      "bitmessage": "BM-orUNCNMuF4K4nGhNSKM9pJoMNmkdagPRw",
-      "i2pbote": "-kmLYmfbyg-5lvqPxXV4WiySxnhv3vshKjXW~BcTjZh8ONGKvc929y~YWMF3MMMWqV2LKTWlPJnt5LnlRrwdRW"
-    },
-    {
-      "name": "The Author"
     }
   ],
-  "author": "The Contributors",
+  "author": {
+    "name": "null_radix",
+    "email": "null_radix@riseup.net"
+  },
   "license": "AGPL"
 }
