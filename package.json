@@ -20,11 +20,11 @@
     "qs": "~0.6.6",
     "lodash": "~2.2.1",
     "coffee-script": "~1.6.3",
-    "hapi-auth-cookie": "^1.0.2",
-    "metageo-social-api": "~0.0.1",
+    "metageo-social-api": "git+https://github.com/craveprogramminginc/metageo-social-api",
     "metageo-mblog-api": "git+https://github.com/craveprogramminginc/metageo-mblog-api",
-    "metageo-core": "~0.0.4",
-    "metegeo-frontend": "git+https://github.com/craveprogramminginc/metgeo-frontend"
+    "metageo-core": "git+https://github.com/craveprogramminginc/metageo-core",
+    "metegeo-frontend": "git+https://github.com/craveprogramminginc/metgeo-frontend",
+    "hapi-auth-cookie": "^1.0.2"
   },
   "devDependencies": {
     "chai": "~1.7.2",
